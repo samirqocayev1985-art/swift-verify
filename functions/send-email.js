@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 
 exports.handler = async (event) => {
+    // CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -14,33 +15,27 @@ exports.handler = async (event) => {
     try {
         const { to, code } = JSON.parse(event.body);
 
-        console.log('Sending email to:', to);
+        console.log("Sending email to:", to);
 
+        // IMPORTANT:
+        // MegaHost gerçek SMTP hostu = sh003.megahost.kz
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: parseInt(process.env.SMTP_PORT),
+            host: "sh003.megahost.kz",
+            port: 465,
             secure: true,
             auth: {
-                user: process.env.SMTP_USER,
+                user: process.env.SMTP_USER,  // örn: check@verify-swift.com
                 pass: process.env.SMTP_PASS
             },
             tls: {
-                rejectUnauthorized: false   // Gmail uyumu için en önemli kısım
+                rejectUnauthorized: false
             }
         });
 
         const mailOptions = {
-            from: `Verify Swift <${process.env.EMAIL_FROM}>`,
+            from: `"Verify Swift" <${process.env.SMTP_USER}>`,
             to: to,
-            envelope: {
-                from: process.env.EMAIL_FROM,
-                to: to
-            },
-            subject: 'Your Verification Code - Verify Swift',
-            headers: {
-                'X-Mailer': 'VerifySwift-Mailer',
-                'List-Unsubscribe': `<mailto:${process.env.EMAIL_FROM}>`
-            },
+            subject: "Your Verification Code - Verify Swift",
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #3498db;">Verify Swift</h2>
@@ -61,19 +56,18 @@ exports.handler = async (event) => {
             headers,
             body: JSON.stringify({
                 success: true,
-                message: 'Verification code sent successfully'
+                message: "Verification code sent successfully"
             })
         };
 
     } catch (error) {
-        console.error('Email error:', error);
-
+        console.error("Email error:", error);
         return {
             statusCode: 500,
             headers,
             body: JSON.stringify({
                 success: false,
-                message: 'Failed to send email: ' + error.message
+                message: "Failed to send email: " + error.message
             })
         };
     }
