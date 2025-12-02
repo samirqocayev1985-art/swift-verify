@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Incoming Payment — Customer View</title>
+<style>
+  :root{--bg:#f4f7fb;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+  body{font-family:Inter,ui-sans-serif,system-ui,Arial,sans-serif;background:var(--bg);margin:0;padding:24px;color:#0f172a}
+  .wrap{max-width:840px;margin:0 auto}
+  .card{background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(12,40,80,0.06);padding:22px;margin-bottom:16px}
+  h1{font-size:18px;margin:0 0 8px}
+  p.lead{margin:0;color:var(--muted)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .col{flex:1;min-width:180px}
+  .label{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .value{font-weight:600;font-size:16px}
+  .amount{font-size:20px;color:var(--accent)}
+  .small{font-size:13px;color:var(--muted)}
+  .btns{display:flex;gap:8px;margin-top:14px}
+  button{background:var(--accent);border:none;color:#fff;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+  button.secondary{background:#eef2ff;color:var(--accent);border:1px solid rgba(11,107,255,0.12)}
+  .status{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700}
+  .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
+  .status.pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2)}
+  .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
+  .status.accepted{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
+  .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
+  .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px dashed #e6eefc}
+  .copy button{background:transparent;color:var(--accent);padding:6px;border-radius:6px;border:1px solid rgba(11,107,255,0.12)}
+  .note{font-size:13px;color:var(--muted);margin-top:8px}
+  .swift-list{font-size:13px;color:#6b7280;margin-top:4px; line-height:1.5}
+  
+  /* Flow Container */
+  .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
+  .flow-step{text-align:center;position:relative;min-width:180px}
+  .flow-step .bank-icon{width:56px;height:56px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;font-weight:bold;box-shadow:0 4px 12px rgba(59,130,246,0.3)}
+  .flow-step .arrow-icon{width:40px;height:40px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#64748b;font-size:20px}
+  .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:600}
+  .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
+  .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+  
+  /* Konnektor xətləri */
+  .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
+  
+  /* Yanıb-sönən effekt */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .blinking {
+    animation: blink 1s infinite;
+  }
+  
+  @media (max-width:768px){
+    .flow-container{flex-direction:column;gap:30px}
+    .connector-line{display:none}
+    .flow-step{min-width:100%}
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Incoming Payment</h1>
+    <p class="lead">Below are the key details of funds received. This view is for the customer only and sensitive account details are partially masked.</p>
+    <br>
+    <h1>Uetr code</h1>
+    <p class="lead">0b99fc6c-c967-4ece-8ff8-5d8a90257c8c</p>
+
+    <div class="row">
+      <div class="col">
+        <div class="label">Status</div>
+        <div class="value"><span class="status" id="topStatus"></span></div>
+      </div>
+      <div class="col">
+        <div class="label">Amount</div>
+        <div class="value amount">EUR 20,000,000.00</div>
+      </div>
+      <div class="col">
+        <div class="label">Sent date:</div>
+        <div class="value">01-Dec-2025</div>
+      </div>
+      <div class="col">
+        <div class="label">Value date:</div>
+        <div class="value">03-Dec-2025</div>
+      </div>
+    </div>
+
+    <div class="muted-line"></div>
+
+    <div class="row">
+      <div class="col">
+        <div class="label">Ordering Beneficiary / Ordering Party</div>
+        <div class="value">MMG Capital Limited</div>
+        <div class="small"></div>
+        <br>
+        <div class="label">Sender / Ordering Party</div>
+        <div class="value">Banque Cramer et Cie SA</div>
+        <div class="small">Zurich, Switzerland</div>
+        <br>
+        <div class="label">Beneficiary Customer / Ordering Party</div>
+        <div class="value">Pandally Invest Co., Limited</div>
+        <div class="small">Hong Kong.</div>
+        <br>
+        <div class="label">Bank reciever / Ordering Party</div>
+        <div class="value">OCBCBANK (Hong Kong) Limited</div>
+        <div class="small">Hong Kong</div>
+      </div>
+      <div class="col">
+        <div class="label">Sender Account</div>
+        <div class="value">CH45 **** **** **** **** 2002</div>
+        <div class="small">(Full IBAN stored securely in bank)</div>
+        <br><br><br><br>
+        <div class="label">Beneficiary Account</div>
+        <div class="value">802- **** **** **** **** 0831</div>
+        <div class="small">(Full IBAN stored securely in bank)</div>
+      </div>
+    </div>
+
+    <div class="muted-line"></div>
+
+    <div class="row">
+      <div class="col">
+        <div class="label">Reference / Purpose</div>
+        <div class="value small">Payment for Agreement No. TZFW-2025</div>
+      </div>
+      <div class="col">
+        <div class="label">Transaction Reference (ISO 20022)</div>
+        <div class="copy">
+          <div class="small" id="txRef">COBA300525CH59279</div>
+          <button id="copyBtn">Copy</button>
+        </div>
+        <div class="swift-list">
+          Sender BIC: CRAMCHGGXXX<br>
+          Intermediary BIC: COBADEFFXXX<br>
+          Beneficiary BIC: WIHBHKHHXXX<br>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWIFT AXIŞ VİZUALİ -->
+    <div class="flow-container">
+      <!-- Debtor Bank -->
+      <div class="flow-step">
+        <div class="bank-icon">🏦</div>
+        <div class="bank-name">Debtor Bank</div>
+        <div class="bank-code">CRAMCHGGXXX</div>
+        <div class="status-tag" id="debtor-status">Sent</div>
+      </div>
+      
+      <div class="connector-line" id="connector-1" style="background:#10b981;"></div>
+      
+      <!-- Arrow/Intermediary -->
+      <div class="flow-step">
+        <div class="arrow-icon">➡️</div>
+        <div class="bank-name">Intermediary Bank</div>
+        <div class="bank-code">COBADEFFXXX</div>
+        <div class="status-tag" id="intermediary-status">Accepted</div>
+      </div>
+      
+      <div class="connector-line" id="connector-2" style="background:#3b82f6;"></div>
+      
+      <!-- Beneficiary Bank -->
+      <div class="flow-step">
+        <div class="bank-icon">🏦</div>
+        <div class="bank-name">Beneficiary Bank</div>
+        <div class="bank-code">WIHBHKHHXXX</div>
+        <div class="status-tag blinking" id="beneficiary-status">Processing</div>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button id="downloadBtn">Download Receipt (PDF)</button>
+      <button class="secondary" id="helpBtn">Help / FAQ</button>
+    </div>
+
+    <p class="note">Note: The information shown here is for reference purposes only. For questions regarding this payment, contact your bank's customer support.</p>
+  </div>
+</div>
+
+<script>
+  // Səhifə yükləndikdə vizualizasiyanı göstər
+  document.addEventListener('DOMContentLoaded', function() {
+    // Debtor Bank - Sent (yaşıl)
+    const debtorStatus = document.getElementById('debtor-status');
+    debtorStatus.className = 'status-tag';
+    debtorStatus.style.background = '#dcfce7';
+    debtorStatus.style.color = '#166534';
+    
+    // Intermediary Bank - Accepted (yaşıl)
+    const intermediaryStatus = document.getElementById('intermediary-status');
+    intermediaryStatus.className = 'status-tag';
+    intermediaryStatus.style.background = '#dcfce7';
+    intermediaryStatus.style.color = '#166534';
+    
+    // Beneficiary Bank - Processing (mavi və yanıb-sönən)
+    const beneficiaryStatus = document.getElementById('beneficiary-status');
+    beneficiaryStatus.className = 'status-tag blinking';
+    beneficiaryStatus.style.background = '#3b82f6';
+    beneficiaryStatus.style.color = 'white';
+    
+    // Top status - Processing (mavi)
+    const topStatus = document.getElementById('topStatus');
+    topStatus.textContent = 'Processing';
+    topStatus.className = 'status processing';
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    const txt = document.getElementById('txRef').innerText;
+    navigator.clipboard.writeText(txt).then(()=>{
+      const old = this.innerText; this.innerText='Copied';
+      setTimeout(()=> this.innerText=old,1300);
+    }).catch(()=> alert('Copy failed'));
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', function(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let y = 20;
+    doc.setFontSize(12);
+    doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
+    doc.text(`Status: Processing`, 10, y); y+=10;
+    doc.text(`Amount: EUR 20,000,000.00`, 10, y); y+=10;
+    doc.text(`Date Received: 03-Dec-2025`, 10, y); y+=10;
+    doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
+    doc.text(`Sender Account: CH45 **** **** **** **** 2002`, 10, y); y+=10;
+    doc.text(`Beneficiary Account: 802- **** **** **** **** 0831`, 10, y); y+=10;
+    doc.text(`Reference / Purpose: Payment for Agreement No. TZFW-2025`, 10, y); y+=10;
+    doc.text(`SWIFT Info:`, 10, y); y+=10;
+    doc.text(`Sender BIC: CRAMCHGGXXX`, 10, y); y+=10;
+    doc.text(`Intermediary BIC: COBADEFFXXX`, 10, y); y+=10;
+    doc.text(`Beneficiary BIC: WIHBHKHHXXX`, 10, y);
+    doc.save('incoming_payment_receipt.pdf');
+  });
+
+  document.getElementById('helpBtn').addEventListener('click', function(){
+    alert("If you encounter any difficulties, you can contact us via info@verify-swift.com.");
+  });
+</script>
+</body>
+</html>
