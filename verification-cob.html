@@ -43,7 +43,7 @@
   /* Konnektor xətləri */
   .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
   
-  /* Yanıb-sönən effekt */
+  /* Yanıb-sönən effekt (artıq lazım deyil) */
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -161,14 +161,14 @@
         <div class="status-tag" id="intermediary-status">Accepted</div>
       </div>
       
-      <div class="connector-line" id="connector-2" style="background:#3b82f6;"></div>
+      <div class="connector-line" id="connector-2" style="background:#10b981;"></div>
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">WIHBHKHHXXX</div>
-        <div class="status-tag blinking" id="beneficiary-status">Processing</div>
+        <div class="status-tag" id="beneficiary-status">Completed</div>
       </div>
     </div>
 
@@ -196,16 +196,21 @@
     intermediaryStatus.style.background = '#dcfce7';
     intermediaryStatus.style.color = '#166534';
     
-    // Beneficiary Bank - Processing (mavi və yanıb-sönən)
+    // Beneficiary Bank - Completed (yaşıl və stabil)
     const beneficiaryStatus = document.getElementById('beneficiary-status');
-    beneficiaryStatus.className = 'status-tag blinking';
-    beneficiaryStatus.style.background = '#3b82f6';
-    beneficiaryStatus.style.color = 'white';
+    beneficiaryStatus.className = 'status-tag';
+    beneficiaryStatus.style.background = '#dcfce7';
+    beneficiaryStatus.style.color = '#166534';
+    beneficiaryStatus.textContent = 'Completed';
     
-    // Top status - Processing (mavi)
+    // Top status - Completed (yaşıl)
     const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Processing';
-    topStatus.className = 'status processing';
+    topStatus.textContent = 'Completed';
+    topStatus.className = 'status success';
+    
+    // Hər iki konnektor xəttini yaşıl et
+    document.getElementById('connector-1').style.background = '#10b981';
+    document.getElementById('connector-2').style.background = '#10b981';
   });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
@@ -222,7 +227,7 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Processing`, 10, y); y+=10;
+    doc.text(`Status: Completed`, 10, y); y+=10;
     doc.text(`Amount: EUR 20,000,000.00`, 10, y); y+=10;
     doc.text(`Date Received: 03-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
