@@ -121,21 +121,34 @@
       </div>
     </div>
 
+    <!-- SWIFT AXIŞ VİZUALİ -->
     <div class="flow-container">
-      <div class="flow-step debtor">
-        <div class="icon">🏦</div>
-        <div class="label">Debtor Bank (CRAMCHGGXXX)</div>
-        <div class="status"></div>
+      <!-- Debtor Bank -->
+      <div class="flow-step">
+        <div class="bank-icon">🏦</div>
+        <div class="bank-name">Debtor Bank</div>
+        <div class="bank-code">CRAMCHGGXXX</div>
+        <div class="status-tag" id="debtor-status">Sent</div>
       </div>
-      <div class="flow-step intermediary">
-        <div class="icon">➡️</div>
-        <div class="label">Intermediary Bank (COBADEFFXXX)</div>
-        <div class="status"></div>
+      
+      <div class="connector-line" id="connector-1" style="background:#10b981;"></div>
+      
+      <!-- Arrow/Intermediary -->
+      <div class="flow-step">
+        <div class="arrow-icon">➡️</div>
+        <div class="bank-name">Intermediary Bank</div>
+        <div class="bank-code">COBADEFFXXX</div>
+        <div class="status-tag" id="intermediary-status">Accepted</div>
       </div>
-      <div class="flow-step beneficiary">
-        <div class="icon">🏦</div>
-        <div class="label">Beneficiary Bank (WIHBHKHHXXX)</div>
-        <div class="status"></div>
+      
+      <div class="connector-line" id="connector-2" style="background:#3b82f6;"></div>
+      
+      <!-- Beneficiary Bank -->
+      <div class="flow-step">
+        <div class="bank-icon">🏦</div>
+        <div class="bank-name">Beneficiary Bank</div>
+        <div class="bank-code">WIHBHKHHXXX</div>
+        <div class="status-tag blinking" id="beneficiary-status">Processing</div>
       </div>
     </div>
 
@@ -219,6 +232,7 @@
 </script>
 </body>
 </html>
+
 
 
 
