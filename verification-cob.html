@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Incoming Payment — Customer View</title>
 <style>
-  :root{--bg:#f4f7fb;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6}
+  :root{--bg:#f4f7fb;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
   body{font-family:Inter,ui-sans-serif,system-ui,Arial,sans-serif;background:var(--bg);margin:0;padding:24px;color:#0f172a}
   .wrap{max-width:840px;margin:0 auto}
   .card{background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(12,40,80,0.06);padding:22px;margin-bottom:16px}
@@ -24,20 +24,40 @@
   .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
   .status.pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2)}
   .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
-  .beneficiary-pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2);}
+  .status.accepted{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
   .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px dashed #e6eefc}
   .copy button{background:transparent;color:var(--accent);padding:6px;border-radius:6px;border:1px solid rgba(11,107,255,0.12)}
   .note{font-size:13px;color:var(--muted);margin-top:8px}
   .swift-list{font-size:13px;color:#6b7280;margin-top:4px; line-height:1.5}
-  .flow-container{display:flex;align-items:center;justify-content:space-between;margin-top:30px}
-  .flow-step{text-align:center;flex:1;position:relative;cursor:pointer}
-  .flow-step .icon{width:50px;height:50px;background:#eef2f7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto;font-weight:bold;color:#0b6bff}
-  .flow-step .label{margin-top:6px;font-size:12px;color:#6b7280}
-  .flow-step .status{margin-top:4px;display:inline-block;padding:4px 8px;font-size:11px}
-  .flow-step::after{content:'';position:absolute;top:25px;right:-50%;height:2px;background:#d1d5db;width:100%;z-index:-1}
-  .flow-step:last-child::after{display:none}
-  @media (max-width:600px){.flow-container{flex-direction:column}.flow-step::after{display:none;margin:0}}
+  
+  /* Flow Container */
+  .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
+  .flow-step{text-align:center;position:relative;min-width:180px}
+  .flow-step .bank-icon{width:56px;height:56px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;font-weight:bold;box-shadow:0 4px 12px rgba(59,130,246,0.3)}
+  .flow-step .arrow-icon{width:40px;height:40px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#64748b;font-size:20px}
+  .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:600}
+  .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
+  .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+  
+  /* Konnektor xətləri */
+  .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
+  
+  /* Yanıb-sönən effekt */
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .blinking {
+    animation: blink 1s infinite;
+  }
+  
+  @media (max-width:768px){
+    .flow-container{flex-direction:column;gap:30px}
+    .connector-line{display:none}
+    .flow-step{min-width:100%}
+  }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -162,41 +182,31 @@
 </div>
 
 <script>
-  const statuses = {
-    debtor: 'pending',
-    intermediary: 'Accepted/Processing',
-    beneficiary: 'pending' // Top status
-  };
-
-  const beneficiaryFlowStatus = ''; // Flow-step müstəqil
-
-  function displayText(status){
-    if(status === 'success') return 'Received';
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  }
-
-  function updateStatuses(){
-    // Debtor və Intermediary
-    const debtor = document.querySelector('.flow-step.debtor .status');
-    debtor.innerText = displayText(statuses.debtor);
-    debtor.className = `status ${statuses.debtor}`;
-
-    const intermediary = document.querySelector('.flow-step.intermediary .status');
-    intermediary.innerText = displayText(statuses.intermediary);
-    intermediary.className = `status ${statuses.intermediary}`;
-
-    // Beneficiary Flow-step müstəqil Pending
-    const beneficiary = document.querySelector('.flow-step.beneficiary .status');
-    beneficiary.innerText = displayText(beneficiaryFlowStatus);
-    beneficiary.className = 'status beneficiary-pending';
-
-    // TopStatus üçün ayrıca
+  // Səhifə yükləndikdə vizualizasiyanı göstər
+  document.addEventListener('DOMContentLoaded', function() {
+    // Debtor Bank - Sent (yaşıl)
+    const debtorStatus = document.getElementById('debtor-status');
+    debtorStatus.className = 'status-tag';
+    debtorStatus.style.background = '#dcfce7';
+    debtorStatus.style.color = '#166534';
+    
+    // Intermediary Bank - Accepted (yaşıl)
+    const intermediaryStatus = document.getElementById('intermediary-status');
+    intermediaryStatus.className = 'status-tag';
+    intermediaryStatus.style.background = '#dcfce7';
+    intermediaryStatus.style.color = '#166534';
+    
+    // Beneficiary Bank - Processing (mavi və yanıb-sönən)
+    const beneficiaryStatus = document.getElementById('beneficiary-status');
+    beneficiaryStatus.className = 'status-tag blinking';
+    beneficiaryStatus.style.background = '#3b82f6';
+    beneficiaryStatus.style.color = 'white';
+    
+    // Top status - Processing (mavi)
     const topStatus = document.getElementById('topStatus');
-    topStatus.innerText = displayText(statuses.beneficiary);
-    topStatus.className = 'status pending';
-  }
-
-  updateStatuses();
+    topStatus.textContent = 'Processing';
+    topStatus.className = 'status processing';
+  });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
     const txt = document.getElementById('txRef').innerText;
@@ -212,7 +222,7 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: ${displayText(statuses.beneficiary)}`, 10, y); y+=10;
+    doc.text(`Status: Processing`, 10, y); y+=10;
     doc.text(`Amount: EUR 20,000,000.00`, 10, y); y+=10;
     doc.text(`Date Received: 03-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
@@ -232,9 +242,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
