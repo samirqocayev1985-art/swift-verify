@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Incoming Payment — Customer View</title>
 <style>
-  :root{--bg:#f4f7fb;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6}
+  :root{--bg:#f4f7fb;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--cancelled:#dc2626}
   body{font-family:Inter,ui-sans-serif,system-ui,Arial,sans-serif;background:var(--bg);margin:0;padding:24px;color:#0f172a}
   .wrap{max-width:840px;margin:0 auto}
   .card{background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(12,40,80,0.06);padding:22px;margin-bottom:16px}
@@ -24,6 +24,7 @@
   .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
   .status.pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2)}
   .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
+  .status.cancelled{background:#fef2f2;color:var(--cancelled);border:1px solid rgba(220,38,38,0.2)}
   .beneficiary-pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2);}
   .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px dashed #e6eefc}
@@ -150,15 +151,16 @@
 
 <script>
   const statuses = {
-    debtor: 'pending',
-    intermediary: 'Accepted/Processing',
-    beneficiary: 'pending' // Top status
+    debtor: 'Cancelled',
+    intermediary: 'Cancelled',
+    beneficiary: 'Cancelled' // Top status da ləğv edildi
   };
 
-  const beneficiaryFlowStatus = ''; // Flow-step müstəqil
+  const beneficiaryFlowStatus = 'Cancelled'; // Flow-step üçün ləğv edildi
 
   function displayText(status){
     if(status === 'success') return 'Received';
+    if(status === 'Cancelled') return 'Cancelled';
     return status.charAt(0).toUpperCase() + status.slice(1);
   }
 
@@ -166,21 +168,21 @@
     // Debtor və Intermediary
     const debtor = document.querySelector('.flow-step.debtor .status');
     debtor.innerText = displayText(statuses.debtor);
-    debtor.className = `status ${statuses.debtor}`;
+    debtor.className = `status ${statuses.debtor.toLowerCase()}`;
 
     const intermediary = document.querySelector('.flow-step.intermediary .status');
     intermediary.innerText = displayText(statuses.intermediary);
-    intermediary.className = `status ${statuses.intermediary}`;
+    intermediary.className = `status ${statuses.intermediary.toLowerCase()}`;
 
-    // Beneficiary Flow-step müstəqil Pending
+    // Beneficiary Flow-step
     const beneficiary = document.querySelector('.flow-step.beneficiary .status');
     beneficiary.innerText = displayText(beneficiaryFlowStatus);
-    beneficiary.className = 'status beneficiary-pending';
+    beneficiary.className = 'status cancelled';
 
     // TopStatus üçün ayrıca
     const topStatus = document.getElementById('topStatus');
     topStatus.innerText = displayText(statuses.beneficiary);
-    topStatus.className = 'status pending';
+    topStatus.className = 'status cancelled';
   }
 
   updateStatuses();
@@ -219,6 +221,3 @@
 </script>
 </body>
 </html>
-
-
-
