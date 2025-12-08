@@ -22,7 +22,7 @@
   button.secondary{background:#eef2ff;color:var(--accent);border:1px solid rgba(11,107,255,0.12)}
   .status{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700}
   .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
-  .status.pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2)}
+  .status.pending{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
   .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
   .status.accepted{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
   .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
@@ -46,7 +46,7 @@
   /* Yanıb-sönən effekt */
   @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.3; }
   }
   
   .blinking {
@@ -64,7 +64,7 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Incoming Payment</h1>
+    <h1>Accepted</h1>
     <p class="lead">Below are the key details of funds received. This view is for the customer only and sensitive account details are partially masked.</p>
     <br>
     <h1>Uetr code</h1>
@@ -151,17 +151,17 @@
         <div class="status-tag" id="debtor-status">Pending</div>
       </div>
       
-      <div class="connector-line" id="connector-1" style="background:#fbbf24;"></div>
+      <div class="connector-line" id="connector-1" style="background:#16a34a;"></div>
       
       <!-- Arrow/Intermediary -->
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
-        <div class="status-tag" id="intermediary-status">Accepted</div>
+        <div class="status-tag blinking" id="intermediary-status">Accepted</div>
       </div>
       
-      <div class="connector-line" id="connector-2" style="background:#f1f5f9;"></div>
+      <div class="connector-line blinking" id="connector-2" style="background:#16a34a;"></div> <!-- Yanıb-sönən yaşıl -->
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
@@ -184,21 +184,21 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Top status - Pending (sarı)
+    // Top status - Accepted (YAŞIL oldu)
     const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Pending';
-    topStatus.className = 'status pending';
+    topStatus.textContent = 'Accepted';
+    topStatus.className = 'status accepted';
     
-    // Debtor Bank - Pending (sarı və yanıb-sönən)
+    // Debtor Bank - Pending (YAŞIL, yanıb-sönən DEYİL)
     const debtorStatus = document.getElementById('debtor-status');
-    debtorStatus.className = 'status-tag blinking';
-    debtorStatus.style.background = '#fef3c7';
-    debtorStatus.style.color = '#d97706';
+    debtorStatus.className = 'status-tag';
+    debtorStatus.style.background = '#dcfce7';
+    debtorStatus.style.color = '#166534';
     debtorStatus.textContent = 'Pending';
     
-    // Intermediary Bank - Accepted (yaşıl)
+    // Intermediary Bank - Accepted (yaşıl, yanıb-sönən)
     const intermediaryStatus = document.getElementById('intermediary-status');
-    intermediaryStatus.className = 'status-tag';
+    intermediaryStatus.className = 'status-tag blinking';
     intermediaryStatus.style.background = '#dcfce7';
     intermediaryStatus.style.color = '#166534';
     intermediaryStatus.textContent = 'Accepted';
@@ -210,12 +210,13 @@
     beneficiaryStatus.style.border = 'none';
     
     // Konnektor xətləri:
-    // Birinci xətt - sarı (Pending)
-    document.getElementById('connector-1').style.background = '#fbbf24';
-    document.getElementById('connector-1').classList.add('blinking');
+    // Birinci xətt - YAŞIL (yanıb-sönən DEYİL)
+    document.getElementById('connector-1').style.background = '#16a34a';
+    document.getElementById('connector-1').classList.remove('blinking');
     
-    // İkinci xətt - boz (aktiv deyil)
-    document.getElementById('connector-2').style.background = '#f1f5f9';
+    // İkinci xətt - YAŞIL (yanıb-sönən)
+    document.getElementById('connector-2').style.background = '#16a34a';
+    document.getElementById('connector-2').classList.add('blinking');
   });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
@@ -232,7 +233,7 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Pending`, 10, y); y+=10;
+    doc.text(`Status: Accepted`, 10, y); y+=10; /* Pending -> Accepted */
     doc.text(`Amount: EUR 3,000,000.00`, 10, y); y+=10;
     doc.text(`Date Received: 10-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
