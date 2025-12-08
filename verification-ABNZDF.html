@@ -22,9 +22,10 @@
   button.secondary{background:#eef2ff;color:var(--accent);border:1px solid rgba(11,107,255,0.12)}
   .status{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700}
   .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
-  .status.pending{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
+  .status.pending{background:#fee2e2;color:#dc2626;border:1px solid rgba(220,38,38,0.2)} /* QIRMIZI oldu */
   .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
-  .status.accepted{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
+  .status.accepted{background:#fee2e2;color:#dc2626;border:1px solid rgba(220,38,38,0.2)} /* QIRMIZI oldu */
+  .status.cancelled{background:#fee2e2;color:#dc2626;border:1px solid rgba(220,38,38,0.2)} /* QIRMIZI oldu */
   .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px dashed #e6eefc}
   .copy button{background:transparent;color:var(--accent);padding:6px;border-radius:6px;border:1px solid rgba(11,107,255,0.12)}
@@ -64,7 +65,7 @@
 <body>
 <div class="wrap">
   <div class="card">
-    <h1>Accepted</h1>
+    <h1>Cancelled</h1> <!-- "Accepted" -> "Cancelled" -->
     <p class="lead">Below are the key details of funds received. This view is for the customer only and sensitive account details are partially masked.</p>
     <br>
     <h1>Uetr code</h1>
@@ -148,27 +149,27 @@
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Debtor Bank</div>
         <div class="bank-code">CRAMCHGGXXX</div>
-        <div class="status-tag" id="debtor-status">Pending</div>
+        <div class="status-tag" id="debtor-status">Accepted</div>
       </div>
       
-      <div class="connector-line" id="connector-1" style="background:#16a34a;"></div>
+      <div class="connector-line" id="connector-1" style="background:#dc2626;"></div> <!-- QIRMIZI -->
       
       <!-- Arrow/Intermediary -->
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
-        <div class="status-tag blinking" id="intermediary-status">Accepted</div>
+        <div class="status-tag" id="intermediary-status">Accepted</div>
       </div>
       
-      <div class="connector-line blinking" id="connector-2" style="background:#16a34a;"></div> <!-- Yanıb-sönən yaşıl -->
+      <div class="connector-line" id="connector-2" style="background:#dc2626;"></div> <!-- QIRMIZI -->
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">ABDIAEADXXX</div>
-        <div class="status-tag" id="beneficiary-status"></div>
+        <div class="status-tag" id="beneficiary-status">Cancelled</div>
       </div>
     </div>
 
@@ -184,39 +185,40 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Top status - Accepted (YAŞIL oldu)
+    // Top status - Cancelled (QIRMIZI oldu)
     const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Accepted';
-    topStatus.className = 'status accepted';
+    topStatus.textContent = 'Cancelled';
+    topStatus.className = 'status cancelled';
     
-    // Debtor Bank - Pending (YAŞIL, yanıb-sönən DEYİL)
+    // Debtor Bank - Accepted (QIRMIZI)
     const debtorStatus = document.getElementById('debtor-status');
     debtorStatus.className = 'status-tag';
-    debtorStatus.style.background = '#dcfce7';
-    debtorStatus.style.color = '#166534';
-    debtorStatus.textContent = 'Pending';
+    debtorStatus.style.background = '#fee2e2';
+    debtorStatus.style.color = '#dc2626';
+    debtorStatus.textContent = 'Accepted';
     
-    // Intermediary Bank - Accepted (yaşıl, yanıb-sönən)
+    // Intermediary Bank - Accepted (QIRMIZI)
     const intermediaryStatus = document.getElementById('intermediary-status');
-    intermediaryStatus.className = 'status-tag blinking';
-    intermediaryStatus.style.background = '#dcfce7';
-    intermediaryStatus.style.color = '#166534';
+    intermediaryStatus.className = 'status-tag';
+    intermediaryStatus.style.background = '#fee2e2';
+    intermediaryStatus.style.color = '#dc2626';
     intermediaryStatus.textContent = 'Accepted';
     
-    // Beneficiary Bank - Boş (heç bir mətn)
+    // Beneficiary Bank - Cancelled (QIRMIZI)
     const beneficiaryStatus = document.getElementById('beneficiary-status');
-    beneficiaryStatus.textContent = '';
-    beneficiaryStatus.style.background = 'transparent';
-    beneficiaryStatus.style.border = 'none';
+    beneficiaryStatus.className = 'status-tag';
+    beneficiaryStatus.style.background = '#fee2e2';
+    beneficiaryStatus.style.color = '#dc2626';
+    beneficiaryStatus.textContent = 'Cancelled';
     
     // Konnektor xətləri:
-    // Birinci xətt - YAŞIL (yanıb-sönən DEYİL)
-    document.getElementById('connector-1').style.background = '#16a34a';
+    // Birinci xətt - QIRMIZI
+    document.getElementById('connector-1').style.background = '#dc2626';
     document.getElementById('connector-1').classList.remove('blinking');
     
-    // İkinci xətt - YAŞIL (yanıb-sönən)
-    document.getElementById('connector-2').style.background = '#16a34a';
-    document.getElementById('connector-2').classList.add('blinking');
+    // İkinci xətt - QIRMIZI
+    document.getElementById('connector-2').style.background = '#dc2626';
+    document.getElementById('connector-2').classList.remove('blinking');
   });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
@@ -233,13 +235,13 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Accepted`, 10, y); y+=10; /* Pending -> Accepted */
+    doc.text(`Status: Cancelled`, 10, y); y+=10; /* Accepted -> Cancelled */
     doc.text(`Amount: EUR 3,000,000.00`, 10, y); y+=10;
     doc.text(`Date Received: 10-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
     doc.text(`Sender Account: CH45 **** **** **** **** 2002`, 10, y); y+=10;
     doc.text(`Beneficiary Account: AE91** **** **** **** 3868`, 10, y); y+=10;
-    doc.text(`Reference / Purpose: Payment for Investment  Agreement No. 577-97`, 10, y); y+=10;
+    doc.text(`Reference / Purpose: Payment for Investment Agreement No. 577-97`, 10, y); y+=10;
     doc.text(`SWIFT Info:`, 10, y); y+=10;
     doc.text(`Sender BIC: CRAMCHGGXXX`, 10, y); y+=10;
     doc.text(`Intermediary BIC: COBADEFFXXX`, 10, y); y+=10;
