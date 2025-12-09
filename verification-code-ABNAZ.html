@@ -148,10 +148,10 @@
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Debtor Bank</div>
         <div class="bank-code">CRAMCHGGXXX</div>
-        <div class="status-tag" id="debtor-status">Pending</div>
+        <div class="status-tag" id="debtor-status">Sent</div>
       </div>
       
-      <div class="connector-line" id="connector-1" style="background:#fbbf24;"></div>
+      <div class="connector-line" id="connector-1" style="background:#10b981;"></div>
       
       <!-- Arrow/Intermediary -->
       <div class="flow-step">
@@ -161,14 +161,14 @@
         <div class="status-tag" id="intermediary-status">Accepted</div>
       </div>
       
-      <div class="connector-line" id="connector-2" style="background:#f1f5f9;"></div>
+      <div class="connector-line" id="connector-2" style="background:#10b981;"></div>
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">DHBKHKHHXXX</div>
-        <div class="status-tag" id="beneficiary-status"></div>
+        <div class="status-tag" id="beneficiary-status">Completed</div>
       </div>
     </div>
 
@@ -184,17 +184,17 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Top status - Pending (sarı)
+    // Top status - Completed (yaşıl)
     const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Pending';
-    topStatus.className = 'status pending';
+    topStatus.textContent = 'Completed';
+    topStatus.className = 'status success';
     
-    // Debtor Bank - Pending (sarı və yanıb-sönən)
+    // Debtor Bank - Sent (yaşıl)
     const debtorStatus = document.getElementById('debtor-status');
-    debtorStatus.className = 'status-tag blinking';
-    debtorStatus.style.background = '#fef3c7';
-    debtorStatus.style.color = '#d97706';
-    debtorStatus.textContent = 'Pending';
+    debtorStatus.className = 'status-tag';
+    debtorStatus.style.background = '#dcfce7';
+    debtorStatus.style.color = '#166534';
+    debtorStatus.textContent = 'Sent';
     
     // Intermediary Bank - Accepted (yaşıl)
     const intermediaryStatus = document.getElementById('intermediary-status');
@@ -203,19 +203,19 @@
     intermediaryStatus.style.color = '#166534';
     intermediaryStatus.textContent = 'Accepted';
     
-    // Beneficiary Bank - Boş (heç bir mətn)
+    // Beneficiary Bank - Completed (yaşıl)
     const beneficiaryStatus = document.getElementById('beneficiary-status');
-    beneficiaryStatus.textContent = '';
-    beneficiaryStatus.style.background = 'transparent';
-    beneficiaryStatus.style.border = 'none';
+    beneficiaryStatus.className = 'status-tag';
+    beneficiaryStatus.style.background = '#dcfce7';
+    beneficiaryStatus.style.color = '#166534';
+    beneficiaryStatus.textContent = 'Completed';
     
     // Konnektor xətləri:
-    // Birinci xətt - sarı (Pending)
-    document.getElementById('connector-1').style.background = '#fbbf24';
-    document.getElementById('connector-1').classList.add('blinking');
+    // Birinci xətt - yaşıl
+    document.getElementById('connector-1').style.background = '#10b981';
     
-    // İkinci xətt - boz (aktiv deyil)
-    document.getElementById('connector-2').style.background = '#f1f5f9';
+    // İkinci xətt - yaşıl
+    document.getElementById('connector-2').style.background = '#10b981';
   });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
@@ -232,7 +232,7 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Pending`, 10, y); y+=10;
+    doc.text(`Status: Completed`, 10, y); y+=10;
     doc.text(`Amount: EUR 20,000,000.00`, 10, y); y+=10;
     doc.text(`Date Received: 09-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
