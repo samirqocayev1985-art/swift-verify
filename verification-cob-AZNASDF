@@ -115,7 +115,7 @@
         <div class="small">(Full IBAN stored securely in bank)</div>
         <br><br><br><br>
         <div class="label">Beneficiary Account</div>
-        <div class="value">802- **** **** **** **** 0831</div>
+        <div class="value">0690 **** **** **** **** 0300</div>
         <div class="small">(Full IBAN stored securely in bank)</div>
       </div>
     </div>
@@ -125,18 +125,18 @@
     <div class="row">
       <div class="col">
         <div class="label">Reference / Purpose</div>
-        <div class="value small">Payment for Agreement No. TZFW-2025</div>
+        <div class="value small">Payment for Agreement No. 2025/12/03</div>
       </div>
       <div class="col">
         <div class="label">Transaction Reference (ISO 20022)</div>
         <div class="copy">
-          <div class="small" id="txRef">COBA300525CH59279</div>
+          <div class="small" id="txRef">COBA780533CH12564</div>
           <button id="copyBtn">Copy</button>
         </div>
         <div class="swift-list">
           Sender BIC: CRAMCHGGXXX<br>
           Intermediary BIC: COBADEFFXXX<br>
-          Beneficiary BIC: WIHBHKHHXXX<br>
+          Beneficiary BIC: CENAIDJAXXX<br>
         </div>
       </div>
     </div>
@@ -167,7 +167,7 @@
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
-        <div class="bank-code">WIHBHKHHXXX</div>
+        <div class="bank-code">CENAIDJAXXX</div>
         <div class="status-tag" id="beneficiary-status">Completed</div>
       </div>
     </div>
@@ -184,19 +184,19 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Debtor Bank - Sent (yaşıl)
+    // Debtor Bank - Pending (yaşıl)
     const debtorStatus = document.getElementById('debtor-status');
     debtorStatus.className = 'status-tag';
     debtorStatus.style.background = '#dcfce7';
     debtorStatus.style.color = '#166534';
     
-    // Intermediary Bank - Accepted (yaşıl)
+    // Intermediary Bank - Accepted/Processing (yaşıl)
     const intermediaryStatus = document.getElementById('intermediary-status');
     intermediaryStatus.className = 'status-tag';
     intermediaryStatus.style.background = '#dcfce7';
     intermediaryStatus.style.color = '#166534';
     
-    // Beneficiary Bank - Completed (yaşıl və stabil)
+    // Beneficiary Bank -  (yaşıl və stabil)
     const beneficiaryStatus = document.getElementById('beneficiary-status');
     beneficiaryStatus.className = 'status-tag';
     beneficiaryStatus.style.background = '#dcfce7';
@@ -227,17 +227,17 @@
     let y = 20;
     doc.setFontSize(12);
     doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Completed`, 10, y); y+=10;
+    doc.text(`Status: Pending`, 10, y); y+=10;
     doc.text(`Amount: EUR 20,000,000.00`, 10, y); y+=10;
-    doc.text(`Date Received: 03-Dec-2025`, 10, y); y+=10;
+    doc.text(`Date Received: 12-Dec-2025`, 10, y); y+=10;
     doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
     doc.text(`Sender Account: CH45 **** **** **** **** 2002`, 10, y); y+=10;
-    doc.text(`Beneficiary Account: 802- **** **** **** **** 0831`, 10, y); y+=10;
+    doc.text(`Beneficiary Account: 0690 **** **** **** **** 0300`, 10, y); y+=10;
     doc.text(`Reference / Purpose: Payment for Agreement No. TZFW-2025`, 10, y); y+=10;
     doc.text(`SWIFT Info:`, 10, y); y+=10;
     doc.text(`Sender BIC: CRAMCHGGXXX`, 10, y); y+=10;
     doc.text(`Intermediary BIC: COBADEFFXXX`, 10, y); y+=10;
-    doc.text(`Beneficiary BIC: WIHBHKHHXXX`, 10, y);
+    doc.text(`Beneficiary BIC: CENAIDJAXXX`, 10, y);
     doc.save('incoming_payment_receipt.pdf');
   });
 
