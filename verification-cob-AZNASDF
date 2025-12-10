@@ -43,7 +43,7 @@
   /* Konnektor xətləri */
   .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
   
-  /* Yanıb-sönən effekt (artıq lazım deyil) */
+  /* Yanıb-sönən effekt */
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -148,27 +148,27 @@
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Debtor Bank</div>
         <div class="bank-code">CRAMCHGGXXX</div>
-        <div class="status-tag" id="debtor-status">Sent</div>
+        <div class="status-tag" id="debtor-status">Pending</div>
       </div>
       
-      <div class="connector-line" id="connector-1" style="background:#10b981;"></div>
+      <div class="connector-line" id="connector-1" style="background:#f59e0b;"></div>
       
       <!-- Arrow/Intermediary -->
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
-        <div class="status-tag" id="intermediary-status">Accepted</div>
+        <div class="status-tag" id="intermediary-status">Accepted/Processing</div>
       </div>
       
-      <div class="connector-line" id="connector-2" style="background:#10b981;"></div>
+      <div class="connector-line" id="connector-2" style="background:#3b82f6;"></div>
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">CENAIDJAXXX</div>
-        <div class="status-tag" id="beneficiary-status">Completed</div>
+        <div class="status-tag" id="beneficiary-status">—</div>
       </div>
     </div>
 
@@ -184,40 +184,43 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Debtor Bank - Pending (yaşıl)
+    // Debtor Bank - Pending (sarı və yanıb-sönən)
     const debtorStatus = document.getElementById('debtor-status');
-    debtorStatus.className = 'status-tag';
-    debtorStatus.style.background = '#dcfce7';
-    debtorStatus.style.color = '#166534';
+    debtorStatus.className = 'status-tag blinking';
+    debtorStatus.style.background = '#fef3c7';
+    debtorStatus.style.color = '#d97706';
+    debtorStatus.style.border = '1px solid rgba(245, 158, 11, 0.3)';
     
-    // Intermediary Bank - Accepted/Processing (yaşıl)
+    // Intermediary Bank - Accepted/Processing (göy və sabit)
     const intermediaryStatus = document.getElementById('intermediary-status');
     intermediaryStatus.className = 'status-tag';
-    intermediaryStatus.style.background = '#dcfce7';
-    intermediaryStatus.style.color = '#166534';
+    intermediaryStatus.style.background = '#dbeafe';
+    intermediaryStatus.style.color = '#1d4ed8';
+    intermediaryStatus.style.border = '1px solid rgba(59, 130, 246, 0.3)';
     
-    // Beneficiary Bank -  (yaşıl və stabil)
+    // Beneficiary Bank - Boş (açıq rəngli, heç bir status)
     const beneficiaryStatus = document.getElementById('beneficiary-status');
     beneficiaryStatus.className = 'status-tag';
-    beneficiaryStatus.style.background = '#dcfce7';
-    beneficiaryStatus.style.color = '#166534';
-    beneficiaryStatus.textContent = 'Completed';
+    beneficiaryStatus.style.background = '#f8fafc';
+    beneficiaryStatus.style.color = '#94a3b8';
+    beneficiaryStatus.style.border = '1px dashed #cbd5e1';
+    beneficiaryStatus.textContent = '—';
     
-    // Top status - Completed (yaşıl)
+    // Top status - Pending (sarı)
     const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Completed';
-    topStatus.className = 'status success';
+    topStatus.textContent = 'Pending';
+    topStatus.className = 'status pending';
     
-    // Hər iki konnektor xəttini yaşıl et
-    document.getElementById('connector-1').style.background = '#10b981';
-    document.getElementById('connector-2').style.background = '#10b981';
+    // Xətləri rənglər
+    document.getElementById('connector-1').style.background = '#f59e0b';
+    document.getElementById('connector-2').style.background = '#3b82f6';
   });
 
   document.getElementById('copyBtn').addEventListener('click', function(){
     const txt = document.getElementById('txRef').innerText;
     navigator.clipboard.writeText(txt).then(()=>{
       const old = this.innerText; this.innerText='Copied';
-      setTimeout(()=> this.innerText=old,1300);
+      setTimeout(() => this.innerText=old, 1300);
     }).catch(()=> alert('Copy failed'));
   });
 
