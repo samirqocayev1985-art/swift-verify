@@ -21,16 +21,13 @@
   button{background:var(--accent);border:none;color:#fff;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
   button.secondary{background:#eef2ff;color:var(--accent);border:1px solid rgba(11,107,255,0.12)}
   .status{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:700}
-  .status.success{background:#ecfdf5;color:var(--success);border:1px solid rgba(6,95,70,0.08)}
-  .status.pending{background:#fff7ed;color:var(--pending);border:1px solid rgba(245,158,11,0.2)}
-  .status.processing{background:#e0f2fe;color:var(--processing);border:1px solid rgba(59,130,246,0.2)}
-  .status.accepted{background:#dcfce7;color:#166534;border:1px solid rgba(22,101,52,0.1)}
+  .status.success{background:#ecfdf5;color:#166534;border:1px solid rgba(22,101,52,0.1)}
   .muted-line{height:1px;background:#eef2f7;margin:16px -22px}
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px dashed #e6eefc}
   .copy button{background:transparent;color:var(--accent);padding:6px;border-radius:6px;border:1px solid rgba(11,107,255,0.12)}
   .note{font-size:13px;color:var(--muted);margin-top:8px}
   .swift-list{font-size:13px;color:#6b7280;margin-top:4px; line-height:1.5}
-  
+
   /* Flow Container */
   .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
   .flow-step{text-align:center;position:relative;min-width:180px}
@@ -39,34 +36,26 @@
   .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:600}
   .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
   .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
-  
-  /* Konnektor xətləri */
+
   .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
-  
-  /* Yanıb-sönən effekt */
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-  
-  .blinking {
-    animation: blink 1s infinite;
-  }
-  
+
   @media (max-width:768px){
     .flow-container{flex-direction:column;gap:30px}
     .connector-line{display:none}
     .flow-step{min-width:100%}
   }
 </style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
 <div class="wrap">
   <div class="card">
     <h1>Incoming Payment</h1>
-    <p class="lead">Below are the key details of funds received. This view is for the customer only and sensitive account details are partially masked.</p>
+    <p class="lead">Below are the key details of funds received.</p>
     <br>
+
     <h1>Uetr code</h1>
     <p class="lead">c04ac3b1-4a33-42ef-b0e3-854813f25fff</p>
 
@@ -75,10 +64,12 @@
         <div class="label">Status</div>
         <div class="value"><span class="status" id="topStatus"></span></div>
       </div>
+
       <div class="col">19,800,090.00
         <div class="label">Amount</div>
         <div class="value amount">EUR </div>
       </div>
+
       <div class="col">
         <div class="label">Sent date:</div>
         <div class="value">10-Dec-2025</div>
@@ -93,30 +84,31 @@
 
     <div class="row">
       <div class="col">
-        <div class="label">Ordering Beneficiary / Ordering Party</div>
+        <div class="label">Ordering Beneficiary</div>
         <div class="value">MMG Capital Limited</div>
-        <div class="small"></div>
         <br>
-        <div class="label">Sender / Ordering Party</div>
+
+        <div class="label">Sender</div>
         <div class="value">Banque Cramer et Cie SA</div>
         <div class="small">Zurich, Switzerland</div>
         <br>
-        <div class="label">Beneficiary Customer / Ordering Party</div>
+
+        <div class="label">Beneficiary Customer</div>
         <div class="value">Megah Mineral Persada</div>
-        <div class="small">Komplek Duta Harapan Indah Blok, N No.45. Kapuk Muara, Penjaringan, Jakarta, Indonesia</div>
+        <div class="small">Jakarta, Indonesia</div>
         <br>
-        <div class="label">Bank reciever / Ordering Party</div>
-          <div class="value">Bank Central Asia (BCA)</div>
-        <div class="small">J.Muara Karang Timur, Blok B VII No. 116-117 Jakarta Utara, DKI Jakarta, 1450, Indonesia</div>
+
+        <div class="label">Bank receiver</div>
+        <div class="value">Bank Central Asia (BCA)</div>
       </div>
+
       <div class="col">
         <div class="label">Sender Account</div>
         <div class="value">CH45 **** **** **** **** 2002</div>
-        <div class="small">(Full IBAN stored securely in bank)</div>
         <br><br><br><br>
+
         <div class="label">Beneficiary Account</div>
         <div class="value">0690 **** **** **** **** 0300</div>
-        <div class="small">(Full IBAN stored securely in bank)</div>
       </div>
     </div>
 
@@ -127,12 +119,14 @@
         <div class="label">Reference / Purpose</div>
         <div class="value small">Payment for Agreement No. 2025/12/03</div>
       </div>
+
       <div class="col">
-        <div class="label">Transaction Reference (ISO 20022)</div>
+        <div class="label">Transaction Reference</div>
         <div class="copy">
           <div class="small" id="txRef">COBA780533CH12564</div>
           <button id="copyBtn">Copy</button>
         </div>
+
         <div class="swift-list">
           Sender BIC: CRAMCHGGXXX<br>
           Intermediary BIC: COBADEFFXXX<br>
@@ -141,34 +135,35 @@
       </div>
     </div>
 
-    <!-- SWIFT AXIŞ VİZUALİ -->
+    <!-- SWIFT FLOW -->
     <div class="flow-container">
+
       <!-- Debtor Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Debtor Bank</div>
         <div class="bank-code">CRAMCHGGXXX</div>
-        <div class="status-tag" id="debtor-status">Pending</div>
+        <div class="status-tag" id="debtor-status">Sent</div>
       </div>
-      
-      <div class="connector-line" id="connector-1" style="background:#f59e0b;"></div>
-      
-      <!-- Arrow/Intermediary -->
+
+      <div class="connector-line" id="connector-1"></div>
+
+      <!-- Intermediary Bank -->
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
-        <div class="status-tag" id="intermediary-status">Accepted/Processing</div>
+        <div class="status-tag" id="intermediary-status">Accepted</div>
       </div>
-      
-      <div class="connector-line" id="connector-2" style="background:#3b82f6;"></div>
-      
+
+      <div class="connector-line" id="connector-2"></div>
+
       <!-- Beneficiary Bank -->
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">CENAIDJAXXX</div>
-        <div class="status-tag" id="beneficiary-status">—</div>
+        <div class="status-tag" id="beneficiary-status">Completed</div>
       </div>
     </div>
 
@@ -177,76 +172,72 @@
       <button class="secondary" id="helpBtn">Help / FAQ</button>
     </div>
 
-    <p class="note">Note: The information shown here is for reference purposes only. For questions regarding this payment, contact your bank's customer support.</p>
+    <p class="note">Note: For questions regarding this payment, contact your bank's support.</p>
   </div>
 </div>
 
 <script>
-  // Səhifə yükləndikdə vizualizasiyanı göstər
-  document.addEventListener('DOMContentLoaded', function() {
-    // Debtor Bank - Pending (sarı və yanıb-sönən)
-    const debtorStatus = document.getElementById('debtor-status');
-    debtorStatus.className = 'status-tag blinking';
-    debtorStatus.style.background = '#fef3c7';
-    debtorStatus.style.color = '#d97706';
-    debtorStatus.style.border = '1px solid rgba(245, 158, 11, 0.3)';
-    
-    // Intermediary Bank - Accepted/Processing (göy və sabit)
-    const intermediaryStatus = document.getElementById('intermediary-status');
-    intermediaryStatus.className = 'status-tag';
-    intermediaryStatus.style.background = '#dbeafe';
-    intermediaryStatus.style.color = '#1d4ed8';
-    intermediaryStatus.style.border = '1px solid rgba(59, 130, 246, 0.3)';
-    
-    // Beneficiary Bank - Boş (açıq rəngli, heç bir status)
-    const beneficiaryStatus = document.getElementById('beneficiary-status');
-    beneficiaryStatus.className = 'status-tag';
-    beneficiaryStatus.style.background = '#f8fafc';
-    beneficiaryStatus.style.color = '#94a3b8';
-    beneficiaryStatus.style.border = '1px dashed #cbd5e1';
-    beneficiaryStatus.textContent = '—';
-    
-    // Top status - Pending (sarı)
-    const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Pending';
-    topStatus.className = 'status pending';
-    
-    // Xətləri rənglər
-    document.getElementById('connector-1').style.background = '#f59e0b';
-    document.getElementById('connector-2').style.background = '#3b82f6';
-  });
+document.addEventListener('DOMContentLoaded', function() {
 
-  document.getElementById('copyBtn').addEventListener('click', function(){
-    const txt = document.getElementById('txRef').innerText;
-    navigator.clipboard.writeText(txt).then(()=>{
-      const old = this.innerText; this.innerText='Copied';
-      setTimeout(() => this.innerText=old, 1300);
-    }).catch(()=> alert('Copy failed'));
-  });
+  /* Debtor Bank → Sent (green) */
+  const debtorStatus = document.getElementById('debtor-status');
+  debtorStatus.textContent = "Sent";
+  debtorStatus.style.background = '#dcfce7';
+  debtorStatus.style.color = '#166534';
+  debtorStatus.style.border = '1px solid rgba(22,101,52,0.2)';
 
-  document.getElementById('downloadBtn').addEventListener('click', function(){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    let y = 20;
-    doc.setFontSize(12);
-    doc.text(`Transaction Reference (ISO 20022): ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-    doc.text(`Status: Pending`, 10, y); y+=10;
-    doc.text(`Amount: EUR 19,800,090.00`, 10, y); y+=10;
-    doc.text(`Date Received: 12-Dec-2025`, 10, y); y+=10;
-    doc.text(`Sender / Ordering Party: Banque Cramer & Cie SA`, 10, y); y+=10;
-    doc.text(`Sender Account: CH45 **** **** **** **** 2002`, 10, y); y+=10;
-    doc.text(`Beneficiary Account: 0690 **** **** **** **** 0300`, 10, y); y+=10;
-    doc.text(`Reference / Purpose: Payment for Agreement No. 2025/12/03`, 10, y); y+=10;
-    doc.text(`SWIFT Info:`, 10, y); y+=10;
-    doc.text(`Sender BIC: CRAMCHGGXXX`, 10, y); y+=10;
-    doc.text(`Intermediary BIC: COBADEFFXXX`, 10, y); y+=10;
-    doc.text(`Beneficiary BIC: CENAIDJAXXX`, 10, y);
-    doc.save('incoming_payment_receipt.pdf');
-  });
+  /* Intermediary Bank → Accepted (green) */
+  const intermediaryStatus = document.getElementById('intermediary-status');
+  intermediaryStatus.textContent = "Accepted";
+  intermediaryStatus.style.background = '#dcfce7';
+  intermediaryStatus.style.color = '#166534';
+  intermediaryStatus.style.border = '1px solid rgba(22,101,52,0.2)';
 
-  document.getElementById('helpBtn').addEventListener('click', function(){
-    alert("If you encounter any difficulties, you can contact us via info@verify-swift.com.");
-  });
+  /* Beneficiary Bank → Completed (green) */
+  const beneficiaryStatus = document.getElementById('beneficiary-status');
+  beneficiaryStatus.textContent = "Completed";
+  beneficiaryStatus.style.background = '#dcfce7';
+  beneficiaryStatus.style.color = '#166534';
+  beneficiaryStatus.style.border = '1px solid rgba(22,101,52,0.2)';
+
+  /* Top status */
+  const topStatus = document.getElementById('topStatus');
+  topStatus.textContent = 'Completed';
+  topStatus.className = 'status success';
+
+  /* Connector Lines (green) */
+  document.getElementById('connector-1').style.background = '#16a34a';
+  document.getElementById('connector-2').style.background = '#16a34a';
+});
+
+/* Copy Button */
+document.getElementById('copyBtn').addEventListener('click', function(){
+  const txt = document.getElementById('txRef').innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const old = this.innerText; this.innerText='Copied';
+    setTimeout(() => this.innerText=old, 1300);
+  })
+});
+
+/* PDF Download */
+document.getElementById('downloadBtn').addEventListener('click', function(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFontSize(12);
+  doc.text(`Transaction Reference: ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
+  doc.text(`Status: Completed`, 10, y); y+=10;
+  doc.text(`Amount: EUR 19,800,090.00`, 10, y); y+=10;
+  doc.text(`Date Received: 12-Dec-2025`, 10, y); y+=10;
+  doc.save('incoming_payment_receipt.pdf');
+});
+
+/* Help */
+document.getElementById('helpBtn').addEventListener('click', function(){
+  alert("For assistance, contact: info@verify-swift.com");
+});
 </script>
+
 </body>
 </html>
