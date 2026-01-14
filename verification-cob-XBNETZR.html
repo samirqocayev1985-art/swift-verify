@@ -239,7 +239,7 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
 
   doc.setFontSize(12);
   doc.text(`Transaction Reference: ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
-  doc.text(`Status: Completed`, 10, y); y+=10;
+  doc.text(`Status: Pending`, 10, y); y+=10;
   doc.text(`Amount: EUR 21,300,000.00`, 10, y); y+=10;
   doc.text(`Date Received: 19-Jan-2026`, 10, y); y+=10;
   doc.save('incoming_payment_receipt.pdf');
