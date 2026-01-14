@@ -179,36 +179,50 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-  /* Debtor Bank → Sent (green) */
+  /* Pending style */
+  const pendingBg = '#fef3c7';
+  const pendingColor = '#92400e';
+  const pendingBorder = '1px solid rgba(146,64,14,0.25)';
+
+  const inactiveBg = '#f1f5f9';
+  const inactiveColor = '#64748b';
+  const inactiveBorder = '1px solid rgba(100,116,139,0.2)';
+
+  /* Debtor Bank → Pending */
   const debtorStatus = document.getElementById('debtor-status');
-  debtorStatus.textContent = "Sent";
-  debtorStatus.style.background = '#dcfce7';
-  debtorStatus.style.color = '#166534';
-  debtorStatus.style.border = '1px solid rgba(22,101,52,0.2)';
+  debtorStatus.textContent = "Pending";
+  debtorStatus.style.background = pendingBg;
+  debtorStatus.style.color = pendingColor;
+  debtorStatus.style.border = pendingBorder;
 
-  /* Intermediary Bank → Accepted (green) */
+  /* Intermediary Bank → Not started */
   const intermediaryStatus = document.getElementById('intermediary-status');
-  intermediaryStatus.textContent = "Accepted";
-  intermediaryStatus.style.background = '#dcfce7';
-  intermediaryStatus.style.color = '#166534';
-  intermediaryStatus.style.border = '1px solid rgba(22,101,52,0.2)';
+  intermediaryStatus.textContent = "Waiting";
+  intermediaryStatus.style.background = inactiveBg;
+  intermediaryStatus.style.color = inactiveColor;
+  intermediaryStatus.style.border = inactiveBorder;
 
-  /* Beneficiary Bank → Completed (green) */
+  /* Beneficiary Bank → Not started */
   const beneficiaryStatus = document.getElementById('beneficiary-status');
-  beneficiaryStatus.textContent = "Completed";
-  beneficiaryStatus.style.background = '#dcfce7';
-  beneficiaryStatus.style.color = '#166534';
-  beneficiaryStatus.style.border = '1px solid rgba(22,101,52,0.2)';
+  beneficiaryStatus.textContent = "Waiting";
+  beneficiaryStatus.style.background = inactiveBg;
+  beneficiaryStatus.style.color = inactiveColor;
+  beneficiaryStatus.style.border = inactiveBorder;
 
-  /* Top status */
+  /* Top Status → Pending */
   const topStatus = document.getElementById('topStatus');
-  topStatus.textContent = 'Completed';
-  topStatus.className = 'status success';
+  topStatus.textContent = 'Pending';
+  topStatus.style.background = pendingBg;
+  topStatus.style.color = pendingColor;
+  topStatus.style.border = pendingBorder;
+  topStatus.className = 'status';
 
-  /* Connector Lines (green) */
-  document.getElementById('connector-1').style.background = '#16a34a';
-  document.getElementById('connector-2').style.background = '#16a34a';
+  /* Connector Lines → inactive (grey) */
+  document.getElementById('connector-1').style.background = '#e5e7eb';
+  document.getElementById('connector-2').style.background = '#e5e7eb';
 });
+</script>
+
 
 /* Copy Button */
 document.getElementById('copyBtn').addEventListener('click', function(){
