@@ -57,7 +57,7 @@
     <br>
 
     <h1>Uetr code</h1>
-    <p class="lead">c04ac3b1-4a33-42ef-b0e3-854813f25fff</p>
+    <p class="lead">3de2581e-f144-11f0-a92c-325096b39f47</p>
 
     <div class="row">
       <div class="col">
@@ -65,18 +65,18 @@
         <div class="value"><span class="status" id="topStatus"></span></div>
       </div>
 
-      <div class="col">19,800,090.00
+      <div class="col">21,300,000.00
         <div class="label">Amount</div>
         <div class="value amount">EUR </div>
       </div>
 
       <div class="col">
         <div class="label">Sent date:</div>
-        <div class="value">10-Dec-2025</div>
+        <div class="value">15-Jan-2026</div>
       </div>
       <div class="col">
         <div class="label">Value date:</div>
-        <div class="value">12-Dec-2025</div>
+        <div class="value">19-Jan-2026</div>
       </div>
     </div>
 
@@ -89,26 +89,26 @@
         <br>
 
         <div class="label">Sender</div>
-        <div class="value">Banque Cramer et Cie SA</div>
-        <div class="small">Zurich, Switzerland</div>
+        <div class="value">Santanderbank UK Plc, London, UK</div>
+        <div class="small">Regents Place, 2 Triton Square, London, UK</div>
         <br>
 
         <div class="label">Beneficiary Customer</div>
-        <div class="value">Megah Mineral Persada</div>
+        <div class="value">PT. BANGUN MEGAH MANDIRI PROPERTINDO</div>
         <div class="small">Jakarta, Indonesia</div>
         <br>
 
         <div class="label">Bank receiver</div>
-        <div class="value">Bank Central Asia (BCA)</div>
+        <div class="value">Bank Negara Indonesia (BNI)</div>
       </div>
 
       <div class="col">
         <div class="label">Sender Account</div>
-        <div class="value">CH45 **** **** **** **** 2002</div>
+        <div class="value">GB27 **** **** **** **** 7500</div>
         <br><br><br><br>
 
         <div class="label">Beneficiary Account</div>
-        <div class="value">0690 **** **** **** **** 0300</div>
+        <div class="value">2025 **** **** **** **** 1252</div>
       </div>
     </div>
 
@@ -128,9 +128,9 @@
         </div>
 
         <div class="swift-list">
-          Sender BIC: CRAMCHGGXXX<br>
+          Sender BIC: ABBYGB2LXXX<br>
           Intermediary BIC: COBADEFFXXX<br>
-          Beneficiary BIC: CENAIDJAXXX<br>
+          Beneficiary BIC: BNINIDJAXXX<br>
         </div>
       </div>
     </div>
@@ -142,7 +142,7 @@
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Debtor Bank</div>
-        <div class="bank-code">CRAMCHGGXXX</div>
+        <div class="bank-code">ABBYGB2LXXX</div>
         <div class="status-tag" id="debtor-status">Sent</div>
       </div>
 
@@ -162,7 +162,7 @@
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
-        <div class="bank-code">CENAIDJAXXX</div>
+        <div class="bank-code">BNINIDJAXXX</div>
         <div class="status-tag" id="beneficiary-status">Completed</div>
       </div>
     </div>
@@ -228,8 +228,8 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
   doc.setFontSize(12);
   doc.text(`Transaction Reference: ${document.getElementById('txRef').innerText}`, 10, y); y+=10;
   doc.text(`Status: Completed`, 10, y); y+=10;
-  doc.text(`Amount: EUR 19,800,090.00`, 10, y); y+=10;
-  doc.text(`Date Received: 12-Dec-2025`, 10, y); y+=10;
+  doc.text(`Amount: EUR 21,300,000.00`, 10, y); y+=10;
+  doc.text(`Date Received: 19-Jan-2026`, 10, y); y+=10;
   doc.save('incoming_payment_receipt.pdf');
 });
 
