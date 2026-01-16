@@ -272,7 +272,7 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
   doc.text("Payment Receipt", 20, 20);
   doc.setFontSize(12);
   doc.text(`Reference: ${document.getElementById('txRef').innerText}`, 20, 40);
-  doc.text("Amount: EUR 2,500,000.00", 20, 50);
+  doc.text("Amount: EUR 7,000,000.00", 20, 50);
   doc.text("Date: 20-Jan-2026", 20, 60);
   doc.save('payment_receipt.pdf');
 });
