@@ -144,11 +144,11 @@
       </div>
       <div class="col">
         <div class="label">Sent date:</div>
-        <div class="value">15-Jan-2026</div>
+        <div class="value">19-Jan-2026</div>
       </div>
       <div class="col">
         <div class="label">Value date:</div>
-        <div class="value">19-Jan-2026</div>
+        <div class="value">21-Jan-2026</div>
       </div>
     </div>
 
@@ -160,8 +160,8 @@
         <div class="value">MMG Capital Limited</div>
         <br>
         <div class="label">Sender</div>
-        <div class="value">Banco Santander, S.A., ES (Spain)</div>
-        <div class="small">Paseo de Pereda, 9-12, 39004 Santander, Spain</div>
+        <div class="value">TSB Bank Plc (UK)</div>
+        <div class="small">Henry Duncan House, 120 George Street, Edinburgh EH2 4LH</div>
         <br>
         <div class="label">Beneficiary Customer</div>
         <div class="value">PT. BANGUN MEGAH MANDIRI PROPERTINDO</div>
@@ -184,7 +184,7 @@
     <div class="row">
       <div class="col">
         <div class="label">Reference / Purpose</div>
-        <div class="value small">Payment for Agreement No. 2026/01/15</div>
+        <div class="value small">Payment for Agreement No. 2026/01/19</div>
       </div>
       <div class="col">
         <div class="label">Transaction Reference</div>
@@ -193,7 +193,7 @@
           <button id="copyBtn">Copy</button>
         </div>
         <div class="swift-list">
-          Sender BIC: <strong>BSCHESMM</strong><br>
+          Sender BIC: <strong>TSBSGB2AXXX</strong><br>
           Intermediary BIC: <strong>RZBAATWWXXX</strong><br>
           Beneficiary BIC: <strong>BNINIDJAXXX</strong><br>
         </div>
@@ -204,7 +204,7 @@
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Sender Bank</div>
-        <div class="bank-code">BSCHESMMXXX</div>
+        <div class="bank-code">TSBSGB2AXXX</div>
         <div class="status-tag" id="debtor-status">Sent</div>
       </div>
       <div class="connector-line"></div>
@@ -281,7 +281,7 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
   doc.setFontSize(12);
   doc.text(`Reference: ${document.getElementById('txRef').innerText}`, 20, 40);
   doc.text(`Amount: EUR 21,300,000.00`, 20, 50);
-  doc.text(`Date: 19-Jan-2026`, 20, 60);
+  doc.text(`Date: 21-Jan-2026`, 20, 60);
   doc.save('payment_receipt.pdf');
 });
 
