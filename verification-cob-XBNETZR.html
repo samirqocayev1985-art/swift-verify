@@ -106,6 +106,13 @@
   .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
   .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
+  /* Yanıb-sönmə effekti */
+  @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.3; }
+  }
+  .blinking { animation: blink 1s infinite; }
+
   @media (max-width:768px){
     .flow-container{flex-direction:column;gap:30px}
     .connector-line{display:none}
@@ -172,7 +179,7 @@
       </div>
       <div class="col">
         <div class="label">Sender Account</div>
-        <div class="value">ES93 **** **** **** **** 0486</div>
+        <div class="value">GB25**** **** **** **** 1254</div>
         <br><br><br><br>
         <div class="label">Beneficiary Account</div>
         <div class="value">2025 **** **** **** **** 1252</div>
@@ -205,21 +212,21 @@
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Sender Bank</div>
         <div class="bank-code">TSBSGB2AXXX</div>
-        <div class="status-tag" id="debtor-status">Sent</div>
+        <div class="status-tag" id="debtor-status"></div>
       </div>
       <div class="connector-line"></div>
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">RZBAATWWXXX</div>
-        <div class="status-tag" id="intermediary-status">Accepted</div>
+        <div class="status-tag" id="intermediary-status"></div>
       </div>
       <div class="connector-line"></div>
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Beneficiary Bank</div>
         <div class="bank-code">BNINIDJAXXX</div>
-        <div class="status-tag" id="beneficiary-status">Completed</div>
+        <div class="status-tag" id="beneficiary-status"></div>
       </div>
     </div>
 
@@ -237,23 +244,30 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const pendingBg = '#fef3c7', pendingColor = '#92400e', pendingBorder = '1px solid rgba(146,64,14,0.2)';
-  const inactiveBg = '#f1f5f9', inactiveColor = '#64748b', inactiveBorder = '1px solid #e2e8f0';
+  const sentBg = '#16a34a', sentColor = '#fff', sentBorder = '1px solid rgba(22,163,74,0.2)';
+  const blinkingBg = '#facc15', blinkingColor = '#92400e', blinkingBorder = '1px solid rgba(250,204,21,0.3)';
+  const waitingBg = '#f1f5f9', waitingColor = '#64748b', waitingBorder = '1px solid #e2e8f0';
 
-  const setStatus = (id, text, bg, color, border) => {
+  const setStatus = (id, text, bg, color, border, blinking=false) => {
     const el = document.getElementById(id);
     if(el) {
       el.textContent = text;
       el.style.background = bg;
       el.style.color = color;
       el.style.border = border;
+      if(blinking){
+        el.classList.add('blinking');
+      } else {
+        el.classList.remove('blinking');
+      }
     }
   };
 
-  setStatus('topStatus', 'Pending', pendingBg, pendingColor, pendingBorder);
-  setStatus('debtor-status', 'Pending', pendingBg, pendingColor, pendingBorder);
-  setStatus('intermediary-status', 'Waiting', inactiveBg, inactiveColor, inactiveBorder);
-  setStatus('beneficiary-status', 'Waiting', inactiveBg, inactiveColor, inactiveBorder);
+  // Statusları təyin edək
+  setStatus('topStatus', 'Sent', sentBg, sentColor, sentBorder);
+  setStatus('debtor-status', 'Sent', sentBg, sentColor, sentBorder);
+  setStatus('intermediary-status', 'Processing', blinkingBg, blinkingColor, blinkingBorder, true);
+  setStatus('beneficiary-status', 'Pending', waitingBg, waitingColor, waitingBorder);
 });
 
 // UETR kopyalama funksiyası
