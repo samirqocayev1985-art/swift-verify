@@ -1,1 +1,221 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta name="viewport" content="width=device-width,initial-scale=1" /> <title>Incoming Payment — Customer View</title> <style> :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8} body { font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif; margin: 0; padding: 24px; color: #0f172a; min-height: 100vh; background-color: #f3f4f6; background-image: radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%), radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%); background-attachment: fixed; position: relative; overflow-x: hidden; } /* Animasiyalar */ @keyframes blinkBlue { 0%, 100% { background-color: #3b82f6; box-shadow: 0 0 5px #3b82f6; opacity: 1; } 50% { background-color: #60a5fa; box-shadow: 0 0 15px #60a5fa; opacity: 0.7; } } .blinking-processing { animation: blinkBlue 1s infinite ease-in-out; color: white !important; border: none !important; } .wrap{max-width:840px;margin:0 auto; position: relative;} .custom-top-logo { width: 140px; height: auto; display: block; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); } .card{ background:var(--card); border-radius:16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); padding:28px; margin-bottom:16px; border: 1px solid rgba(255,255,255,0.8); position: relative; backdrop-filter: blur(10px); } h1{font-size:18px;margin:0 0 8px; font-weight: bold;} p.lead{margin:0;color:var(--muted)} .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px} .col{flex:1;min-width:180px} .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;} .value{font-weight:600;font-size:16px} .amount{font-size:18px; color:var(--accent); font-weight: 800;} .small{font-size:13px;color:var(--muted)} .btns{display:flex;gap:10px;margin-top:20px} button{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s; font-family: inherit;} button:hover{filter: brightness(1.1); transform: translateY(-1px);} button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0} .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;} .muted-line{height:1px;background:#f1f5f9;margin:20px -28px} .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0} .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;} .note{font-size:13px;color:var(--muted);margin-top:12px; font-style: italic;} .swift-list{font-size:13px;color:#6b7280;margin-top:6px; line-height:1.6} .footer {text-align: center; margin-top: 40px; padding-bottom: 30px; color: var(--muted); font-size: 13px;} .footer a {color: var(--accent); text-decoration: none; font-weight: 600;} .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative} .flow-step{text-align:center;position:relative;min-width:180px} .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;box-shadow:0 10px 15px -3px rgba(59,130,246,0.2)} .flow-step .arrow-icon{width:40px;height:40px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#64748b;font-size:18px; border: 1px solid #e2e8f0;} .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:700} .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px} .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700} .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;} @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .flow-step{min-width:100%} } </style> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> </head> <body> <div class="wrap"> <a href="https://verify-swift.com"> <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" class="custom-top-logo"> </a> <div class="card"> <h1>Incoming Payment</h1> <p class="lead">Below are the key details of funds received.</p> <div class="muted-line"></div> <div class="label">Uetr code</div> <div class="copy" style="margin-bottom: 10px;"> <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">0cf59e86-d194-438b-9b47-539de6ea4dd7</div> <button id="copyUetrBtn">Copy</button> </div> <div class="row"> <div class="col"> <div class="label">Status</div> <div class="value"><span class="status" id="topStatus"></span></div> </div> <div class="col"> <div class="label">Amount</div> <div class="value amount">EUR 7,000,000.00</div> </div> <div class="col"> <div class="label">Sent date:</div> <div class="value">16-Jan-2026</div> </div> <div class="col"> <div class="label">Value date:</div> <div class="value">20-Jan-2026</div> </div> </div> <div class="muted-line"></div> <div class="row"> <div class="col"> <div class="label">Ordering Beneficiary</div> <div class="value">MMG Capital Limited</div> <br> <div class="label">Sender / Ordering Party</div> <div class="value">Banque Cramer et Cie SA</div> <div class="small">Zurich, Switzerland</div> <br> <div class="label">Beneficiary Customer</div> <div class="value">Jamli Com LLC</div> <div class="small">Arsenjia Carnojevica BB, Podgorica, Montenegro</div> <br> <div class="label">Bank receiver</div> <div class="value">Adriatic Bank AD Podgorica</div> </div> <div class="col"> <div class="value">CH45 **** **** **** **** 2002</div> <div class="small">(Full IBAN stored securely in bank)</div> <br><br><br><br> <div class="label">Beneficiary Account</div> <div class="value">ME25 **** **** **** **** 7359</div> <div class="small">(Full IBAN stored securely in bank)</div> </div> </div> <div class="muted-line"></div> <div class="row"> <div class="col"> <div class="label">Reference / Purpose</div> <div class="value small">Payment for Agreement No. AG/SJU-004856</div> </div> <div class="col"> <div class="label">Transaction Reference</div> <div class="copy"> <div class="small" id="txRef" style="font-weight: 700;">COBA780533CH25879</div> <button id="copyBtn">Copy</button> </div> <div class="swift-list"> Sender BIC: <strong>CRAMCHGGXXX</strong><br> Intermediary BIC: <strong>COBADEFFXXX</strong><br> Beneficiary BIC: <strong>AZMNMEPGXXX</strong><br> </div> </div> </div> <div class="flow-container"> <div class="flow-step"> <div class="bank-icon">🏦</div> <div class="bank-name">Sender Bank</div> <div class="bank-code">CRAMCHGGXXX</div> <div class="status-tag" id="debtor-status">Sent</div> </div> <div class="connector-line" style="background: #065f46;"></div> <div class="flow-step"> <div class="arrow-icon">➡️</div> <div class="bank-name">Intermediary Bank</div> <div class="bank-code">COBADEFFXXX</div> <div class="status-tag" id="intermediary-status">Processing</div> </div> <div class="connector-line"></div> <div class="flow-step"> <div class="bank-icon">🏦</div> <div class="bank-name">Beneficiary Bank</div> <div class="bank-code">AZMNMEPGXXX</div> <div class="status-tag" id="beneficiary-status">Waiting</div> </div> </div> <div class="btns"> <button id="downloadBtn">Download Receipt (PDF)</button> <button class="secondary" id="helpBtn">Help / FAQ</button> </div> <p class="note">Note: For questions regarding this payment, contact your bank's support.</p> </div> <div class="footer"> &copy; 2026 <a href="https://verify-swift.com">verify-swift.com</a>. All rights reserved. </div> </div> <script> document.addEventListener('DOMContentLoaded', function() { const successBg = '#e6f7ee', successColor = '#065f46', successBorder = '1px solid rgba(6,95,70,0.2)'; const inactiveBg = '#f1f5f9', inactiveColor = '#64748b', inactiveBorder = '1px solid #e2e8f0'; const setStatus = (id, text, bg, color, border, extraClass = '') => { const el = document.getElementById(id); if(el) { el.textContent = text; el.style.background = bg; el.style.color = color; el.style.border = border; if(extraClass) el.classList.add(extraClass); } }; // Üst status və ilk bank yaşıl (Sent) setStatus('topStatus', 'Sent', successBg, successColor, successBorder); setStatus('debtor-status', 'Sent', successBg, successColor, successBorder); // Ortadakı bank Yanıb sönən (Processing) setStatus('intermediary-status', 'Processing', '#3b82f6', '#ffffff', 'none', 'blinking-processing'); // Sonuncu bank hələ gözləyir setStatus('beneficiary-status', 'Waiting', inactiveBg, inactiveColor, inactiveBorder); }); document.getElementById('copyUetrBtn').addEventListener('click', function(){ const txt = document.getElementById('uetrVal').innerText; navigator.clipboard.writeText(txt).then(()=>{ const old = this.innerText; this.innerText='Copied'; setTimeout(() => this.innerText=old, 1300); }); }); document.getElementById('copyBtn').addEventListener('click', function(){ const txt = document.getElementById('txRef').innerText; navigator.clipboard.writeText(txt).then(()=>{ const old = this.innerText; this.innerText='Copied'; setTimeout(() => this.innerText=old, 1300); }); }); document.getElementById('downloadBtn').addEventListener('click', function(){ const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(18); doc.text("Payment Receipt", 20, 20); doc.setFontSize(12); doc.text(Reference: ${document.getElementById('txRef').innerText}, 20, 40); doc.text("Amount: EUR 7,000,000.00", 20, 50); doc.text("Date: 20-Jan-2026", 20, 60); doc.save('payment_receipt.pdf'); }); document.getElementById('helpBtn').addEventListener('click', () => alert("Contact: info@verify-swift.com")); </script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Incoming Payment — Customer View</title>
+    <style>
+        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+        body { font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif; margin: 0; padding: 24px; color: #0f172a; min-height: 100vh; background-color: #f3f4f6; background-image: radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%), radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%); background-attachment: fixed; position: relative; overflow-x: hidden; }
+        
+        @keyframes blinkBlue { 
+            0%, 100% { background-color: #3b82f6; box-shadow: 0 0 5px #3b82f6; opacity: 1; } 
+            50% { background-color: #60a5fa; box-shadow: 0 0 15px #60a5fa; opacity: 0.7; } 
+        }
+        
+        .blinking-processing { animation: blinkBlue 1s infinite ease-in-out; color: white !important; border: none !important; }
+        .wrap{max-width:840px;margin:0 auto; position: relative;}
+        .custom-top-logo { width: 140px; height: auto; display: block; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }
+        .card{ background:var(--card); border-radius:16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); padding:28px; margin-bottom:16px; border: 1px solid rgba(255,255,255,0.8); position: relative; backdrop-filter: blur(10px); }
+        h1{font-size:18px;margin:0 0 8px; font-weight: bold;}
+        p.lead{margin:0;color:var(--muted)}
+        .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+        .col{flex:1;min-width:180px}
+        .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+        .value{font-weight:600;font-size:16px}
+        .amount{font-size:18px; color:var(--accent); font-weight: 800;}
+        .small{font-size:13px;color:var(--muted)}
+        .btns{display:flex;gap:10px;margin-top:20px}
+        button{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s; font-family: inherit;}
+        button:hover{filter: brightness(1.1); transform: translateY(-1px);}
+        button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+        .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
+        .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
+        .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
+        .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
+        .note{font-size:13px;color:var(--muted);margin-top:12px; font-style: italic;}
+        .swift-list{font-size:13px;color:#6b7280;margin-top:6px; line-height:1.6}
+        .footer {text-align: center; margin-top: 40px; padding-bottom: 30px; color: var(--muted); font-size: 13px;}
+        .footer a {color: var(--accent); text-decoration: none; font-weight: 600;}
+        .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
+        .flow-step{text-align:center;position:relative;min-width:180px}
+        .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;box-shadow:0 10px 15px -3px rgba(59,130,246,0.2)}
+        .flow-step .arrow-icon{width:40px;height:40px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#64748b;font-size:18px; border: 1px solid #e2e8f0;}
+        .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:700}
+        .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
+        .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
+        @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .flow-step{min-width:100%} }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="wrap">
+        <a href="https://verify-swift.com">
+            <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" class="custom-top-logo">
+        </a>
+        <div class="card">
+            <h1>Incoming Payment</h1>
+            <p class="lead">Below are the key details of funds received.</p>
+            <div class="muted-line"></div>
+            <div class="label">Uetr code</div>
+            <div class="copy" style="margin-bottom: 10px;">
+                <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">0cf59e86-d194-438b-9b47-539de6ea4dd7</div>
+                <button id="copyUetrBtn">Copy</button>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="label">Status</div>
+                    <div class="value"><span class="status" id="topStatus"></span></div>
+                </div>
+                <div class="col">
+                    <div class="label">Amount</div>
+                    <div class="value amount">EUR 7,000,000.00</div>
+                </div>
+                <div class="col">
+                    <div class="label">Sent date:</div>
+                    <div class="value">16-Jan-2026</div>
+                </div>
+                <div class="col">
+                    <div class="label">Value date:</div>
+                    <div class="value">20-Jan-2026</div>
+                </div>
+            </div>
+            <div class="muted-line"></div>
+            <div class="row">
+                <div class="col">
+                    <div class="label">Ordering Beneficiary</div>
+                    <div class="value">MMG Capital Limited</div>
+                    <br>
+                    <div class="label">Sender / Ordering Party</div>
+                    <div class="value">Banque Cramer et Cie SA</div>
+                    <div class="small">Zurich, Switzerland</div>
+                    <br>
+                    <div class="label">Beneficiary Customer</div>
+                    <div class="value">Jamli Com LLC</div>
+                    <div class="small">Arsenjia Carnojevica BB, Podgorica, Montenegro</div>
+                    <br>
+                    <div class="label">Bank receiver</div>
+                    <div class="value">Adriatic Bank AD Podgorica</div>
+                </div>
+                <div class="col">
+                    <div class="value">CH45 **** **** **** **** 2002</div>
+                    <div class="small">(Full IBAN stored securely in bank)</div>
+                    <br><br><br><br>
+                    <div class="label">Beneficiary Account</div>
+                    <div class="value">ME25 **** **** **** **** 7359</div>
+                    <div class="small">(Full IBAN stored securely in bank)</div>
+                </div>
+            </div>
+            <div class="muted-line"></div>
+            <div class="row">
+                <div class="col">
+                    <div class="label">Reference / Purpose</div>
+                    <div class="value small">Payment for Agreement No. AG/SJU-004856</div>
+                </div>
+                <div class="col">
+                    <div class="label">Transaction Reference</div>
+                    <div class="copy">
+                        <div class="small" id="txRef" style="font-weight: 700;">COBA780533CH25879</div>
+                        <button id="copyBtn">Copy</button>
+                    </div>
+                    <div class="swift-list">
+                        Sender BIC: <strong>CRAMCHGGXXX</strong><br>
+                        Intermediary BIC: <strong>COBADEFFXXX</strong><br>
+                        Beneficiary BIC: <strong>AZMNMEPGXXX</strong><br>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="bank-icon">🏦</div>
+                    <div class="bank-name">Sender Bank</div>
+                    <div class="bank-code">CRAMCHGGXXX</div>
+                    <div class="status-tag" id="debtor-status">Sent</div>
+                </div>
+                <div class="connector-line" style="background: #065f46;"></div>
+                <div class="flow-step">
+                    <div class="arrow-icon">➡️</div>
+                    <div class="bank-name">Intermediary Bank</div>
+                    <div class="bank-code">COBADEFFXXX</div>
+                    <div class="status-tag" id="intermediary-status">Processing</div>
+                </div>
+                <div class="connector-line" style="background: #065f46;"></div>
+                <div class="flow-step">
+                    <div class="bank-icon">🏦</div>
+                    <div class="bank-name">Beneficiary Bank</div>
+                    <div class="bank-code">AZMNMEPGXXX</div>
+                    <div class="status-tag" id="beneficiary-status">Waiting</div>
+                </div>
+            </div>
+            <div class="btns">
+                <button id="downloadBtn">Download Receipt (PDF)</button>
+                <button class="secondary" id="helpBtn">Help / FAQ</button>
+            </div>
+            <p class="note">Note: For questions regarding this payment, contact your bank's support.</p>
+        </div>
+        <div class="footer">
+            &copy; 2026 <a href="https://verify-swift.com">verify-swift.com</a>. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const successBg = '#e6f7ee', successColor = '#065f46', successBorder = '1px solid rgba(6,95,70,0.2)';
+            
+            const setStatus = (id, text, bg, color, border, extraClass = '') => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.textContent = text;
+                    el.style.background = bg;
+                    el.style.color = color;
+                    el.style.border = border;
+                    if(extraClass) el.classList.add(extraClass);
+                }
+            };
+
+            // 1. Sent statusu - Yaşıl sabit
+            setStatus('topStatus', 'Sent', successBg, successColor, successBorder);
+            setStatus('debtor-status', 'Sent', successBg, successColor, successBorder);
+
+            // 2. Intermediary statusu - Processed və Yaşıl sabit
+            setStatus('intermediary-status', 'Processed', successBg, successColor, successBorder);
+
+            // 3. Beneficiary statusu - Completed və Yanıb sönən (Mavi)
+            setStatus('beneficiary-status', 'Completed', '#3b82f6', '#ffffff', 'none', 'blinking-processing');
+        });
+
+        document.getElementById('copyUetrBtn').addEventListener('click', function(){
+            const txt = document.getElementById('uetrVal').innerText;
+            navigator.clipboard.writeText(txt).then(()=>{
+                const old = this.innerText;
+                this.innerText='Copied';
+                setTimeout(() => this.innerText=old, 1300);
+            });
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', function(){
+            const txt = document.getElementById('txRef').innerText;
+            navigator.clipboard.writeText(txt).then(()=>{
+                const old = this.innerText;
+                this.innerText='Copied';
+                setTimeout(() => this.innerText=old, 1300);
+            });
+        });
+
+        document.getElementById('downloadBtn').addEventListener('click', function(){
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18);
+            doc.text("Payment Receipt", 20, 20);
+            doc.setFontSize(12);
+            doc.text(`Reference: ${document.getElementById('txRef').innerText}`, 20, 40);
+            doc.text("Amount: EUR 7,000,000.00", 20, 50);
+            doc.text("Date: 20-Jan-2026", 20, 60);
+            doc.save('payment_receipt.pdf');
+        });
+
+        document.getElementById('helpBtn').addEventListener('click', () => alert("Contact: info@verify-swift.com"));
+    </script>
+</body>
+</html>
