@@ -45,6 +45,26 @@
         .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
         .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
+        
+        /* Yeni refund qeydi üçün stil */
+        .refund-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffecb5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .refund-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
         @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .flow-step{min-width:100%} }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -126,6 +146,17 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Refund qeydi -->
+            <div class="refund-note">
+                <div class="refund-icon">⚠️</div>
+                <div>
+                    <strong>Refund Notification:</strong> Payment was refunded back from the side of AML department of Beneficiary Bank.
+                    <br>
+                    <small>Reason: Additional verification required. Please contact your bank for more details.</small>
+                </div>
+            </div>
+            
             <div class="flow-container">
                 <div class="flow-step">
                     <div class="bank-icon">🏦</div>
@@ -162,6 +193,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const successBg = '#e6f7ee', successColor = '#065f46', successBorder = '1px solid rgba(6,95,70,0.2)';
+            const processingBg = '#3b82f6', processingColor = '#ffffff';
+            const completedBg = '#f1f5f9', completedColor = '#475569', completedBorder = '1px solid #e2e8f0';
             
             const setStatus = (id, text, bg, color, border, extraClass = '') => {
                 const el = document.getElementById(id);
@@ -174,15 +207,15 @@
                 }
             };
 
-            // 1. Sent statusu - Yaşıl sabit
+            // 1. Sender bank - Sent (yaşıl sabit)
             setStatus('topStatus', 'Sent', successBg, successColor, successBorder);
             setStatus('debtor-status', 'Sent', successBg, successColor, successBorder);
 
-            // 2. Intermediary statusu - Processed və Yaşıl sabit
-            setStatus('intermediary-status', 'Processed', successBg, successColor, successBorder);
+            // 2. Intermediary bank - Processing (yanıb-sönən göy)
+            setStatus('intermediary-status', 'Processing', processingBg, processingColor, 'none', 'blinking-processing');
 
-            // 3. Beneficiary statusu - Completed və Yanıb sönən (Mavi)
-            setStatus('beneficiary-status', 'Completed', '#3b82f6', '#ffffff', 'none', 'blinking-processing');
+            // 3. Beneficiary bank - Completed (boz sabit)
+            setStatus('beneficiary-status', 'Completed', completedBg, completedColor, completedBorder);
         });
 
         document.getElementById('copyUetrBtn').addEventListener('click', function(){
