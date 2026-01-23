@@ -44,13 +44,42 @@
   .connector-line{flex:1;height:2px;margin:0 10px;position:relative;max-width:120px}
   
   /* Yanıb-sönən effekt */
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+  @keyframes blinkBlue {
+    0%, 100% { 
+        background-color: #3b82f6; 
+        box-shadow: 0 0 5px #3b82f6; 
+        opacity: 1; 
+    }
+    50% { 
+        background-color: #60a5fa; 
+        box-shadow: 0 0 15px #60a5fa; 
+        opacity: 0.7; 
+    }
   }
   
-  .blinking {
-    animation: blink 1.5s infinite;
+  .blinking-processing {
+    animation: blinkBlue 1s infinite ease-in-out;
+    color: white !important;
+    border: none !important;
+  }
+  
+  /* Yeni refund qeydi üçün stil */
+  .refund-note {
+    background-color: #fff3cd;
+    border: 1px solid #ffecb5;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #856404;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .refund-icon {
+    font-size: 16px;
+    flex-shrink: 0;
   }
   
   @media (max-width:768px){
@@ -141,6 +170,16 @@
       </div>
     </div>
 
+    <!-- Refund qeydi -->
+    <div class="refund-note">
+      <div class="refund-icon">⚠️</div>
+      <div>
+        <strong>Refund Notification:</strong> Payment was refunded back from the side of AML department of Beneficiary Bank.
+        <br>
+        <small>Reason: Additional verification required. Please contact your bank for more details.</small>
+      </div>
+    </div>
+
     <!-- SWIFT AXIŞ VİZUALİ -->
     <div class="flow-container">
       <!-- Debtor Bank -->
@@ -151,17 +190,17 @@
         <div class="status-tag" id="debtor-status">Sent</div>
       </div>
       
-      <div class="connector-line" id="connector-1" style="background:#10b981;"></div>
+      <div class="connector-line" id="connector-1"></div>
       
       <!-- Arrow/Intermediary -->
       <div class="flow-step">
         <div class="arrow-icon">➡️</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
-        <div class="status-tag" id="intermediary-status">Accepted</div>
+        <div class="status-tag" id="intermediary-status">Processing</div>
       </div>
       
-      <div class="connector-line" id="connector-2" style="background:#10b981;"></div>
+      <div class="connector-line" id="connector-2"></div>
       
       <!-- Beneficiary Bank -->
       <div class="flow-step">
@@ -184,31 +223,32 @@
 <script>
   // Səhifə yükləndikdə vizualizasiyanı göstər
   document.addEventListener('DOMContentLoaded', function() {
-    // Top status - Completed (yaşıl)
-    const topStatus = document.getElementById('topStatus');
-    topStatus.textContent = 'Completed';
-    topStatus.className = 'status success';
+    const successBg = '#dcfce7', successColor = '#166534';
+    const processingBg = '#3b82f6', processingColor = '#ffffff';
+    const completedBg = '#f1f5f9', completedColor = '#475569';
     
-    // Debtor Bank - Sent (yaşıl)
-    const debtorStatus = document.getElementById('debtor-status');
-    debtorStatus.className = 'status-tag';
-    debtorStatus.style.background = '#dcfce7';
-    debtorStatus.style.color = '#166534';
-    debtorStatus.textContent = 'Sent';
+    const setStatus = (id, text, bg, color, border, extraClass = '') => {
+      const el = document.getElementById(id);
+      if(el) {
+        el.textContent = text;
+        el.style.background = bg;
+        el.style.color = color;
+        if(border) el.style.border = border;
+        if(extraClass) el.classList.add(extraClass);
+      }
+    };
+
+    // 1. Top status - Sent (yaşıl)
+    setStatus('topStatus', 'Sent', successBg, successColor, '1px solid rgba(22,101,52,0.1)');
     
-    // Intermediary Bank - Accepted (yaşıl)
-    const intermediaryStatus = document.getElementById('intermediary-status');
-    intermediaryStatus.className = 'status-tag';
-    intermediaryStatus.style.background = '#dcfce7';
-    intermediaryStatus.style.color = '#166534';
-    intermediaryStatus.textContent = 'Accepted';
+    // 2. Debtor Bank - Sent (yaşıl)
+    setStatus('debtor-status', 'Sent', successBg, successColor, 'none');
     
-    // Beneficiary Bank - Completed (yaşıl)
-    const beneficiaryStatus = document.getElementById('beneficiary-status');
-    beneficiaryStatus.className = 'status-tag';
-    beneficiaryStatus.style.background = '#dcfce7';
-    beneficiaryStatus.style.color = '#166534';
-    beneficiaryStatus.textContent = 'Completed';
+    // 3. Intermediary Bank - Processing (yanıb-sönən göy)
+    setStatus('intermediary-status', 'Processing', processingBg, processingColor, 'none', 'blinking-processing');
+    
+    // 4. Beneficiary Bank - Completed (boz sabit)
+    setStatus('beneficiary-status', 'Completed', completedBg, completedColor, '1px solid #e2e8f0');
     
     // Konnektor xətləri:
     // Birinci xətt - yaşıl
@@ -242,7 +282,8 @@
     doc.text(`SWIFT Info:`, 10, y); y+=10;
     doc.text(`Sender BIC: CRAMCHGGXXX`, 10, y); y+=10;
     doc.text(`Intermediary BIC: COBADEFFXXX`, 10, y); y+=10;
-    doc.text(`Beneficiary BIC: DHBKHKHHXXX`, 10, y);
+    doc.text(`Beneficiary BIC: DHBKHKHHXXX`, 10, y); y+=10;
+    doc.text(`Refund Note: Payment was refunded back from the side of AML department of Beneficiary Bank.`, 10, y);
     doc.save('incoming_payment_receipt.pdf');
   });
 
