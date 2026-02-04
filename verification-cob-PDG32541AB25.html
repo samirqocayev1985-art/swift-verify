@@ -136,7 +136,7 @@
 
     <div class="label">Uetr code</div>
     <div class="copy" style="margin-bottom: 10px;">
-        <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">3de2581e-f144-11f0-a92c-325096b39f47</div>
+        <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">fedc2134-ec3e-4cdf-a170-30566cc176e7</div>
         <button id="copyUetrBtn">Copy</button>
     </div>
 
@@ -294,8 +294,8 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
   doc.text("Payment Receipt", 20, 20);
   doc.setFontSize(12);
   doc.text(`Reference: ${document.getElementById('txRef').innerText}`, 20, 40);
-  doc.text(`Amount: EUR 21,300,000.00`, 20, 50);
-  doc.text(`Date: 21-Jan-2026`, 20, 60);
+  doc.text(`Amount: EUR 30,000,000.00`, 20, 50);
+  doc.text(`Date: 09-Feb-2026`, 20, 60);
   doc.save('payment_receipt.pdf');
 });
 
