@@ -23,31 +23,6 @@
     overflow-x: hidden;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    width: 500px;
-    height: 500px;
-    border: 60px solid rgba(11, 107, 255, 0.02);
-    border-radius: 80px;
-    top: -150px;
-    right: -100px;
-    transform: rotate(25deg);
-    z-index: -1;
-  }
-
-  body::after {
-    content: "";
-    position: fixed;
-    width: 300px;
-    height: 300px;
-    border: 40px solid rgba(219, 194, 149, 0.03);
-    border-radius: 50%;
-    bottom: -100px;
-    left: -50px;
-    z-index: -1;
-  }
-
   .wrap{max-width:840px;margin:0 auto; position: relative;}
   
   .custom-top-logo {
@@ -91,26 +66,15 @@
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
   .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
   
-  .note{font-size:13px;color:var(--muted);margin-top:12px; font-style: italic;}
-  .swift-list{font-size:13px;color:#6b7280;margin-top:6px; line-height:1.6}
-
-  .footer {text-align: center; margin-top: 40px; padding-bottom: 30px; color: var(--muted); font-size: 13px;}
-  .footer a {color: var(--accent); text-decoration: none; font-weight: 600;}
-
   .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
   .flow-step{text-align:center;position:relative;min-width:180px}
   .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;box-shadow:0 10px 15px -3px rgba(59,130,246,0.2)}
-  .flow-step .arrow-icon{width:40px;height:40px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#64748b;font-size:18px; border: 1px solid #e2e8f0;}
   .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:700}
   .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
-  .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+  .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
   .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
-  /* Yanıb-sönmə effekti */
-  @keyframes blink {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0.3; }
-  }
+  @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
   .blinking { animation: blink 1s infinite; }
 
   @media (max-width:768px){
@@ -164,18 +128,18 @@
     <div class="row">
       <div class="col">
         <div class="label">Ordering Beneficiary</div>
-        <div class="value">MMG Capital Limited</div>
+        <div class="value" id="orderBen">MMG Capital Limited</div>
         <br>
         <div class="label">Sender</div>
-        <div class="value">Banque Cramer et Cie SA</div>
+        <div class="value" id="senderName">Banque Cramer et Cie SA</div>
         <div class="small">Zurich, Switzerland</div>
         <br>
         <div class="label">Beneficiary Customer</div>
-        <div class="value">Palame Resource Treasury Sole Co., Ltd</div>
-        <div class="small">Dongpalan Rd, Alley 03, Phonsavanh  Neua Village,  Sisattanak District, Vientiane Capital, Lao</div>
+        <div class="value" id="beneCust">Palame Resource Treasury Sole Co., Ltd</div>
+        <div class="small">Dongpalan Rd, Alley 03, Phonsavanh Neua Village, Sisattanak District, Vientiane Capital, Lao</div>
         <br>
         <div class="label">Bank receiver</div>
-        <div class="value">Sai Gon – Ha Noi Bank Lao Limited</div>
+        <div class="value" id="beneBank">Sai Gon – Ha Noi Bank Lao Limited</div>
       </div>
       <div class="col">
         <div class="label">Sender Account</div>
@@ -199,10 +163,10 @@
           <div class="small" id="txRef" style="font-weight: 700;">COBA515626CH63378</div>
           <button id="copyBtn">Copy</button>
         </div>
-        <div class="swift-list">
-          Sender BIC: <strong>CRAMCHGGXXX</strong><br>
-          Intermediary BIC: <strong>COBADEFFXXX</strong><br>
-          Beneficiary BIC: <strong>SHBALALAXXX</strong><br>
+        <div style="margin-top:10px; font-size:13px; color:#6b7280" id="bicSection">
+          Sender BIC: <strong id="sBic">CRAMCHGGXXX</strong><br>
+          Intermediary BIC: <strong id="iBic">COBADEFFXXX</strong><br>
+          Beneficiary BIC: <strong id="bBic">SHBALALAXXX</strong>
         </div>
       </div>
     </div>
@@ -216,7 +180,7 @@
       </div>
       <div class="connector-line"></div>
       <div class="flow-step">
-        <div class="arrow-icon">➡️</div>
+        <div class="bank-icon" style="background: #64748b;">🏦</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
         <div class="status-tag" id="intermediary-status"></div>
@@ -234,7 +198,6 @@
       <button id="downloadBtn">Download Receipt (PDF)</button>
       <button class="secondary" id="helpBtn">Help / FAQ</button>
     </div>
-    <p class="note">Note: For questions regarding this payment, contact your bank's support.</p>
   </div>
 
   <div class="footer">
@@ -252,52 +215,83 @@ document.addEventListener('DOMContentLoaded', function() {
     const el = document.getElementById(id);
     if(el) {
       el.textContent = text;
-      el.style.background = bg;
-      el.style.color = color;
-      el.style.border = border;
-      if(blinking){
-        el.classList.add('blinking');
-      } else {
-        el.classList.remove('blinking');
-      }
+      el.style.background = bg; el.style.color = color; el.style.border = border;
+      if(blinking) el.classList.add('blinking');
     }
   };
 
-  // Statusları təyin edək
   setStatus('topStatus', 'Sent', sentBg, sentColor, sentBorder);
   setStatus('debtor-status', 'Sent', sentBg, sentColor, sentBorder);
   setStatus('intermediary-status', 'Processing', blinkingBg, blinkingColor, blinkingBorder, true);
   setStatus('beneficiary-status', 'Pending', waitingBg, waitingColor, waitingBorder);
 });
 
-// UETR kopyalama funksiyası
-document.getElementById('copyUetrBtn').addEventListener('click', function(){
-  const txt = document.getElementById('uetrVal').innerText;
-  navigator.clipboard.writeText(txt).then(()=>{
-    const old = this.innerText; this.innerText='Copied';
-    setTimeout(() => this.innerText=old, 1300);
-  });
-});
-
-document.getElementById('copyBtn').addEventListener('click', function(){
-  const txt = document.getElementById('txRef').innerText;
-  navigator.clipboard.writeText(txt).then(()=>{
-    const old = this.innerText; this.innerText='Copied';
-    setTimeout(() => this.innerText=old, 1300);
-  });
-});
-
+// PDF Yükləmə Funksiyası
 document.getElementById('downloadBtn').addEventListener('click', function(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.setFontSize(18);
-  doc.text("Payment Receipt", 20, 20);
-  doc.setFontSize(12);
-  doc.text(`Reference: ${document.getElementById('txRef').innerText}`, 20, 40);
-  doc.text(`Amount: EUR 30,000,000.00`, 20, 50);
-  doc.text(`Date: 09-Feb-2026`, 20, 60);
-  doc.save('payment_receipt.pdf');
+  
+  // Stil və Başlıq
+  doc.setFontSize(20);
+  doc.setTextColor(11, 107, 255);
+  doc.text("SWIFT Payment Receipt", 20, 20);
+  
+  doc.setDrawColor(230, 230, 230);
+  doc.line(20, 25, 190, 25);
+
+  doc.setFontSize(11);
+  doc.setTextColor(0, 0, 0);
+  
+  let y = 35;
+  const col1 = 20;
+  const col2 = 70;
+
+  // Əsas Detallar
+  doc.setFont("helvetica", "bold"); doc.text("Transaction Summary", col1, y); y += 10;
+  doc.setFont("helvetica", "normal");
+  
+  doc.text("UETR Code:", col1, y); doc.text(document.getElementById('uetrVal').innerText, col2, y); y += 8;
+  doc.text("Reference:", col1, y); doc.text(document.getElementById('txRef').innerText, col2, y); y += 8;
+  doc.text("Amount:", col1, y); doc.text("EUR 30,000,000.00", col2, y); y += 8;
+  doc.text("Value Date:", col1, y); doc.text("09-Feb-2026", col2, y); y += 15;
+
+  // Bank Məlumatları
+  doc.setFont("helvetica", "bold"); doc.text("Banking Path Information", col1, y); y += 10;
+  doc.setFont("helvetica", "normal");
+
+  doc.setFont("helvetica", "bold"); doc.text("Sender Bank:", col1, y); doc.setFont("helvetica", "normal");
+  doc.text(document.getElementById('senderName').innerText + " (" + document.getElementById('sBic').innerText + ")", col2, y); y += 8;
+
+  doc.setFont("helvetica", "bold"); doc.text("Intermediary:", col1, y); doc.setFont("helvetica", "normal");
+  doc.text("Commerzbank AG (" + document.getElementById('iBic').innerText + ")", col2, y); y += 8;
+
+  doc.setFont("helvetica", "bold"); doc.text("Receiver Bank:", col1, y); doc.setFont("helvetica", "normal");
+  doc.text(document.getElementById('beneBank').innerText + " (" + document.getElementById('bBic').innerText + ")", col2, y); y += 8;
+
+  doc.setFont("helvetica", "bold"); doc.text("Beneficiary:", col1, y); doc.setFont("helvetica", "normal");
+  doc.text(document.getElementById('beneCust').innerText, col2, y); y += 20;
+
+  // Footer
+  doc.setFontSize(9);
+  doc.setTextColor(100, 100, 100);
+  doc.text("This document is generated by verify-swift.com as a formal payment status report.", col1, y);
+  doc.text("Date of Issue: " + new Date().toUTCString(), col1, y + 5);
+
+  doc.save('SWIFT_Receipt.pdf');
 });
+
+// Kopyalama
+const setupCopy = (btnId, valId) => {
+  document.getElementById(btnId).addEventListener('click', function(){
+    const txt = document.getElementById(valId).innerText;
+    navigator.clipboard.writeText(txt).then(()=>{
+      const old = this.innerText; this.innerText='Copied';
+      setTimeout(() => this.innerText=old, 1300);
+    });
+  });
+};
+setupCopy('copyUetrBtn', 'uetrVal');
+setupCopy('copyBtn', 'txRef');
 
 document.getElementById('helpBtn').addEventListener('click', () => alert("Contact: info@verify-swift.com"));
 </script>
