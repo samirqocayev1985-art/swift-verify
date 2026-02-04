@@ -3,9 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Incoming Payment — Customer View</title>
+<title>Cancelled Payment — Customer View</title>
 <style>
-  :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+  :root{
+    --bg:#f8fafc;
+    --card:#fff;
+    --accent:#dc2626; /* Qırmızı rəng (Ləğv üçün) */
+    --muted:#6b7280;
+    --error:#991b1b;
+    --error-bg:#fee2e2;
+  }
   
   body {
     font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
@@ -15,9 +22,8 @@
     min-height: 100vh;
     background-color: #f3f4f6;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%),
-      radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(220, 38, 38, 0.08) 0px, transparent 50%);
     background-attachment: fixed;
     position: relative;
     overflow-x: hidden;
@@ -51,12 +57,12 @@
   .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
   .value{font-weight:600;font-size:16px}
   
-  .amount{font-size:18px; color:var(--accent); font-weight: 800;}
+  .amount{font-size:18px; color:var(--accent); font-weight: 800; text-decoration: line-through;}
   
   .small{font-size:13px;color:var(--muted)}
   .btns{display:flex;gap:10px;margin-top:20px}
   
-  button{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s; font-family: inherit;}
+  button{background:#475569;border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s; font-family: inherit;}
   button:hover{filter: brightness(1.1); transform: translateY(-1px);}
   button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
   
@@ -64,18 +70,15 @@
   .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
   
   .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
-  .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
+  .copy button{background:transparent;color:#475569;padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
   
   .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
   .flow-step{text-align:center;position:relative;min-width:180px}
-  .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;box-shadow:0 10px 15px -3px rgba(59,130,246,0.2)}
+  .flow-step .bank-icon{width:60px;height:60px;background:#cbd5e1;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
   .flow-step .bank-name{font-size:12px;color:#475569;margin-bottom:4px;font-weight:700}
   .flow-step .bank-code{font-size:11px;color:#94a3b8;margin-bottom:8px;letter-spacing:0.5px}
   .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
-  .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
-
-  @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
-  .blinking { animation: blink 1s infinite; }
+  .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #fee2e2;}
 
   @media (max-width:768px){
     .flow-container{flex-direction:column;gap:30px}
@@ -93,8 +96,8 @@
   </a>
 
   <div class="card">
-    <h1>Incoming Payment</h1>
-    <p class="lead">Below are the key details of funds received.</p>
+    <h1 style="color: #dc2626;">Payment Cancelled</h1>
+    <p class="lead">The transaction has been terminated and the funds were not moved.</p>
     
     <div class="muted-line"></div>
 
@@ -107,7 +110,7 @@
     <div class="row">
       <div class="col">
         <div class="label">Status</div>
-        <div class="value"><span class="status" id="topStatus"></span></div>
+        <div class="value"><span class="status" id="topStatus">CANCELLED</span></div>
       </div>
       <div class="col">
         <div class="label">Amount</div>
@@ -119,7 +122,7 @@
       </div>
       <div class="col">
         <div class="label">Value date:</div>
-        <div class="value">09-Feb-2026</div>
+        <div class="value">--</div>
       </div>
     </div>
 
@@ -136,7 +139,7 @@
         <br>
         <div class="label">Beneficiary Customer</div>
         <div class="value" id="beneCust">Palame Resource Treasury Sole Co., Ltd</div>
-        <div class="small">Dongpalan Rd, Alley 03, Phonsavanh Neua Village, Sisattanak District, Vientiane Capital, Lao</div>
+        <div class="small">Vientiane Capital, Lao</div>
         <br>
         <div class="label">Bank receiver</div>
         <div class="value" id="beneBank">Sai Gon – Ha Noi Bank Lao Limited</div>
@@ -180,7 +183,7 @@
       </div>
       <div class="connector-line"></div>
       <div class="flow-step">
-        <div class="bank-icon" style="background: #64748b;">🏦</div>
+        <div class="bank-icon">🏦</div>
         <div class="bank-name">Intermediary Bank</div>
         <div class="bank-code">COBADEFFXXX</div>
         <div class="status-tag" id="intermediary-status"></div>
@@ -195,48 +198,48 @@
     </div>
 
     <div class="btns">
-      <button id="downloadBtn">Download Receipt (PDF)</button>
-      <button class="secondary" id="helpBtn">Help / FAQ</button>
+      <button id="downloadBtn" style="background: #ef4444;">Download Cancellation Notice</button>
+      <button class="secondary" id="helpBtn">Reason for Cancellation</button>
     </div>
   </div>
 
-  <div class="footer">
-    &copy; 2026 <a href="https://verify-swift.com">verify-swift.com</a>. All rights reserved.
+  <div class="footer" style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 20px;">
+    &copy; 2026 <a href="https://verify-swift.com" style="color: #64748b;">verify-swift.com</a>. All rights reserved.
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const sentBg = '#16a34a', sentColor = '#fff', sentBorder = '1px solid rgba(22,163,74,0.2)';
-  const blinkingBg = '#facc15', blinkingColor = '#92400e', blinkingBorder = '1px solid rgba(250,204,21,0.3)';
-  const waitingBg = '#f1f5f9', waitingColor = '#64748b', waitingBorder = '1px solid #e2e8f0';
+  const cancelBg = '#fee2e2', cancelColor = '#991b1b', cancelBorder = '1px solid #f87171';
+  const mainCancelBg = '#dc2626', mainCancelColor = '#fff';
 
-  const setStatus = (id, text, bg, color, border, blinking=false) => {
+  const setStatus = (id, text, bg, color, border) => {
     const el = document.getElementById(id);
     if(el) {
       el.textContent = text;
-      el.style.background = bg; el.style.color = color; el.style.border = border;
-      if(blinking) el.classList.add('blinking');
+      el.style.background = bg; 
+      el.style.color = color; 
+      el.style.border = border;
+      el.classList.remove('blinking');
     }
   };
 
-  setStatus('topStatus', 'Sent', sentBg, sentColor, sentBorder);
-  setStatus('debtor-status', 'Sent', sentBg, sentColor, sentBorder);
-  setStatus('intermediary-status', 'Processing', blinkingBg, blinkingColor, blinkingBorder, true);
-  setStatus('beneficiary-status', 'Pending', waitingBg, waitingColor, waitingBorder);
+  setStatus('topStatus', 'CANCELLED', mainCancelBg, mainCancelColor, '1px solid #b91c1c');
+  setStatus('debtor-status', 'REJECTED', cancelBg, cancelColor, cancelBorder);
+  setStatus('intermediary-status', 'CANCELLED', cancelBg, cancelColor, cancelBorder);
+  setStatus('beneficiary-status', 'VOID', cancelBg, cancelColor, cancelBorder);
 });
 
-// PDF Yükləmə Funksiyası
+// PDF Yükləmə Funksiyası (Ləğv statusu ilə)
 document.getElementById('downloadBtn').addEventListener('click', function(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   
-  // Stil və Başlıq
   doc.setFontSize(20);
-  doc.setTextColor(11, 107, 255);
-  doc.text("SWIFT Payment Receipt", 20, 20);
+  doc.setTextColor(220, 38, 38);
+  doc.text("SWIFT Payment Cancellation Notice", 20, 20);
   
-  doc.setDrawColor(230, 230, 230);
+  doc.setDrawColor(220, 38, 38);
   doc.line(20, 25, 190, 25);
 
   doc.setFontSize(11);
@@ -246,41 +249,20 @@ document.getElementById('downloadBtn').addEventListener('click', function(){
   const col1 = 20;
   const col2 = 70;
 
-  // Əsas Detallar
-  doc.setFont("helvetica", "bold"); doc.text("Transaction Summary", col1, y); y += 10;
+  doc.setFont("helvetica", "bold"); doc.text("Status: CANCELLED / VOID", col1, y); y += 10;
   doc.setFont("helvetica", "normal");
   
   doc.text("UETR Code:", col1, y); doc.text(document.getElementById('uetrVal').innerText, col2, y); y += 8;
-  doc.text("Reference:", col1, y); doc.text(document.getElementById('txRef').innerText, col2, y); y += 8;
-  doc.text("Amount:", col1, y); doc.text("EUR 30,000,000.00", col2, y); y += 8;
-  doc.text("Value Date:", col1, y); doc.text("09-Feb-2026", col2, y); y += 15;
+  doc.text("Amount:", col1, y); doc.text("EUR 30,000,000.00 (NOT PROCESSED)", col2, y); y += 8;
+  doc.text("Notice Date:", col1, y); doc.text(new Date().toLocaleDateString(), col2, y); y += 15;
 
-  // Bank Məlumatları
-  doc.setFont("helvetica", "bold"); doc.text("Banking Path Information", col1, y); y += 10;
-  doc.setFont("helvetica", "normal");
-
-  doc.setFont("helvetica", "bold"); doc.text("Sender Bank:", col1, y); doc.setFont("helvetica", "normal");
-  doc.text(document.getElementById('senderName').innerText + " (" + document.getElementById('sBic').innerText + ")", col2, y); y += 8;
-
-  doc.setFont("helvetica", "bold"); doc.text("Intermediary:", col1, y); doc.setFont("helvetica", "normal");
-  doc.text("Commerzbank AG (" + document.getElementById('iBic').innerText + ")", col2, y); y += 8;
-
-  doc.setFont("helvetica", "bold"); doc.text("Receiver Bank:", col1, y); doc.setFont("helvetica", "normal");
-  doc.text(document.getElementById('beneBank').innerText + " (" + document.getElementById('bBic').innerText + ")", col2, y); y += 8;
-
-  doc.setFont("helvetica", "bold"); doc.text("Beneficiary:", col1, y); doc.setFont("helvetica", "normal");
-  doc.text(document.getElementById('beneCust').innerText, col2, y); y += 20;
-
-  // Footer
   doc.setFontSize(9);
-  doc.setTextColor(100, 100, 100);
-  doc.text("This document is generated by verify-swift.com as a formal payment status report.", col1, y);
-  doc.text("Date of Issue: " + new Date().toUTCString(), col1, y + 5);
+  doc.setTextColor(150, 0, 0);
+  doc.text("The transaction was terminated by the banking system. No funds were debited/credited.", col1, y);
 
-  doc.save('SWIFT_Receipt.pdf');
+  doc.save('SWIFT_Cancellation.pdf');
 });
 
-// Kopyalama
 const setupCopy = (btnId, valId) => {
   document.getElementById(btnId).addEventListener('click', function(){
     const txt = document.getElementById(valId).innerText;
@@ -293,7 +275,7 @@ const setupCopy = (btnId, valId) => {
 setupCopy('copyUetrBtn', 'uetrVal');
 setupCopy('copyBtn', 'txRef');
 
-document.getElementById('helpBtn').addEventListener('click', () => alert("Contact: info@verify-swift.com"));
+document.getElementById('helpBtn').addEventListener('click', () => alert("Cancellation Reason: Compliance check failed or sender recalled the transfer."));
 </script>
 </body>
 </html>
