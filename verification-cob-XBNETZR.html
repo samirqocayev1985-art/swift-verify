@@ -3,124 +3,155 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cancelled Payment — Customer View</title>
+<title>Refunded Payment — Customer View</title>
 <style>
-  :root{
-    --bg:#f8fafc;
-    --card:#fff;
-    --accent:#dc2626; /* Ləğv üçün qırmızı */
-    --muted:#64748b;
-    --error:#991b1b;
-    --void-gray:#475569;
+  :root {
+    --bg: #f8fafc;
+    --card: #fff;
+    --accent: #dc2626; 
+    --muted: #6b7280;
+    --warning: #856404;
+    --warning-bg: #fff3cd;
+    --void-gray: #475569;
   }
   
   body {
-    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+    font-family: 'Inter', ui-sans-serif, system-ui, Arial, sans-serif;
+    background: var(--bg);
     margin: 0;
     padding: 24px;
     color: #0f172a;
-    min-height: 100vh;
-    background-color: #f1f5f9;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(71, 85, 105, 0.05) 0px, transparent 50%);
-    background-attachment: fixed;
   }
 
-  .wrap{max-width:840px;margin:0 auto; position: relative;}
+  .wrap { max-width: 840px; margin: 0 auto; }
   
-  .custom-top-logo {
-    width: 140px;
-    height: auto;
-    display: block;
-    margin-bottom: 15px;
-    filter: grayscale(1); /* Logo boz rəngdə */
-  }
-
-  .card{
-    background:var(--card);
-    border-radius:16px; 
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    padding:28px;
-    margin-bottom:16px;
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    padding: 28px;
+    margin-bottom: 16px;
     border: 1px solid #e2e8f0;
     position: relative;
     overflow: hidden;
   }
 
-  /* Arxa fonda böyük VOID yazısı */
+  /* REFUNDED/VOID Filigranı */
   .card::after {
-    content: "CANCELLED";
+    content: "REFUNDED";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-30deg);
     font-size: 100px;
     font-weight: 900;
-    color: rgba(220, 38, 38, 0.03);
+    color: rgba(220, 38, 38, 0.04);
     pointer-events: none;
   }
 
-  h1{font-size:22px;margin:0 0 8px; font-weight: bold; color: var(--accent);}
-  p.lead{margin:0;color:var(--muted)}
-  .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-  .col{flex:1;min-width:180px}
-  .label{font-size:11px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;}
-  .value{font-weight:600;font-size:16px}
+  h1 { font-size: 20px; margin: 0 0 8px; color: var(--accent); font-weight: bold; }
+  p.lead { margin: 0; color: var(--muted); font-size: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .col { flex: 1; min-width: 180px; }
+  .label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+  .value { font-weight: 600; font-size: 16px; }
   
-  .amount{font-size:20px; color:var(--void-gray); font-weight: 800; text-decoration: line-through;}
-  
-  .btns{display:flex;gap:10px;margin-top:20px}
-  
-  button{background:var(--void-gray);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600; font-family: inherit;}
-  button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
-  
-  .status{display:inline-block;padding:6px 14px;border-radius:999px;font-weight:800; font-size: 13px; text-transform: uppercase;}
-  .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
-  
-  .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:6px 12px;border-radius:10px;border:1px solid #e2e8f0}
-  .copy button{background:transparent;color:var(--accent);padding:4px 8px; font-size: 12px; border:none; cursor:pointer;}
-  
-  .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;}
-  .flow-step{text-align:center;min-width:160px}
-  .flow-step .bank-icon{width:55px;height:55px;background:#cbd5e1;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:20px;}
-  .flow-step .bank-name{font-size:12px;color:#475569;font-weight:700}
-  .status-tag{display:inline-block;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;margin-top:8px;}
-  .connector-line{flex:1;height:2px;background: #e2e8f0; margin: 0 10px;}
+  .amount { 
+    font-size: 22px; 
+    color: var(--void-gray); 
+    font-weight: 800; 
+    text-decoration: line-through; 
+  }
 
-  @media (max-width:768px){ .flow-container{flex-direction:column; gap:20px;} .connector-line{display:none;} }
+  .muted-line { height: 1px; background: #f1f5f9; margin: 20px -28px; }
+  
+  .copy-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 15px;
+  }
+  
+  .copy-box button {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  /* AML/Refund Xəbərdarlıq Qutusu */
+  .alert-box {
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #991b1b;
+    border-left: 5px solid #dc2626;
+  }
+
+  .flow-container { display: flex; align-items: center; justify-content: center; margin: 30px 0; }
+  .flow-step { text-align: center; min-width: 160px; }
+  .bank-icon { width: 50px; height: 50px; background: #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-size: 20px; }
+  .status-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+  .connector { flex: 1; height: 2px; background: #e2e8f0; margin: 0 10px; }
+
+  .btns { display: flex; gap: 10px; margin-top: 20px; }
+  button.main-btn { background: #dc2626; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+  button.main-btn:hover { background: #b91c1c; }
+  button.sec-btn { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+  @media (max-width:768px) { .flow-container { flex-direction: column; gap: 20px; } .connector { display: none; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 <div class="wrap">
-  <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" class="custom-top-logo">
+  <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" style="width:140px; margin-bottom:15px; filter: grayscale(1);">
 
   <div class="card">
-    <h1>Payment Cancelled</h1>
-    <p class="lead">The transaction was aborted and funds were not transferred.</p>
+    <h1>Payment Refunded</h1>
+    <p class="lead">The transaction was rejected and the funds were returned to the sender.</p>
     
     <div class="muted-line"></div>
 
-    <div class="label">Uetr code</div>
-    <div class="copy" style="margin-bottom: 10px;">
-        <div class="value" id="uetrVal" style="font-family: monospace; color: #64748b; font-size: 13px;">3de2581e-f144-11f0-a92c-325096b39f47</div>
-        <button id="copyUetrBtn">Copy</button>
+    <div class="label">UETR Code</div>
+    <div class="copy-box">
+      <span id="uetrVal" style="font-family: monospace; color: #64748b;">3de2581e-f144-11f0-a92c-325096b39f47</span>
+      <button id="copyUetrBtn">Copy</button>
     </div>
 
     <div class="row">
       <div class="col">
         <div class="label">Current Status</div>
-        <div class="value"><span class="status" id="topStatus" style="background:#fee2e2; color:#b91c1c; border:1px solid #f87171;">CANCELLED</span></div>
+        <div class="value"><span class="status-tag" style="background:#fee2e2; color:#b91c1c; border: 1px solid #f87171;">REFUNDED</span></div>
       </div>
       <div class="col">
-        <div class="label">Original Amount</div>
+        <div class="label">Amount</div>
         <div class="value amount">EUR 21,300,000.00</div>
       </div>
       <div class="col">
-        <div class="label">Attempted Date</div>
-        <div class="value">19-Jan-2026</div>
+        <div class="label">Value Date</div>
+        <div class="value">--</div>
+      </div>
+    </div>
+
+    <div class="alert-box">
+      <div style="display: flex; gap: 10px;">
+        <span style="font-size: 18px;">⚠️</span>
+        <div>
+          <strong style="text-transform: uppercase;">Compliance Rejection Notice:</strong><br>
+          Payment was refunded back to the originator. The transaction failed to pass the internal <strong>AML / KYC compliance verification</strong> at the intermediary or beneficiary bank.
+          <br><br>
+          <small>Reason: Origin of funds verification incomplete. No funds were credited to the beneficiary.</small>
+        </div>
       </div>
     </div>
 
@@ -131,13 +162,13 @@
         <div class="label">Sender Bank</div>
         <div class="value">TSB Bank Plc (UK)</div>
         <br>
-        <div class="label">Beneficiary</div>
+        <div class="label">Beneficiary Customer</div>
         <div class="value">PT. BANGUN MEGAH MANDIRI PROPERTINDO</div>
       </div>
       <div class="col">
         <div class="label">Transaction Reference</div>
-        <div class="copy">
-          <div class="small" id="txRef" style="font-weight: 700;">RZBA780533WW25874</div>
+        <div class="copy-box">
+          <span id="txRef" style="font-weight: 700;">RZBA780533WW25874</span>
           <button id="copyBtn">Copy</button>
         </div>
       </div>
@@ -147,68 +178,75 @@
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Sender</div>
-        <div class="status-tag" style="background:#fee2e2; color:#991b1b;">REJECTED</div>
+        <div class="status-tag" style="background:#dcfce7; color:#166534;">SENT</div>
       </div>
-      <div class="connector-line"></div>
+      <div class="connector"></div>
       <div class="flow-step">
         <div class="bank-icon">🏦</div>
         <div class="bank-name">Intermediary</div>
-        <div class="status-tag" style="background:#f1f5f9; color:#64748b;">STOPPED</div>
+        <div class="status-tag" style="background:#f1f5f9; color:#475569;">RETURNED</div>
       </div>
-      <div class="connector-line"></div>
+      <div class="connector"></div>
       <div class="flow-step">
-        <div class="bank-icon">🏦</div>
+        <div class="bank-icon" style="background:#fca5a5;">🏦</div>
         <div class="bank-name">Beneficiary</div>
-        <div class="status-tag" style="background:#f1f5f9; color:#64748b;">VOID</div>
+        <div class="status-tag" style="background:#fee2e2; color:#991b1b;">REJECTED</div>
       </div>
     </div>
 
     <div class="btns">
-      <button id="downloadBtn" style="background:#dc2626;">Download Cancellation Notice</button>
-      <button class="secondary" id="helpBtn">Reason for Rejection</button>
+      <button class="main-btn" id="downloadBtn">Download Refund Advice (PDF)</button>
+      <button class="sec-btn" id="helpBtn">Compliance FAQ</button>
     </div>
   </div>
 
-  <div style="text-align: center; color: #94a3b8; font-size: 12px;">
-    &copy; 2026 verify-swift.com. This notice is for information purposes only.
+  <div style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 10px;">
+    &copy; 2026 verify-swift.com. All rights reserved.
   </div>
 </div>
 
 <script>
-// Kopyalama Funksiyaları
+/* Kopyalama funksiyası */
 const setupCopy = (btnId, valId) => {
   document.getElementById(btnId).addEventListener('click', function(){
     const txt = document.getElementById(valId).innerText;
-    navigator.clipboard.writeText(txt).then(()=>{
-      const old = this.innerText; this.innerText='Copied';
-      setTimeout(() => this.innerText=old, 1200);
+    navigator.clipboard.writeText(txt).then(() => {
+      const old = this.innerText; this.innerText = 'Copied';
+      setTimeout(() => this.innerText = old, 1200);
     });
   });
 };
 setupCopy('copyUetrBtn', 'uetrVal');
 setupCopy('copyBtn', 'txRef');
 
-// PDF Yükləmə (Ləğv Notice)
+/* PDF Yükləmə (Refund Notice) */
 document.getElementById('downloadBtn').addEventListener('click', function(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.setTextColor(220, 38, 38);
+  
   doc.setFontSize(20);
-  doc.text("CANCELLATION NOTICE", 20, 25);
+  doc.setTextColor(220, 38, 38);
+  doc.text("ADVICE OF REFUND", 20, 25);
+  
   doc.setDrawColor(220, 38, 38);
   doc.line(20, 30, 190, 30);
   
   doc.setFontSize(12);
   doc.setTextColor(0, 0, 0);
-  doc.text(`UETR: ${document.getElementById('uetrVal').innerText}`, 20, 45);
-  doc.text(`Status: CANCELLED / REJECTED`, 20, 55);
-  doc.text(`Original Amount: EUR 21,300,000.00`, 20, 65);
-  doc.text(`Note: No funds have been debited from the originator account.`, 20, 85);
+  doc.text(`UETR: 3de2581e-f144-11f0-a92c-325096b39f47`, 20, 45);
+  doc.text(`Status: REFUNDED / REJECTED`, 20, 55);
+  doc.text(`Amount: EUR 21,300,000.00`, 20, 65);
+  doc.text(`Reason: Compliance verification failed (AML Policy).`, 20, 75);
   
-  doc.save('Cancellation_Notice.pdf');
+  doc.setTextColor(100, 100, 100);
+  doc.setFontSize(10);
+  doc.text("This document confirms that the transaction was terminated and funds", 20, 95);
+  doc.text("were returned to the originating institution.", 20, 100);
+  
+  doc.save('SWIFT_Refund_Advice.pdf');
 });
 
-document.getElementById('helpBtn').addEventListener('click', () => alert("Reason: Compliance review or technical rejection at intermediary level."));
+document.getElementById('helpBtn').addEventListener('click', () => alert("For compliance assistance, contact your local bank branch regarding 'Source of Wealth' documentation."));
 </script>
 </body>
 </html>
