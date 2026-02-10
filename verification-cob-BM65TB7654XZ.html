@@ -70,6 +70,7 @@
         .flow-step{text-align:center;position:relative;min-width:180px}
         .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
         .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
         @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
@@ -126,14 +127,15 @@
                 <div class="label">Sender Bank</div>
                 <div class="value" id="sendBank">Banque Cramer & Cie SA</div>
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
+
                 <br>
                 <div class="label">Beneficiary Customer</div>
                 <div class="value" id="benCust">PT. BANGUN MEGAH MANDIRI PROPERTINDO</div>
                 <div class="small">Jakarta, Indonesia</div>
                 <br>
                 <div class="label">Bank reciever</div>
-                <div class="value" id="benCust">PT. BANGUN MEGAH MANDIRI PROPERTINDO</div>
-                <div class="small">Jakarta, Indonesia</div>           
+                <div class="value" id="recBank">Bank Negara Indonesia (BNI)</div>
+                <div class="small">Jakarta, Indonesia</div>
             </div>
             <div class="col">
                 <div class="label">Reference / Purpose</div>
@@ -145,9 +147,19 @@
                     <button id="copyBtn">Copy</button>
                 </div>
                 <div class="small" style="margin-top:10px">
-                    Sender BIC: <strong>TSBSGB2AXXX</strong><br>
-                    Intermediary BIC: <strong>RZBAATWWXXX</strong><br>
-                    Beneficiary BIC: <strong>BNINIDJAXXX</strong>
+                    <strong>Sender Bank:</strong><br>
+                    <strong>SWIFT: CRAMCHGGXXX</strong><br>
+                    Banque Cramer & Cie SA
+                </div>
+                <div class="small" style="margin-top:10px">
+                    <strong>Intermediary Bank:</strong><br>
+                    <strong>SWIFT: COBADEFFXXX</strong><br>
+                    Commerzbank Filiale Frankfurt am Main
+                </div>
+                <div class="small" style="margin-top:10px">
+                    <strong>Beneficiary Bank:</strong><br>
+                    <strong>SWIFT: COBADEFFXXX</strong><br>
+                    Commerzbank Filiale Frankfurt am Main
                 </div>
             </div>
         </div>
@@ -155,25 +167,28 @@
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Sender</div>
+                <div class="bank-name" style="font-size:12px; font-weight:bold">Sender Bank</div>
+                <div class="swift-code">CRAMCHGGXXX</div>
                 <div class="status-tag" id="debtor-status">Sent</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div class="bank-name" style="font-size:12px; font-weight:bold">Intermediary Bank</div>
+                <div class="swift-code"> COBADEFFXXX</div>
                 <div class="status-tag" id="intermediary-status">Processing</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Beneficiary</div>
+                <div class="bank-name" style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
+                <div class="swift-code">BNINIDJAXXX</div>
                 <div class="status-tag" id="beneficiary-status">Pending</div>
             </div>
         </div>
 
         <div class="btns">
-            <button id="downloadBtn" style="background: #1e293b;">Download Professional Receipt (PDF)</button>
+            <button id="downloadBtn" style="background: #3b82f6;">Download Professional Receipt (PDF)</button>
             <button class="secondary" id="helpBtn">Help Center</button>
         </div>
     </div>
@@ -277,6 +292,7 @@
         drawRow("SENDER BANK", document.getElementById('sendBank').innerText + " (TSBSGB2AXXX)");
         drawRow("BENEFICIARY", document.getElementById('benCust').innerText);
         drawRow("RECEIVING BANK", "Bank Negara Indonesia (BNI) (BNINIDJAXXX)");
+        drawRow("INTERMEDIARY BANK", "Raiffeisen Bank International (COBADEFFXXX)");
         drawRow("PURPOSE", document.getElementById('purpose').innerText);
         drawRow("STATUS", "IN-PROGRESS (INTERMEDIARY)");
 
@@ -304,4 +320,3 @@
     document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
 </script>
 </body>
-</html>
