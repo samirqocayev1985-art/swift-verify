@@ -131,7 +131,7 @@
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Konya, Turkiye.</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Ziraat Bankasi A.S. Turkiye</div>
+                <div class="value">Ziraat Bankasi A.S.</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -309,7 +309,7 @@
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);  // PDF-də qismən gizli
-        addRow("Receiving Bank", "Ziraat Bankasi A.S. Turkiye (TCZBTR2AXXX)");
+        addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
         doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
