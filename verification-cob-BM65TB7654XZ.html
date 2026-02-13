@@ -66,6 +66,14 @@
         .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
         .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
         
+        .iban-box {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px dashed #cbd5e1;
+        }
+
         .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
         .flow-step{text-align:center;position:relative;min-width:180px}
         .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
@@ -79,14 +87,6 @@
         @media (max-width:768px){
             .flow-container{flex-direction:column;gap:30px}
             .connector-line{display:none}
-        }
-
-        .generation-time {
-            font-size: 9px;
-            color: #94a3b8;
-            text-align: right;
-            margin-top: 5px;
-            font-style: italic;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -145,11 +145,19 @@
                 <div class="value" id="benCust">Eskonax Otomotiv Sanayi Ticaret Limited Sirketi</div>
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Ic Kapi No. B06, Konya, Türkiye.</div>
                 <br>
-                <div class="label">Bank reciever</div>
+                <div class="label">Bank receiver</div>
                 <div class="value" id="recBank">Ziraat Bankasi A.S., Türkiye</div>
-                <div class="small"></div>
             </div>
             <div class="col">
+                <div class="label">Payment Details</div>
+                <div class="iban-box">
+                    <div class="label" style="margin-bottom:2px; font-size:10px;">Sender IBAN</div>
+                    <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
+                    
+                    <div class="label" style="margin-bottom:2px; font-size:10px;">Beneficiary IBAN</div>
+                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 **** **** **** 5003</div>
+                </div>
+
                 <div class="label">Reference / Purpose</div>
                 <div class="value small" id="purpose">Payment for Agreement No. 2026/01/19</div>
                 <br>
@@ -158,20 +166,11 @@
                     <div class="small" id="txRef" style="font-weight: 700;">COBA626346CH63388</div>
                     <button id="copyBtn">Copy</button>
                 </div>
+                
                 <div class="small" style="margin-top:10px">
-                    <strong>Sender Bank:</strong><br>
-                    <strong>SWIFT: CRAMCHGGXXX</strong><br>
-                    Banque Cramer & Cie SA
-                </div>
-                <div class="small" style="margin-top:10px">
-                    <strong>Intermediary Bank:</strong><br>
-                    <strong>SWIFT: COBADEFFXXX</strong><br>
-                    Commerzbank Filiale Frankfurt am Main
-                </div>
-                <div class="small" style="margin-top:10px">
-                    <strong>Beneficiary Bank:</strong><br>
-                    <strong>SWIFT: TCZBTR2AXXX</strong><br>
-                    Ziraat Bankasi A.S., Türkiye
+                    <strong>Sender Bank:</strong> CRAMCHGGXXX<br>
+                    <strong>Intermediary:</strong> COBADEFFXXX<br>
+                    <strong>Beneficiary Bank:</strong> TCZBTR2AXXX
                 </div>
             </div>
         </div>
@@ -227,7 +226,6 @@
         updateEl('beneficiary-status', pendStyle);
     });
 
-    // Copy Functions
     const setupCopy = (btnId, valId) => {
         document.getElementById(btnId).addEventListener('click', function() {
             const txt = document.getElementById(valId).innerText;
@@ -240,21 +238,15 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // PDF GENERATION - PERFECTLY FORMATTED WITH GENERATION TIME
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
-        // Colors
-        const primary = [30, 41, 59]; // Dark Slate
-        const accent = [11, 107, 255]; // Swift Blue
+        const primary = [30, 41, 59];
+        const accent = [11, 107, 255];
         const lightGray = [248, 250, 252];
 
-        // Header Background
         doc.setFillColor(...primary);
         doc.rect(0, 0, 210, 40, 'F');
-
-        // Header Text
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(24);
@@ -265,11 +257,8 @@
         doc.text("GLOBAL PAYMENT CONFIRMATION", 140, 20);
         doc.text("Ref: " + document.getElementById('txRef').innerText, 140, 26);
 
-        // Transaction Summary Box
         doc.setFillColor(...lightGray);
         doc.roundedRect(20, 50, 170, 45, 3, 3, 'F');
-        
-        // TOTAL TRANSFER AMOUNT
         doc.setTextColor(...primary);
         doc.setFontSize(9);
         doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
@@ -277,125 +266,29 @@
         doc.setTextColor(...accent);
         doc.text("EUR 4,250,000.00", 30, 75);
 
-        // SENT DATE
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(9);
-        doc.text("SENT DATE", 140, 60);
-        doc.setTextColor(0,0,0);
-        doc.setFontSize(11);
-        doc.setFont("helvetica", "bold");
-        doc.text(document.getElementById('sentDate').innerText, 140, 68);
-        
-        // VALUE DATE
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(9);
-        doc.text("VALUE DATE", 140, 78);
-        doc.setTextColor(0,0,0);
-        doc.setFontSize(11);
-        doc.setFont("helvetica", "bold");
-        doc.text(document.getElementById('valDate').innerText, 140, 86);
-
-        // Separator Line
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, 100, 190, 100);
-
-        // Table - PERFECT ALIGNMENT
         let y = 115;
-        const labelX = 20;
-        const valueX = 70;
-        
-        // Helper function for table rows
-        const addRow = (label, value, isBoldValue = false) => {
+        const addRow = (label, value) => {
             doc.setFont("helvetica", "bold");
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
-            doc.text(label, labelX, y);
-            
-            doc.setFont("helvetica", isBoldValue ? "bold" : "normal");
+            doc.text(label, 20, y);
+            doc.setFont("helvetica", "normal");
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            
-            if (value.length > 50) {
-                const splitValue = doc.splitTextToSize(value, 110);
-                doc.text(splitValue, valueX, y);
-                y += (splitValue.length - 1) * 5;
-            } else {
-                doc.text(value, valueX, y);
-            }
-            
+            doc.text(value, 70, y);
             y += 10;
-            doc.setDrawColor(230, 230, 230);
             doc.line(20, y - 5, 190, y - 5);
         };
 
-        // UETR CODE
         addRow("UETR CODE", document.getElementById('uetrVal').innerText);
-        
-        // ORDERING PARTY
+        addRow("SENDER IBAN", "CH45 **** **** **** 2002");
+        addRow("BENEFICIARY IBAN", "TR92 **** **** **** 5003");
         addRow("ORDERING PARTY", document.getElementById('orderBen').innerText);
-        
-        // SENDER BANK
-        addRow("SENDER BANK", document.getElementById('sendBank').innerText + " (CRAMCHGGXXX)");
-        
-        // BENEFICIARY
+        addRow("SENDER BANK", "Banque Cramer & Cie SA");
         addRow("BENEFICIARY", document.getElementById('benCust').innerText);
-        
-        // RECEIVING BANK
-        addRow("RECEIVING BANK", "Ziraat Bankası A.S., Türkiye (TCZBTR2AXXX)");
-        
-        // INTERMEDIARY BANK
-        addRow("INTERMEDIARY BANK", "Commerzbank Filiale Frankfurt am Main (COBADEFFXXX)");
-        
-        // PURPOSE
-        addRow("PURPOSE", document.getElementById('purpose').innerText);
+        addRow("RECEIVING BANK", "Ziraat Bankası A.S., Türkiye");
 
-        // Add some spacing
-        y += 5;
-
-        // Disclaimer Text - EXACTLY as in screenshot
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.setTextColor(80, 80, 80);
-        const disclaimer = "This advice is for information purposes only. The credit to the beneficiary's account depends on the receiving bank's internal processes and local regulations. Information generated on IN-PROGRESS (INTERMEDIARY)";
-        const splitDisclaimer = doc.splitTextToSize(disclaimer, 170);
-        doc.text(splitDisclaimer, 20, y);
-        
-        y += (splitDisclaimer.length * 5) + 10;
-
-        // VERIFIED BY Section - EXACT POSITIONING
-        doc.setDrawColor(...accent);
-        doc.setLineWidth(0.5);
-        doc.rect(140, y, 40, 35);
-        doc.setFontSize(8);
-        doc.setTextColor(...accent);
-        doc.text("VERIFIED BY", 145, y + 8);
-        doc.text("SWIFT gpi", 145, y + 16);
-        doc.text("NETWORK", 145, y + 24);
-
-        // GENERATION TIME - NEW! (PDF creation date and time)
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-        }).replace(/ /g, '-');
-        const formattedTime = now.toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-        
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(7);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`Document generated on: ${formattedDate} at ${formattedTime}`, 20, 280);
-
-        // Powered by text
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(8);
-        doc.text("Powered by verify-swift.com - Official gpi Tracking Report", 105, 270, {align: "center"});
-
-        doc.save('SWIFT_Payment_Advice_' + document.getElementById('txRef').innerText + '.pdf');
+        doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
     });
 
     document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
