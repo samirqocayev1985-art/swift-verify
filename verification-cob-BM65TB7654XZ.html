@@ -169,6 +169,7 @@
 
         <div class="label">Uetr code</div>
         <div class="copy" style="margin-bottom: 10px;">
+            <!-- UETR kodu son mesajdaki :121 alanından alındı -->
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">b9385469-7830-49dd-99b6-c3b7a11f5ce5</div>
             <button id="copyUetrBtn">Copy</button>
             <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
@@ -182,15 +183,18 @@
             </div>
             <div class="col">
                 <div class="label">Amount</div>
+                <!-- :32A alanındaki məbləğ -->
                 <div class="value amount">EUR 4,250,000.00</div>
             </div>
             <div class="col">
                 <div class="label">Sent date:</div>
-                <div class="value" id="sentDate">13-Feb-2026</div>
+                <!-- :13D alanındakı tarix (16-Fev-2026 formatında) -->
+                <div class="value" id="sentDate">16-Feb-2026</div>
             </div>
             <div class="col">
                 <div class="label">Value date:</div>
-                <div class="value" id="valDate">17-Feb-2026</div>
+                <!-- :32A alanındakı valyuta tarixi (18 Fevral 2026) -->
+                <div class="value" id="valDate">18-Feb-2026</div>
             </div>
         </div>
 
@@ -207,6 +211,7 @@
 
                 <br>
                 <div class="label">Beneficiary Customer</div>
+                <!-- :25a alanındakı Beneficiary adı -->
                 <div class="value" id="benCust">Eskonax Otomotiv Sanayi Ticaret Limited Sirketi</div>
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Ic Kapi No. B06, Konya, Türkiye.</div>
                 <br>
@@ -220,15 +225,18 @@
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
                     
                     <div class="label" style="margin-bottom:2px; font-size:10px;">Beneficiary IBAN</div>
+                    <!-- :25a alanındakı IBAN -->
                     <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 **** **** **** 5003</div>
                 </div>
 
                 <div class="label">Reference / Purpose</div>
+                <!-- :72 alanındakı ödəniş detalları -->
                 <div class="value small" id="purpose">Payment for Agreement No. AG/SJU-008875</div>
                 <br>
                 <div class="label">Transaction Reference</div>
                 <div class="copy">
-                    <div class="small" id="txRef" style="font-weight: 700;">COBA626346CH63388</div>
+                    <!-- :20 alanındakı müştəri referansı -->
+                    <div class="small" id="txRef" style="font-weight: 700;">CBA17112248B401-160226</div>
                     <button id="copyBtn">Copy</button>
                 </div>
                 
@@ -380,29 +388,46 @@
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
         const amount = "EUR 4,250,000.00";
-        const valueDate = document.getElementById('valDate').innerText;
-        const senderIBAN = "CH45 **** **** **** 2002";
-        const beneficiaryIBAN = "TR92 **** **** **** 5003";
+        const valueDate = document.getElementById('valDate').innerText; // 18-Feb-2026
+        // Format value date to DDMMYYYY for SWIFT message
+        const dateParts = valueDate.split('-');
+        const day = dateParts[0];
+        const month = dateParts[1];
+        const year = dateParts[2];
+        const swiftDate = day + month + year; // 18Feb2026 -> 18022026 (Feb -> 02)
+        const monthMap = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
+                         'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'};
+        const swiftDateFormatted = day + monthMap[month] + year;
+        
+        const senderIBAN = document.getElementById('senderIban').innerText;
+        const beneficiaryIBAN = document.getElementById('beneficiaryIban').innerText;
         
         let message = "";
         
         if (type === '900') {
             title.innerText = 'SWIFT MT900 - Confirmation of Debit';
             message = `{1:F01CRAMCHGGXXX0000000000}{2:I900BICFOOXXXXXN}{4:
-:20:${uetr}
+:20:${txRef}
+:21:COBA626346CH63388
 :25:${senderIBAN}
-:32A:${valueDate.replace(/-/g, '')}EUR4250000,00
+:32A:${swiftDateFormatted}EUR4250000,00
 :52A:CRAMCHGGXXX
 :72:/CODT/DEBIT ADVICE
+:121:${uetr}
 -}`;
         } else if (type === '910') {
             title.innerText = 'SWIFT MT910 - Confirmation of Credit';
-            message = `{1:F01TCZBTR2AXXX0000000000}{2:I910BICFOOXXXXXN}{4:
-:20:${uetr}
-:25:${beneficiaryIBAN}
-:32A:${valueDate.replace(/-/g, '')}EUR4250000,00
-:52A:CRAMCHGGXXX
-:72:/CRDT/CREDIT ADVICE
+            // Sizin verdiyiniz son mesaj formatında
+            message = `{1:F01CRAMCHGGXXX0000000000}{2:I910BICFOOXXXXXN}{4:
+:20:${txRef}
+:21:COBA626346CH63388
+:25a:${document.getElementById('benCust').innerText}
+${beneficiaryIBAN}
+:13D: 16022026
+:72:${document.getElementById('purpose').innerText}
+:32A:${swiftDateFormatted}EUR4250000,00
+:52A:CRAMCHGGXXX, Banque Cramer &SIE
+:121:${uetr}
 -}`;
         }
         
