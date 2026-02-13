@@ -406,15 +406,17 @@
         
         if (type === '900') {
             title.innerText = 'SWIFT MT900 - Confirmation of Debit';
-            message = `{1:F01CRAMCHGGXXX0000000000}{2:I900BICFOOXXXXXN}{4:
+message = `{1:F21CRAMCHGGXXX8291722562}{1:177:1602261435}{451:0}{108:XXXXX}}
 :20:${txRef}
-:21:COBA626346CH63388
-:25:${senderIBAN}
+:21:b9385469-7830-49dd-99b6-c3b7a11f5ce5
+:25a:${document.getElementById('benCust').innerText}
+${beneficiaryIBAN}
+:13D: 16022026
+:72:${document.getElementById('purpose').innerText}
 :32A:${swiftDateFormatted}EUR4250000,00
-:52A:CRAMCHGGXXX
-:72:/CODT/DEBIT ADVICE
-:121:${uetr}
+:52A:CRAMCHGGXXX, Banque Cramer &SIE
 -}`;
+        
         } else if (type === '910') {
             title.innerText = 'SWIFT MT910 - Confirmation of Credit';
             // Sizin verdiyiniz son mesaj formatında
