@@ -80,6 +80,14 @@
             .flow-container{flex-direction:column;gap:30px}
             .connector-line{display:none}
         }
+
+        .generation-time {
+            font-size: 9px;
+            color: #94a3b8;
+            text-align: right;
+            margin-top: 5px;
+            font-style: italic;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -232,7 +240,7 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // ENRICHED PDF GENERATION
+    // PDF GENERATION - PERFECTLY FORMATTED WITH GENERATION TIME
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -259,70 +267,133 @@
 
         // Transaction Summary Box
         doc.setFillColor(...lightGray);
-        doc.roundedRect(20, 50, 170, 30, 3, 3, 'F');
+        doc.roundedRect(20, 50, 170, 45, 3, 3, 'F');
         
+        // TOTAL TRANSFER AMOUNT
         doc.setTextColor(...primary);
         doc.setFontSize(9);
         doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
         doc.setFontSize(20);
         doc.setTextColor(...accent);
-        doc.text("EUR 4,250,000.00", 30, 72);
+        doc.text("EUR 4,250,000.00", 30, 75);
 
+        // SENT DATE
         doc.setTextColor(100, 100, 100);
         doc.setFontSize(9);
-        doc.text("SENT DATE", 140, 58);
+        doc.text("SENT DATE", 140, 60);
         doc.setTextColor(0,0,0);
-        doc.setFontSize(12);
-        doc.text(document.getElementById('sentDate').innerText, 140, 65);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text(document.getElementById('sentDate').innerText, 140, 68);
+        
+        // VALUE DATE
         doc.setTextColor(100, 100, 100);
         doc.setFontSize(9);
-        doc.text("VALUE DATE", 140, 72);
+        doc.text("VALUE DATE", 140, 78);
         doc.setTextColor(0,0,0);
-        doc.setFontSize(12);
-        doc.text(document.getElementById('valDate').innerText, 140, 79);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text(document.getElementById('valDate').innerText, 140, 86);
 
-        // Details Table
-        let y = 100;
-        const drawRow = (label, value) => {
-            doc.setDrawColor(230, 230, 230);
-            doc.line(20, y, 190, y);
+        // Separator Line
+        doc.setDrawColor(200, 200, 200);
+        doc.line(20, 100, 190, 100);
+
+        // Table - PERFECT ALIGNMENT
+        let y = 115;
+        const labelX = 20;
+        const valueX = 70;
+        
+        // Helper function for table rows
+        const addRow = (label, value, isBoldValue = false) => {
             doc.setFont("helvetica", "bold");
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
-            doc.text(label, 20, y + 8);
-            doc.setFont("helvetica", "normal");
+            doc.text(label, labelX, y);
+            
+            doc.setFont("helvetica", isBoldValue ? "bold" : "normal");
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text(value, 70, y + 8);
-            y += 15;
+            
+            if (value.length > 50) {
+                const splitValue = doc.splitTextToSize(value, 110);
+                doc.text(splitValue, valueX, y);
+                y += (splitValue.length - 1) * 5;
+            } else {
+                doc.text(value, valueX, y);
+            }
+            
+            y += 10;
+            doc.setDrawColor(230, 230, 230);
+            doc.line(20, y - 5, 190, y - 5);
         };
 
-        drawRow("UETR CODE", document.getElementById('uetrVal').innerText);
-        drawRow("ORDERING PARTY", document.getElementById('orderBen').innerText);
-        drawRow("SENDER BANK", document.getElementById('sendBank').innerText + " (TSBSGB2AXXX)");
-        drawRow("BENEFICIARY", document.getElementById('benCust').innerText);
-        drawRow("RECEIVING BANK", "Ziraat Bankasi A.S., Türkiye (TCZBTR2AXXX)");
-        drawRow("INTERMEDIARY BANK", "Raiffeisen Bank International (COBADEFFXXX)");
-        drawRow("PURPOSE", document.getElementById('purpose').innerText);
-        drawRow("STATUS", "IN-PROGRESS (INTERMEDIARY)");
+        // UETR CODE
+        addRow("UETR CODE", document.getElementById('uetrVal').innerText);
+        
+        // ORDERING PARTY
+        addRow("ORDERING PARTY", document.getElementById('orderBen').innerText);
+        
+        // SENDER BANK
+        addRow("SENDER BANK", document.getElementById('sendBank').innerText + " (CRAMCHGGXXX)");
+        
+        // BENEFICIARY
+        addRow("BENEFICIARY", document.getElementById('benCust').innerText);
+        
+        // RECEIVING BANK
+        addRow("RECEIVING BANK", "Ziraat Bankası A.S., Türkiye (TCZBTR2AXXX)");
+        
+        // INTERMEDIARY BANK
+        addRow("INTERMEDIARY BANK", "Commerzbank Filiale Frankfurt am Main (COBADEFFXXX)");
+        
+        // PURPOSE
+        addRow("PURPOSE", document.getElementById('purpose').innerText);
 
-        // Security Stamp / Footer
+        // Add some spacing
+        y += 5;
+
+        // Disclaimer Text - EXACTLY as in screenshot
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(80, 80, 80);
+        const disclaimer = "This advice is for information purposes only. The credit to the beneficiary's account depends on the receiving bank's internal processes and local regulations. Information generated on IN-PROGRESS (INTERMEDIARY)";
+        const splitDisclaimer = doc.splitTextToSize(disclaimer, 170);
+        doc.text(splitDisclaimer, 20, y);
+        
+        y += (splitDisclaimer.length * 5) + 10;
+
+        // VERIFIED BY Section - EXACT POSITIONING
         doc.setDrawColor(...accent);
         doc.setLineWidth(0.5);
-        doc.rect(140, 210, 40, 40); 
+        doc.rect(140, y, 40, 35);
         doc.setFontSize(8);
         doc.setTextColor(...accent);
-        doc.text("VERIFIED BY", 145, 220);
-        doc.text("SWIFT gpi", 145, 230);
-        doc.text("NETWORK", 145, 240);
+        doc.text("VERIFIED BY", 145, y + 8);
+        doc.text("SWIFT gpi", 145, y + 16);
+        doc.text("NETWORK", 145, y + 24);
 
-        doc.setTextColor(150, 150, 150);
-        doc.setFontSize(8);
-        const disclaimer = "This advice is for information purposes only. The credit to the beneficiary's account depends on the receiving bank's internal processes and local regulations. Information generated on " + new Date().toUTCString();
-        doc.text(doc.splitTextToSize(disclaimer, 100), 20, 220);
-
+        // GENERATION TIME - NEW! (PDF creation date and time)
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        }).replace(/ /g, '-');
+        const formattedTime = now.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        
         doc.setFont("helvetica", "italic");
-        doc.text("Powered by verify-swift.com - Official gpi Tracking Report", 105, 280, {align: "center"});
+        doc.setFontSize(7);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`Document generated on: ${formattedDate} at ${formattedTime}`, 20, 280);
+
+        // Powered by text
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.text("Powered by verify-swift.com - Official gpi Tracking Report", 105, 270, {align: "center"});
 
         doc.save('SWIFT_Payment_Advice_' + document.getElementById('txRef').innerText + '.pdf');
     });
@@ -330,4 +401,4 @@
     document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
 </script>
 </body>
-    </html>
+</html>
