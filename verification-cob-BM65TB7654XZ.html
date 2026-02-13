@@ -131,7 +131,7 @@
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Konya, Turkiye.</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Ziraat Bankasi A.S. Turkiye</div>
+                <div class="value">Ziraat Bankasi A.S.</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -139,7 +139,7 @@
                     <div class="label" style="font-size:10px;">Sender IBAN</div>
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
                     <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
-                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 **** **** **** 5003</div>
+                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 0001 0017 3985 6789 5003</div>
                 </div>
                 <div class="label">Purpose</div>
                 <div class="value small" id="purpose">Payment for Agreement No. AG/SJU-008875</div>
@@ -228,36 +228,45 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // SƏNİN DÜZƏLTDİYİN RAW FORMATI İLƏ MT MESSAGE FUNKSİYASI
+    // DÜZGÜN MT900/MT910 FORMATI - BİR-BİRİNİN EYNİ, SADƏCƏ TİP FƏRQLİ
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
-        const benCust = document.getElementById('benCust').innerText;
         const beneficiaryIBAN = document.getElementById('beneficiaryIban').innerText;
         
-        // Sənin düzəltdiyin xüsusi RAW format
-        let rawHeader = "{1:F21CRAMCHGGXXX8291722562}{1:177:1602261435}{451:0}{108:XXXXX}}";
+        // Tarix formatı: 18-Feb-2026 -> 180226 (YYMMDD)
+        const valueDate = "180226"; // 18 Fevral 2026
         
-        let message = `${rawHeader}
-:20:${txRef}
-:21:${uetr}
-:25a:${benCust}
-${beneficiaryIBAN}
-:13D: 16022026
-:72:${purpose}
-:32A:18022026EUR4250000,00
-:52A:CRAMCHGGXXX, Banque Cramer &SIE
--}`;
+        // Basic header (eyni, sadəcə O900/O910 dəyişir)
+        const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
+        const messageType = type === '900' ? 'O900' : 'O910';
+        const messageRest = "1611060216TCZBTR2AXXX50621189241602061435N}{3:{108:XXXXX}}{4:\n";
+        
+        const header = basicHeader + messageType + messageRest;
+        
+        // Mesajı qur (hər iki tip üçün eyni, sadəcə header fərqli)
+        let message = header +
+            ":20:" + txRef + "\n" +
+            ":21:" + uetr + "\n" +
+            ":25:" + beneficiaryIBAN + "\n" +
+            ":32A:" + valueDate + "EUR4250000,00\n" +
+            ":52A:CRAMCHGGXXX\n" +
+            ":72:/BENEF/ " + purpose + "\n" +
+            "-}";
 
-        document.getElementById('modalTitle').innerText = 'SWIFT MT' + type;
+        document.getElementById('modalTitle').innerText = 'SWIFT MT' + type + ' - ' + 
+            (type === '900' ? 'Confirmation of Debit' : 'Confirmation of Credit');
         document.getElementById('modalContent').innerText = message;
         document.getElementById('mtModal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('mtModal').style.display = 'none'; }
+    
     function copyModalContent() {
-        navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => alert('Copied!'));
+        navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => {
+            alert('MT Message copied to clipboard!');
+        });
     }
 
     // PDF Funksiyası
@@ -290,10 +299,17 @@ ${beneficiaryIBAN}
         addRow("Ordering Party", document.getElementById('orderBen').innerText);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
-        addRow("Receiving Bank", "Ziraat Bankasi A.S. Turkiye");
+        addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
         doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
+    });
+
+    // Escape düyməsi ilə modalı bağla
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
     });
 </script>
 </body>
