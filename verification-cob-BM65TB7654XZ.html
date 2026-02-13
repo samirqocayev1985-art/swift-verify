@@ -9,39 +9,24 @@
         
         body {
             font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-            margin: 0;
-            padding: 24px;
-            color: #0f172a;
-            min-height: 100vh;
+            margin: 0; padding: 24px; color: #0f172a; min-height: 100vh;
             background-color: #f3f4f6;
             background-image: 
                 radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%),
                 radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
             background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
+            position: relative; overflow-x: hidden;
         }
 
         .wrap{max-width:840px;margin:0 auto; position: relative;}
-        
-        .custom-top-logo {
-            width: 140px;
-            height: auto;
-            display: block;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
+        .custom-top-logo { width: 140px; height: auto; display: block; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }
 
         .card{
-            background:var(--card);
-            border-radius:16px; 
+            background:var(--card); border-radius:16px; 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            padding:28px;
-            margin-bottom:16px;
-            border: 1px solid rgba(255,255,255,0.8);
-            position: relative;
-            backdrop-filter: blur(10px);
+            padding:28px; margin-bottom:16px; border: 1px solid rgba(255,255,255,0.8);
+            position: relative; backdrop-filter: blur(10px);
         }
 
         h1{font-size:18px;margin:0 0 8px; font-weight: bold;}
@@ -50,35 +35,8 @@
         .col{flex:1;min-width:180px}
         .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
         .value{font-weight:600;font-size:16px}
-        
         .amount{font-size:18px; color:var(--accent); font-weight: 800;}
-        
         .small{font-size:13px;color:var(--muted)}
-        .btns{display:flex;gap:10px;margin-top:20px}
-        
-        button{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s; font-family: inherit;}
-        button:hover{filter: brightness(1.1); transform: translateY(-1px);}
-        button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
-        
-        .mt-button {
-            background: #f1f5f9;
-            color: #0b6bff;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .mt-button:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
         
         .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
         .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
@@ -86,13 +44,7 @@
         .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
         .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
         
-        .iban-box {
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px dashed #cbd5e1;
-        }
+        .iban-box { background: #f1f5f9; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #cbd5e1; }
 
         .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
         .flow-step{text-align:center;position:relative;min-width:180px}
@@ -104,53 +56,22 @@
         @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
         .blinking { animation: blink 1s infinite; }
 
-        /* MT Modal stilleri */
-        .mt-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .mt-modal-content {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        .mt-modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            cursor: pointer;
-            font-size: 20px;
-            color: var(--muted);
-        }
-        .mt-message {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            margin: 16px 0;
-            white-space: pre-wrap;
+        .mt-button {
+            background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
         }
 
-        @media (max-width:768px){
-            .flow-container{flex-direction:column;gap:30px}
-            .connector-line{display:none}
-            .copy{flex-wrap:wrap;}
-        }
+        .mt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .mt-modal-content { background: white; padding: 24px; border-radius: 16px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .mt-message { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: 'Courier New', monospace; font-size: 14px; margin: 16px 0; white-space: pre-wrap; }
+        .mt-modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: var(--muted); }
+
+        .btns{display:flex;gap:10px;margin-top:20px}
+        button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
+        button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0; padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;}
+
+        @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .copy{flex-wrap:wrap;} }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -169,7 +90,6 @@
 
         <div class="label">Uetr code</div>
         <div class="copy" style="margin-bottom: 10px;">
-            <!-- UETR kodu son mesajdaki :121 alanından alındı -->
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">b9385469-7830-49dd-99b6-c3b7a11f5ce5</div>
             <button id="copyUetrBtn">Copy</button>
             <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
@@ -183,17 +103,14 @@
             </div>
             <div class="col">
                 <div class="label">Amount</div>
-                <!-- :32A alanındaki məbləğ -->
                 <div class="value amount">EUR 4,250,000.00</div>
             </div>
             <div class="col">
                 <div class="label">Sent date:</div>
-                <!-- :13D alanındakı tarix (16-Fev-2026 formatında) -->
                 <div class="value" id="sentDate">16-Feb-2026</div>
             </div>
             <div class="col">
                 <div class="label">Value date:</div>
-                <!-- :32A alanındakı valyuta tarixi (18 Fevral 2026) -->
                 <div class="value" id="valDate">18-Feb-2026</div>
             </div>
         </div>
@@ -202,48 +119,32 @@
 
         <div class="row">
             <div class="col">
-                <div class="label">Ordering Beneficiary</div>
+                <div class="label">Ordering Party</div>
                 <div class="value" id="orderBen">MMG Capital Limited</div>
                 <br>
                 <div class="label">Sender Bank</div>
-                <div class="value" id="sendBank">Banque Cramer & Cie SA</div>
+                <div class="value">Banque Cramer & Cie SA</div>
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
-
                 <br>
                 <div class="label">Beneficiary Customer</div>
-                <!-- :25a alanındakı Beneficiary adı -->
                 <div class="value" id="benCust">Eskonax Otomotiv Sanayi Ticaret Limited Sirketi</div>
-                <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Ic Kapi No. B06, Konya, Türkiye.</div>
-                <br>
-                <div class="label">Bank receiver</div>
-                <div class="value" id="recBank">Ziraat Bankasi A.S., Türkiye</div>
+                <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Konya, Türkiye.</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
                 <div class="iban-box">
-                    <div class="label" style="margin-bottom:2px; font-size:10px;">Sender IBAN</div>
+                    <div class="label" style="font-size:10px;">Sender IBAN</div>
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
-                    
-                    <div class="label" style="margin-bottom:2px; font-size:10px;">Beneficiary IBAN</div>
-                    <!-- :25a alanındakı IBAN -->
+                    <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
                     <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 **** **** **** 5003</div>
                 </div>
-
-                <div class="label">Reference / Purpose</div>
-                <!-- :72 alanındakı ödəniş detalları -->
+                <div class="label">Purpose</div>
                 <div class="value small" id="purpose">Payment for Agreement No. AG/SJU-008875</div>
                 <br>
                 <div class="label">Transaction Reference</div>
                 <div class="copy">
-                    <!-- :20 alanındakı müştəri referansı -->
                     <div class="small" id="txRef" style="font-weight: 700;">CBA17112248B401-160226</div>
                     <button id="copyBtn">Copy</button>
-                </div>
-                
-                <div class="small" style="margin-top:10px">
-                    <strong>Sender Bank:</strong> CRAMCHGGXXX<br>
-                    <strong>Intermediary:</strong> COBADEFFXXX<br>
-                    <strong>Beneficiary Bank:</strong> TCZBTR2AXXX
                 </div>
             </div>
         </div>
@@ -251,58 +152,57 @@
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Sender Bank</div>
+                <div style="font-size:12px; font-weight:bold">Sender Bank</div>
                 <div class="swift-code">CRAMCHGGXXX</div>
                 <div class="status-tag" id="debtor-status">Sent</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Intermediary Bank</div>
-                <div class="swift-code"> COBADEFFXXX</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div class="swift-code">COBADEFFXXX</div>
                 <div class="status-tag" id="intermediary-status">Processing</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
-                <div class="bank-name" style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
+                <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">TCZBTR2AXXX</div>
                 <div class="status-tag" id="beneficiary-status">Pending</div>
             </div>
         </div>
 
         <div class="btns">
-            <button id="downloadBtn" style="background: #3b82f6;">Download Professional Receipt (PDF)</button>
-            <button class="secondary" id="helpBtn">Help Center</button>
+            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF)</button>
+            <button class="secondary" onclick="alert('Support: support@verify-swift.com')">Help Center</button>
         </div>
     </div>
 </div>
 
-<!-- MT Message Modal -->
 <div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
     <div class="mt-modal-content">
         <span class="mt-modal-close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">SWIFT MT Message</h2>
+        <h2 id="modalTitle">SWIFT Message</h2>
         <div id="modalContent" class="mt-message"></div>
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <button class="secondary" onclick="closeModal()">Close</button>
-            <button onclick="copyModalContent()">Copy Message</button>
+            <button class="primary-btn" onclick="copyModalContent()">Copy Message</button>
         </div>
     </div>
 </div>
 
 <script>
+    // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
         const procStyle = { bg: '#facc15', color: '#92400e' };
         const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
 
-        const updateEl = (id, style, isBlinking = false) => {
+        const updateEl = (id, style, blink = false) => {
             const el = document.getElementById(id);
             if(el) {
-                el.style.background = style.bg;
-                el.style.color = style.color;
-                if(isBlinking) el.classList.add('blinking');
+                el.style.background = style.bg; el.style.color = style.color;
+                if(blink) el.classList.add('blinking');
             }
         };
 
@@ -312,6 +212,7 @@
         updateEl('beneficiary-status', pendStyle);
     });
 
+    // Copy Logic
     const setupCopy = (btnId, valId) => {
         document.getElementById(btnId).addEventListener('click', function() {
             const txt = document.getElementById(valId).innerText;
@@ -324,133 +225,67 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
+    // MT Message
+    function showMTMessage(type) {
+        const txRef = document.getElementById('txRef').innerText;
+        const uetr = document.getElementById('uetrVal').innerText;
+        const purpose = document.getElementById('purpose').innerText;
+        
+        let message = `{1:F21CRAMCHGGXXX8291722562}{2:I${type}BICFOOXXXXXN}{4:
+:20:${txRef}
+:21:COBA626346CH63388
+:25a:Eskonax Otomotiv Sanayi Ticaret Limited Sirketi
+TR92 **** **** **** 5003
+:13D:16022026
+:32A:260218EUR4250000,00
+:52A:CRAMCHGGXXX
+:72A:${purpose}
+:121:${uetr}
+-}`;
+        document.getElementById('modalTitle').innerText = 'SWIFT MT' + type;
+        document.getElementById('modalContent').innerText = message;
+        document.getElementById('mtModal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('mtModal').style.display = 'none'; }
+    function copyModalContent() {
+        navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => alert('Copied!'));
+    }
+
+    // PDF Düzəliş edilmiş Funksiya
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        const primary = [30, 41, 59];
-        const accent = [11, 107, 255];
-        const lightGray = [248, 250, 252];
-
-        doc.setFillColor(...primary);
-        doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(24);
-        doc.text("SWIFT", 20, 25);
         
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
-        doc.text("GLOBAL PAYMENT CONFIRMATION", 140, 20);
-        doc.text("Ref: " + document.getElementById('txRef').innerText, 140, 26);
+        doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("SWIFT", 20, 25);
+        doc.setFontSize(10); doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 25);
 
-        doc.setFillColor(...lightGray);
-        doc.roundedRect(20, 50, 170, 45, 3, 3, 'F');
-        doc.setTextColor(...primary);
-        doc.setFontSize(9);
-        doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
-        doc.setFontSize(20);
-        doc.setTextColor(...accent);
-        doc.text("EUR 4,250,000.00", 30, 75);
+        doc.setFillColor(248, 250, 252); doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
+        doc.setTextColor(100, 116, 139); doc.setFontSize(9); doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
+        doc.setFontSize(22); doc.setTextColor(11, 107, 255); doc.text("EUR 4,250,000.00", 30, 75);
 
-        let y = 115;
+        let y = 105;
         const addRow = (label, value) => {
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(9);
-            doc.setTextColor(100, 100, 100);
-            doc.text(label, 20, y);
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.text(value, 70, y);
-            y += 10;
-            doc.line(20, y - 5, 190, y - 5);
+            doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.text(label.toUpperCase(), 20, y);
+            doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
+            const splitVal = doc.splitTextToSize(value, 120);
+            doc.text(splitVal, 70, y);
+            y += (splitVal.length * 5) + 5;
+            doc.setDrawColor(226, 232, 240); doc.line(20, y - 4, 190, y - 4); y += 5;
         };
 
-        addRow("UETR CODE", document.getElementById('uetrVal').innerText);
-        addRow("SENDER IBAN", "CH45 **** **** **** 2002");
-        addRow("BENEFICIARY IBAN", "TR92 **** **** **** 5003");
-        addRow("ORDERING PARTY", document.getElementById('orderBen').innerText);
-        addRow("SENDER BANK", "Banque Cramer & Cie SA");
-        addRow("BENEFICIARY", document.getElementById('benCust').innerText);
-        addRow("RECEIVING BANK", "Ziraat Bankası A.S., Türkiye");
+        addRow("UETR Code", document.getElementById('uetrVal').innerText);
+        addRow("Transaction Ref", document.getElementById('txRef').innerText);
+        addRow("Sent Date", document.getElementById('sentDate').innerText);
+        addRow("Value Date", document.getElementById('valDate').innerText);
+        addRow("Ordering Party", document.getElementById('orderBen').innerText);
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
+        addRow("Beneficiary", document.getElementById('benCust').innerText);
+        addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
+        addRow("Purpose", document.getElementById('purpose').innerText);
 
         doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
-    });
-
-    document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
-
-    // MT Message Functions
-    function showMTMessage(type) {
-        const modal = document.getElementById('mtModal');
-        const title = document.getElementById('modalTitle');
-        const content = document.getElementById('modalContent');
-        
-        const uetr = document.getElementById('uetrVal').innerText;
-        const txRef = document.getElementById('txRef').innerText;
-        const amount = "EUR 4,250,000.00";
-        const valueDate = document.getElementById('valDate').innerText; // 18-Feb-2026
-        // Format value date to DDMMYYYY for SWIFT message
-        const dateParts = valueDate.split('-');
-        const day = dateParts[0];
-        const month = dateParts[1];
-        const year = dateParts[2];
-        const swiftDate = day + month + year; // 18Feb2026 -> 18022026 (Feb -> 02)
-        const monthMap = {'Jan':'01', 'Feb':'02', 'Mar':'03', 'Apr':'04', 'May':'05', 'Jun':'06',
-                         'Jul':'07', 'Aug':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dec':'12'};
-        const swiftDateFormatted = day + monthMap[month] + year;
-        
-        const senderIBAN = document.getElementById('senderIban').innerText;
-        const beneficiaryIBAN = document.getElementById('beneficiaryIban').innerText;
-        
-        let message = "";
-        
-        if (type === '900') {
-            title.innerText = 'SWIFT MT900 - Confirmation of Debit';
-message = `{1:F21CRAMCHGGXXX8291722562}{1:177:1602261435}{451:0}{108:XXXXX}}
-:20:${txRef}
-:21:b9385469-7830-49dd-99b6-c3b7a11f5ce5
-:25a:${document.getElementById('benCust').innerText}
-${beneficiaryIBAN}
-:13D: 16022026
-:72:${document.getElementById('purpose').innerText}
-:32A:${swiftDateFormatted}EUR4250000,00
-:52A:CRAMCHGGXXX, Banque Cramer &SIE
--}`;
-        
-        } else if (type === '910') {
-            title.innerText = 'SWIFT MT910 - Confirmation of Credit';
-            // Sizin verdiyiniz son mesaj formatında
-            message = `{1:F21CRAMCHGGXXX8291722562}{1:177:1602261435}{451:0}{108:XXXXX}}
-:20:${txRef}
-:21:b9385469-7830-49dd-99b6-c3b7a11f5ce5
-:25a:${document.getElementById('benCust').innerText}
-${beneficiaryIBAN}
-:13D: 16022026
-:72:${document.getElementById('purpose').innerText}
-:32A:${swiftDateFormatted}EUR4250000,00
-:52A:CRAMCHGGXXX, Banque Cramer &SIE
--}`;
-        }
-        
-        content.innerText = message;
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('mtModal').style.display = 'none';
-    }
-
-    function copyModalContent() {
-        const content = document.getElementById('modalContent').innerText;
-        navigator.clipboard.writeText(content).then(() => {
-            alert('MT Message copied to clipboard!');
-        });
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
     });
 </script>
 </body>
