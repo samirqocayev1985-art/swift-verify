@@ -60,6 +60,26 @@
         button:hover{filter: brightness(1.1); transform: translateY(-1px);}
         button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
         
+        .mt-button {
+            background: #f1f5f9;
+            color: #0b6bff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .mt-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
         .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
         .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
         
@@ -84,9 +104,52 @@
         @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
         .blinking { animation: blink 1s infinite; }
 
+        /* MT Modal stilleri */
+        .mt-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .mt-modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .mt-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            font-size: 20px;
+            color: var(--muted);
+        }
+        .mt-message {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 16px 0;
+            white-space: pre-wrap;
+        }
+
         @media (max-width:768px){
             .flow-container{flex-direction:column;gap:30px}
             .connector-line{display:none}
+            .copy{flex-wrap:wrap;}
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -108,6 +171,8 @@
         <div class="copy" style="margin-bottom: 10px;">
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">b9385469-7830-49dd-99b6-c3b7a11f5ce5</div>
             <button id="copyUetrBtn">Copy</button>
+            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
+            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
         </div>
 
         <div class="row">
@@ -205,6 +270,19 @@
     </div>
 </div>
 
+<!-- MT Message Modal -->
+<div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
+    <div class="mt-modal-content">
+        <span class="mt-modal-close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">SWIFT MT Message</h2>
+        <div id="modalContent" class="mt-message"></div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="secondary" onclick="closeModal()">Close</button>
+            <button onclick="copyModalContent()">Copy Message</button>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
@@ -292,6 +370,62 @@
     });
 
     document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
+
+    // MT Message Functions
+    function showMTMessage(type) {
+        const modal = document.getElementById('mtModal');
+        const title = document.getElementById('modalTitle');
+        const content = document.getElementById('modalContent');
+        
+        const uetr = document.getElementById('uetrVal').innerText;
+        const txRef = document.getElementById('txRef').innerText;
+        const amount = "EUR 4,250,000.00";
+        const valueDate = document.getElementById('valDate').innerText;
+        const senderIBAN = "CH45 **** **** **** 2002";
+        const beneficiaryIBAN = "TR92 **** **** **** 5003";
+        
+        let message = "";
+        
+        if (type === '900') {
+            title.innerText = 'SWIFT MT900 - Confirmation of Debit';
+            message = `{1:F01CRAMCHGGXXX0000000000}{2:I900BICFOOXXXXXN}{4:
+:20:${uetr}
+:25:${senderIBAN}
+:32A:${valueDate.replace(/-/g, '')}EUR4250000,00
+:52A:CRAMCHGGXXX
+:72:/CODT/DEBIT ADVICE
+-}`;
+        } else if (type === '910') {
+            title.innerText = 'SWIFT MT910 - Confirmation of Credit';
+            message = `{1:F01TCZBTR2AXXX0000000000}{2:I910BICFOOXXXXXN}{4:
+:20:${uetr}
+:25:${beneficiaryIBAN}
+:32A:${valueDate.replace(/-/g, '')}EUR4250000,00
+:52A:CRAMCHGGXXX
+:72:/CRDT/CREDIT ADVICE
+-}`;
+        }
+        
+        content.innerText = message;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('mtModal').style.display = 'none';
+    }
+
+    function copyModalContent() {
+        const content = document.getElementById('modalContent').innerText;
+        navigator.clipboard.writeText(content).then(() => {
+            alert('MT Message copied to clipboard!');
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
 </script>
 </body>
 </html>
