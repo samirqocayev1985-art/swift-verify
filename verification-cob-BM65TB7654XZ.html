@@ -132,7 +132,6 @@
                 <br>
                 <div class="label">Receiving Bank</div>
                 <div class="value">Ziraat Bankasi A.S. Turkiye</div>
-
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -229,23 +228,28 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT Message
+    // SƏNİN DÜZƏLTDİYİN RAW FORMATI İLƏ MT MESSAGE FUNKSİYASI
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
+        const benCust = document.getElementById('benCust').innerText;
+        const beneficiaryIBAN = document.getElementById('beneficiaryIban').innerText;
         
-        let message = `{1:F21CRAMCHGGXXX8291722562}{2:I${type}BICFOOXXXXXN}{4:
+        // Sənin düzəltdiyin xüsusi RAW format
+        let rawHeader = "{1:F21CRAMCHGGXXX8291722562}{1:177:1602261435}{451:0}{108:XXXXX}}";
+        
+        let message = `${rawHeader}
 :20:${txRef}
-:21:COBA626346CH63388
-:25a:Eskonax Otomotiv Sanayi Ticaret Limited Sirketi
-TR92 **** **** **** 5003
-:13D:16022026
-:32A:260218EUR4250000,00
-:52A:CRAMCHGGXXX
-:72A:${purpose}
-:121:${uetr}
+:21:${uetr}
+:25a:${benCust}
+${beneficiaryIBAN}
+:13D: 16022026
+:72:${purpose}
+:32A:18022026EUR4250000,00
+:52A:CRAMCHGGXXX, Banque Cramer &SIE
 -}`;
+
         document.getElementById('modalTitle').innerText = 'SWIFT MT' + type;
         document.getElementById('modalContent').innerText = message;
         document.getElementById('mtModal').style.display = 'flex';
@@ -256,7 +260,7 @@ TR92 **** **** **** 5003
         navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => alert('Copied!'));
     }
 
-    // PDF Düzəliş edilmiş Funksiya
+    // PDF Funksiyası
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -273,7 +277,7 @@ TR92 **** **** **** 5003
         const addRow = (label, value) => {
             doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.text(label.toUpperCase(), 20, y);
             doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
-            const splitVal = doc.splitTextToSize(value, 120);
+            const splitVal = doc.splitTextToSize(String(value), 120);
             doc.text(splitVal, 70, y);
             y += (splitVal.length * 5) + 5;
             doc.setDrawColor(226, 232, 240); doc.line(20, y - 4, 190, y - 4); y += 5;
@@ -286,7 +290,7 @@ TR92 **** **** **** 5003
         addRow("Ordering Party", document.getElementById('orderBen').innerText);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
-        addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
+        addRow("Receiving Bank", "Ziraat Bankasi A.S. Turkiye");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
         doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
