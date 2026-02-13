@@ -131,7 +131,7 @@
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Konya, Turkiye.</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Ziraat Bankasi A.S.</div>
+                <div class="value">Ziraat Bankasi A.S. Turkiye</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -139,7 +139,8 @@
                     <div class="label" style="font-size:10px;">Sender IBAN</div>
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
                     <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
-                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 0001 0017 3985 6789 5003</div>
+                    <!-- Qismən gizlədilmiş IBAN -->
+                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 0001 **** **** 5003</div>
                 </div>
                 <div class="label">Purpose</div>
                 <div class="value small" id="purpose">Payment for Agreement No. AG/SJU-008875</div>
@@ -195,6 +196,12 @@
 </div>
 
 <script>
+    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
+    const FULL_BENEFICIARY_IBAN = "TR9200010017398567895003";
+    
+    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
+    const MASKED_BENEFICIARY_IBAN = "TR92 0001 **** **** 5003";
+
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
@@ -213,6 +220,9 @@
         updateEl('debtor-status', sentStyle);
         updateEl('intermediary-status', procStyle, true);
         updateEl('beneficiary-status', pendStyle);
+        
+        // IBAN-ı qismən gizlət
+        document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
     });
 
     // Copy Logic
@@ -228,12 +238,11 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // DÜZGÜN MT900/MT910 FORMATI - BİR-BİRİNİN EYNİ, SADƏCƏ TİP FƏRQLİ
+    // DÜZGÜN MT900/MT910 FORMATI - TAM IBAN İSTİFADƏ OLUNUR (qismən gizli deyil)
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
-        const beneficiaryIBAN = document.getElementById('beneficiaryIban').innerText;
         
         // Tarix formatı: 18-Feb-2026 -> 180226 (YYMMDD)
         const valueDate = "180226"; // 18 Fevral 2026
@@ -245,11 +254,11 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur (hər iki tip üçün eyni, sadəcə header fərqli)
+        // Mesajı qur - TAM IBAN istifadə olunur (boşluqsuz)
         let message = header +
             ":20:" + txRef + "\n" +
             ":21:" + uetr + "\n" +
-            ":25:" + beneficiaryIBAN + "\n" +
+            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +  // Tam IBAN
             ":32A:" + valueDate + "EUR4250000,00\n" +
             ":52A:CRAMCHGGXXX\n" +
             ":72:/BENEF/ " + purpose + "\n" +
@@ -299,7 +308,8 @@
         addRow("Ordering Party", document.getElementById('orderBen').innerText);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
-        addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
+        addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);  // PDF-də qismən gizli
+        addRow("Receiving Bank", "Ziraat Bankasi A.S. Turkiye (TCZBTR2AXXX)");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
         doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
