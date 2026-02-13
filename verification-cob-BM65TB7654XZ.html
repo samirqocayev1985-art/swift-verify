@@ -112,6 +112,10 @@
                 <div class="value amount">EUR 4,250,000.00</div>
             </div>
             <div class="col">
+                <div class="label">Sent date:</div>
+                <div class="value" id="sentDate">13 Feb 2026</div>
+            </div>
+            <div class="col">
                 <div class="label">Value date:</div>
                 <div class="value" id="valDate">17-Feb-2026</div>
             </div>
@@ -266,10 +270,16 @@
 
         doc.setTextColor(100, 100, 100);
         doc.setFontSize(9);
-        doc.text("VALUE DATE", 140, 62);
+        doc.text("SENT DATE", 140, 58);
         doc.setTextColor(0,0,0);
         doc.setFontSize(12);
-        doc.text(document.getElementById('valDate').innerText, 140, 72);
+        doc.text(document.getElementById('sentDate').innerText, 140, 65);
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(9);
+        doc.text("VALUE DATE", 140, 72);
+        doc.setTextColor(0,0,0);
+        doc.setFontSize(12);
+        doc.text(document.getElementById('valDate').innerText, 140, 79);
 
         // Details Table
         let y = 100;
@@ -320,3 +330,4 @@
     document.getElementById('helpBtn').addEventListener('click', () => alert("Support: support@verify-swift.com"));
 </script>
 </body>
+    </html>
