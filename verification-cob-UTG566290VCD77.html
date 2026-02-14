@@ -165,14 +165,14 @@
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">COBADEFFXXX</div>
-                <div class="status-tag" id="intermediary-status">Processing</div>
+                <div class="status-tag" id="intermediary-status">Processed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">TCZBTR2AXXX</div>
-                <div class="status-tag" id="beneficiary-status">Pending</div>
+                <div class="status-tag" id="beneficiary-status">Completed</div>
             </div>
         </div>
 
@@ -204,22 +204,40 @@
 
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
+        // Sent style (yaşıl)
         const sentStyle = { bg: '#16a34a', color: '#fff' };
-        const procStyle = { bg: '#facc15', color: '#92400e' };
-        const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
+        // Processed style (yaşıl, sabit)
+        const processedStyle = { bg: '#16a34a', color: '#fff' };
+        // Completed style (mavi, yanıb-sönən)
+        const completedStyle = { bg: '#3b82f6', color: '#fff' };
 
         const updateEl = (id, style, blink = false) => {
             const el = document.getElementById(id);
             if(el) {
-                el.style.background = style.bg; el.style.color = style.color;
-                if(blink) el.classList.add('blinking');
+                el.style.background = style.bg; 
+                el.style.color = style.color;
+                el.innerText = id === 'intermediary-status' ? 'Processed' : 
+                              (id === 'beneficiary-status' ? 'Completed' : 
+                               (id === 'debtor-status' ? 'Sent' : 
+                                (id === 'topStatus' ? 'Sent' : el.innerText)));
+                if(blink) {
+                    el.classList.add('blinking');
+                } else {
+                    el.classList.remove('blinking');
+                }
             }
         };
 
-        updateEl('topStatus', sentStyle);
-        updateEl('debtor-status', sentStyle);
-        updateEl('intermediary-status', procStyle, true);
-        updateEl('beneficiary-status', pendStyle);
+        // Təyin edirik:
+        // Göndərən bank - Sent (yaşıl, yanıb-sönmür)
+        updateEl('topStatus', sentStyle, false);
+        updateEl('debtor-status', sentStyle, false);
+        
+        // Aralıq bank - Processed (yaşıl, yanıb-sönmür)
+        updateEl('intermediary-status', processedStyle, false);
+        
+        // Benefisiar bank - Completed (mavi, yanıb-sönür)
+        updateEl('beneficiary-status', completedStyle, true);
         
         // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
@@ -250,7 +268,7 @@
         // Basic header (eyni, sadəcə O900/O910 dəyişir)
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
         const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "1611060216TCZBTR2AXXX50621189241302060915N}{3:{108:XXXXX}}{4:\n";
+        const messageRest = "0916130216TCZBTR2AXXX50621189241302060917U}{3:{108:XXXXX}}{4:\n";
         
         const header = basicHeader + messageType + messageRest;
         
