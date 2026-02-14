@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Incoming Payment — Customer View</title>
     <style>
-        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#16a34a;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
         
         body {
             font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
@@ -53,19 +53,11 @@
         .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
-        @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
-        .blinking { animation: blink 1s infinite; }
-
         .mt-button {
             background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
             padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
             cursor: pointer; transition: all 0.2s; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
         }
-
-        .mt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .mt-modal-content { background: white; padding: 24px; border-radius: 16px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
-        .mt-message { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: 'Courier New', monospace; font-size: 14px; margin: 16px 0; white-space: pre-wrap; }
-        .mt-modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: var(--muted); }
 
         .btns{display:flex;gap:10px;margin-top:20px}
         button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
@@ -88,22 +80,20 @@
         
         <div class="muted-line"></div>
 
-        <div class="label">Uetr code</div>
+        <div class="label">UETR code</div>
         <div class="copy" style="margin-bottom: 10px;">
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">c65ddab0-22d7-4a4b-ba79-602dcc1ed530</div>
             <button id="copyUetrBtn">Copy</button>
-            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
-            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
         </div>
 
         <div class="row">
             <div class="col">
                 <div class="label">Status</div>
-                <div class="value"><span class="status" id="topStatus">Sent</span></div>
+                <div class="value"><span class="status" id="topStatus">Completed</span></div>
             </div>
             <div class="col">
                 <div class="label">Amount</div>
-                <div class="value amount">EUR 4,250,000.00</div>
+                <div class="value amount" id="amountVal">EUR 4,250,000.00</div>
             </div>
             <div class="col">
                 <div class="label">Sent date:</div>
@@ -123,7 +113,7 @@
                 <div class="value" id="orderBen">MMG Capital Limited</div>
                 <br>
                 <div class="label">Sender Bank</div>
-                <div class="value">Banque Cramer & Cie SA</div>
+                <div class="value" id="senderBank">Banque Cramer & Cie SA</div>
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
                 <br>
                 <div class="label">Beneficiary Customer</div>
@@ -131,7 +121,7 @@
                 <div class="small">Fevzicakmak Mah., 10638, Str., No. 7, Konya, Turkiye.</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Ziraat Bankasi A.S.</div>
+                <div class="value" id="recvBank">Ziraat Bankasi A.S.</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -139,7 +129,6 @@
                     <div class="label" style="font-size:10px;">Sender IBAN</div>
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
                     <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
-                    <!-- Qismən gizlədilmiş IBAN -->
                     <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR92 0001 **** **** 5003</div>
                 </div>
                 <div class="label">Purpose</div>
@@ -172,7 +161,7 @@
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">TCZBTR2AXXX</div>
-                <div class="status-tag" id="beneficiary-status">Completed</div>
+                <div class="status-tag" id="beneficiary-status">Completed (Amount credited to beneficiary account)</div>
             </div>
         </div>
 
@@ -183,67 +172,25 @@
     </div>
 </div>
 
-<div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
-    <div class="mt-modal-content">
-        <span class="mt-modal-close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">SWIFT Message</h2>
-        <div id="modalContent" class="mt-message"></div>
-        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button class="secondary" onclick="closeModal()">Close</button>
-            <button class="primary-btn" onclick="copyModalContent()">Copy Message</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
-    const FULL_BENEFICIARY_IBAN = "TR9200010017398567895003";
-    
-    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
-    const MASKED_BENEFICIARY_IBAN = "TR92 0001 **** **** 5003";
-
-    // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
-        // Sent style (yaşıl)
-        const sentStyle = { bg: '#16a34a', color: '#fff' };
-        // Processed style (yaşıl, sabit)
-        const processedStyle = { bg: '#16a34a', color: '#fff' };
-        // Completed style (mavi, yanıb-sönən)
-        const completedStyle = { bg: '#3b82f6', color: '#fff' };
+        const successStyle = { bg: '#16a34a', color: '#fff' };
 
-        const updateEl = (id, style, blink = false) => {
+        const updateEl = (id, text) => {
             const el = document.getElementById(id);
             if(el) {
-                el.style.background = style.bg; 
-                el.style.color = style.color;
-                el.innerText = id === 'intermediary-status' ? 'Processed' : 
-                              (id === 'beneficiary-status' ? 'Completed' : 
-                               (id === 'debtor-status' ? 'Sent' : 
-                                (id === 'topStatus' ? 'Sent' : el.innerText)));
-                if(blink) {
-                    el.classList.add('blinking');
-                } else {
-                    el.classList.remove('blinking');
-                }
+                el.style.background = successStyle.bg; 
+                el.style.color = successStyle.color;
+                el.innerText = text;
             }
         };
 
-        // Təyin edirik:
-        // Göndərən bank - Sent (yaşıl, yanıb-sönmür)
-        updateEl('topStatus', sentStyle, false);
-        updateEl('debtor-status', sentStyle, false);
-        
-        // Aralıq bank - Processed (yaşıl, yanıb-sönmür)
-        updateEl('intermediary-status', processedStyle, false);
-        
-        // Benefisiar bank - Completed (mavi, yanıb-sönür)
-        updateEl('beneficiary-status', completedStyle, true);
-        
-        // IBAN-ı qismən gizlət
-        document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
+        updateEl('topStatus', 'Completed');
+        updateEl('debtor-status', 'Sent');
+        updateEl('intermediary-status', 'Processed');
+        updateEl('beneficiary-status', 'Completed (Amount credited to beneficiary account)');
     });
 
-    // Copy Logic
     const setupCopy = (btnId, valId) => {
         document.getElementById(btnId).addEventListener('click', function() {
             const txt = document.getElementById(valId).innerText;
@@ -256,59 +203,22 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // DÜZGÜN MT900/MT910 FORMATI - TAM IBAN İSTİFADƏ OLUNUR (qismən gizli deyil)
-    function showMTMessage(type) {
-        const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;
-        const purpose = document.getElementById('purpose').innerText;
-        
-        // Tarix formatı: 13-Feb-2026 -> 130226 (YYMMDD)
-        const valueDate = "160226"; // 16 Fevral 2026
-        
-        // Basic header (eyni, sadəcə O900/O910 dəyişir)
-        const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
-        const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "0916130216TCZBTR2AXXX50621189241302060919U}{3:{108:XXXXX}}{4:\n";
-        
-        const header = basicHeader + messageType + messageRest;
-        
-        // Mesajı qur - TAM IBAN istifadə olunur (boşluqsuz)
-        let message = header +
-            ":20:" + txRef + "\n" +
-            ":21:" + uetr + "\n" +
-            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +  // Tam IBAN
-            ":32A:" + valueDate + "EUR4250000,00\n" +
-            ":52A:CRAMCHGGXXX\n" +
-            ":72:/BENEF/ " + purpose + "\n" +
-            "-}";
-
-        document.getElementById('modalTitle').innerText = 'SWIFT MT' + type + ' - ' + 
-            (type === '900' ? 'Confirmation of Debit' : 'Confirmation of Credit');
-        document.getElementById('modalContent').innerText = message;
-        document.getElementById('mtModal').style.display = 'flex';
-    }
-
-    function closeModal() { document.getElementById('mtModal').style.display = 'none'; }
-    
-    function copyModalContent() {
-        navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => {
-            alert('MT Message copied to clipboard!');
-        });
-    }
-
-    // PDF Funksiyası
+    // PROFESSIONAL PDF GENERATION
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
+        // Header
         doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
         doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("SWIFT", 20, 25);
         doc.setFontSize(10); doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 25);
 
+        // Amount Box
         doc.setFillColor(248, 250, 252); doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
         doc.setTextColor(100, 116, 139); doc.setFontSize(9); doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
-        doc.setFontSize(22); doc.setTextColor(11, 107, 255); doc.text("EUR 4,250,000.00", 30, 75);
+        doc.setFontSize(22); doc.setTextColor(11, 107, 255); doc.text(document.getElementById('amountVal').innerText, 30, 75);
 
+        // Data Table
         let y = 105;
         const addRow = (label, value) => {
             doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.text(label.toUpperCase(), 20, y);
@@ -319,6 +229,7 @@
             doc.setDrawColor(226, 232, 240); doc.line(20, y - 4, 190, y - 4); y += 5;
         };
 
+        addRow("Transaction Status", "Completed (Amount credited to beneficiary account)");
         addRow("UETR Code", document.getElementById('uetrVal').innerText);
         addRow("Transaction Ref", document.getElementById('txRef').innerText);
         addRow("Sent Date", document.getElementById('sentDate').innerText);
@@ -326,18 +237,15 @@
         addRow("Ordering Party", document.getElementById('orderBen').innerText);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
-        addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);  // PDF-də qismən gizli
+        addRow("Beneficiary IBAN", "TR92 0001 **** **** 5003");
         addRow("Receiving Bank", "Ziraat Bankasi A.S. (TCZBTR2AXXX)");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
-        doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
-    });
+        // Footer
+        doc.setFontSize(8); doc.setTextColor(150, 150, 150);
+        doc.text("This is an official payment confirmation generated by SWIFT gpi tracking services.", 20, 280);
 
-    // Escape düyməsi ilə modalı bağla
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
+        doc.save('SWIFT_Receipt_' + document.getElementById('txRef').innerText + '.pdf');
     });
 </script>
 </body>
