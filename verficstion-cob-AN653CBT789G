@@ -89,7 +89,7 @@
         <div class="row">
             <div class="col">
                 <div class="label">Status</div>
-                <div class="value"><span class="status" id="topStatus">Completed</span></div>
+                <div class="value"><span class="status" id="topStatus">In Process</span></div>
             </div>
             <div class="col">
                 <div class="label">Amount</div>
@@ -155,21 +155,21 @@
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary 1</div>
                 <div class="swift-code">COBADEFF (Frankfurt)</div>
-                <div class="status-tag" id="intermediary1-status">Processed</div>
+                <div class="status-tag" id="intermediary1-status">Processing</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary 2</div>
                 <div class="swift-code">CITIUS33 (New York)</div>
-                <div class="status-tag" id="intermediary2-status">Processed</div>
+                <div class="status-tag" id="intermediary2-status">Processing</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">ISBKTRISXXX</div>
-                <div class="status-tag" id="beneficiary-status">Completed (Credited)</div>
+                <div class="status-tag" id="beneficiary-status">Pending</div>
             </div>
         </div>
 
@@ -182,8 +182,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const successStyle = { bg: '#16a34a', color: '#fff' };
-        const processedStyle = { bg: '#3b82f6', color: '#fff' };
+        const successStyle = { bg: '#16a34a', color: '#fff' };      // Yaşıl - Sent
+        const processingStyle = { bg: '#3b82f6', color: '#fff' };   // Mavi (göy) - Processing
+        const pendingStyle = { bg: '#6b7280', color: '#fff' };      // Boz - Pending
 
         const updateEl = (id, text, bgColor, textColor = '#fff') => {
             const el = document.getElementById(id);
@@ -194,11 +195,12 @@
             }
         };
 
-        updateEl('topStatus', 'Completed', successStyle.bg);
-        updateEl('debtor-status', 'Sent', processedStyle.bg);
-        updateEl('intermediary1-status', 'Processed', processedStyle.bg);
-        updateEl('intermediary2-status', 'Processed', processedStyle.bg);
-        updateEl('beneficiary-status', 'Completed (Credited to beneficiary)', successStyle.bg);
+        // Statuslar:
+        updateEl('topStatus', 'In Process', processingStyle.bg);           // Üstdə "In Process" - mavi
+        updateEl('debtor-status', 'Sent', successStyle.bg);                // Sender Bank - yaşıl "Sent"
+        updateEl('intermediary1-status', 'Processing', processingStyle.bg); // İlk intermediary - mavi "Processing"
+        updateEl('intermediary2-status', 'Processing', processingStyle.bg); // İkinci intermediary - mavi "Processing"
+        updateEl('beneficiary-status', 'Pending', pendingStyle.bg);         // Beneficiary Bank - boz "Pending"
     });
 
     const setupCopy = (btnId, valId) => {
@@ -239,24 +241,24 @@
             doc.setDrawColor(226, 232, 240); doc.line(20, y - 4, 190, y - 4); y += 5;
         };
 
-        addRow("Transaction Status", "Completed (Amount credited to beneficiary account)");
+        addRow("Transaction Status", "In Process - Payment routed via dual intermediaries");
         addRow("UETR Code", document.getElementById('uetrVal').innerText);
         addRow("Transaction Ref", document.getElementById('txRef').innerText);
         addRow("Sent Date", document.getElementById('sentDate').innerText);
         addRow("Value Date", document.getElementById('valDate').innerText);
         addRow("Ordering Party", document.getElementById('orderBen').innerText);
-        addRow("Sender Bank", "UBS Switzerland AG (UBSWCHZH80A)");
-        addRow("Intermediary Bank 1", "Commerzbank AG Frankfurt (COBADEFF)");
-        addRow("Intermediary Bank 2", "Citibank N.A. New York (CITIUS33)");
+        addRow("Sender Bank", "UBS Switzerland AG (UBSWCHZH80A) - SENT");
+        addRow("Intermediary Bank 1", "Commerzbank AG Frankfurt (COBADEFF) - PROCESSING");
+        addRow("Intermediary Bank 2", "Citibank N.A. New York (CITIUS33) - PROCESSING");
         addRow("Beneficiary", document.getElementById('benCust').innerText);
         addRow("Beneficiary IBAN", document.getElementById('beneficiaryIban').innerText);
-        addRow("Receiving Bank", "Türkiye İş Bankası A.Ş. (ISBKTRISXXX)");
+        addRow("Receiving Bank", "Türkiye İş Bankası A.Ş. (ISBKTRISXXX) - PENDING");
         addRow("Purpose", document.getElementById('purpose').innerText);
 
         // Footer
         doc.setFontSize(8); doc.setTextColor(150, 150, 150);
         doc.text("This is an official SWIFT gpi payment confirmation with dual intermediary routing.", 20, 280);
-        doc.text("All banks in the chain have confirmed processing. Generated: " + new Date().toLocaleDateString(), 20, 285);
+        doc.text("Current status: Sent from origin bank, processing at intermediaries (blue). Generated: " + new Date().toLocaleDateString(), 20, 285);
 
         doc.save('SWIFT_Receipt_Dual_Intermediary_' + document.getElementById('txRef').innerText + '.pdf');
     });
