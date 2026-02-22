@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Incoming Payment — Customer View</title>
+    <style>
+        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#16a34a;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+        
+        body {
+            font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+            margin: 0; padding: 24px; color: #0f172a; min-height: 100vh;
+            background-color: #f3f4f6;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            position: relative; overflow-x: hidden;
+        }
+
+        .wrap{max-width:840px;margin:0 auto; position: relative;}
+        .custom-top-logo { width: 140px; height: auto; display: block; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }
+
+        .card{
+            background:var(--card); border-radius:16px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding:28px; margin-bottom:16px; border: 1px solid rgba(255,255,255,0.8);
+            position: relative; backdrop-filter: blur(10px);
+        }
+
+        h1{font-size:18px;margin:0 0 8px; font-weight: bold;}
+        p.lead{margin:0;color:var(--muted)}
+        .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+        .col{flex:1;min-width:180px}
+        .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+        .value{font-weight:600;font-size:16px}
+        .amount{font-size:18px; color:var(--accent); font-weight: 800;}
+        .small{font-size:13px;color:var(--muted)}
+        
+        .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
+        .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
+        
+        .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
+        .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
+        
+        .iban-box { background: #f1f5f9; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #cbd5e1; }
+
+        .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative; flex-wrap: wrap;}
+        .flow-step{text-align:center;position:relative;min-width:160px; flex: 1;}
+        .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
+        .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
+        .connector-line{flex:1;height:2px;margin:0 10px;max-width:80px; background: #e2e8f0;}
+
+        .mt-button {
+            background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        .btns{display:flex;gap:10px;margin-top:20px}
+        button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
+        button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0; padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;}
+
+        @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .copy{flex-wrap:wrap;} }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+    <a href="https://verify-swift.com">
+        <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" class="custom-top-logo">
+    </a>
+
+    <div class="card">
+        <h1>Incoming Payment</h1>
+        <p class="lead">Detailed transaction tracking for high-value transfer with dual intermediary banks.</p>
+        
+        <div class="muted-line"></div>
+
+        <div class="label">UETR code</div>
+        <div class="copy" style="margin-bottom: 10px;">
+            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">a87f43b2-19d8-4c3e-9a64-815ecc2f7d41</div>
+            <button id="copyUetrBtn">Copy</button>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="label">Status</div>
+                <div class="value"><span class="status" id="topStatus">Completed</span></div>
+            </div>
+            <div class="col">
+                <div class="label">Amount</div>
+                <div class="value amount" id="amountVal">EUR 3,850,000.00</div>
+            </div>
+            <div class="col">
+                <div class="label">Sent date:</div>
+                <div class="value" id="sentDate">14-Feb-2026</div>
+            </div>
+            <div class="col">
+                <div class="label">Value date:</div>
+                <div class="value" id="valDate">17-Feb-2026</div>
+            </div>
+        </div>
+
+        <div class="muted-line"></div>
+
+        <div class="row">
+            <div class="col">
+                <div class="label">Ordering Party</div>
+                <div class="value" id="orderBen">Vantage Holdings International</div>
+                <br>
+                <div class="label">Sender Bank</div>
+                <div class="value" id="senderBank">UBS Switzerland AG</div>
+                <div class="small">Bahnhofstrasse 45, 8001 Zurich, Switzerland</div>
+                <br>
+                <div class="label">Beneficiary Customer</div>
+                <div class="value" id="benCust">Anatolia Tekstil Sanayi ve Ticaret A.S.</div>
+                <div class="small">Organize Sanayi Bölgesi, 5. Cadde No:12, Denizli, Türkiye</div>
+                <br>
+                <div class="label">Receiving Bank</div>
+                <div class="value" id="recvBank">Türkiye İş Bankası A.Ş.</div>
+                <div class="small">İş Kuleleri, 34330 Levent/İstanbul, Türkiye</div>
+            </div>
+            <div class="col">
+                <div class="label">Payment Details</div>
+                <div class="iban-box">
+                    <div class="label" style="font-size:10px;">Sender IBAN</div>
+                    <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH93 0077 2016 5238 4295 7</div>
+                    <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
+                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">TR64 0006 4000 0012 3456 7890 01</div>
+                </div>
+                <div class="label">Purpose</div>
+                <div class="value small" id="purpose">Invoice INV-2026-02/114 - Textile Machinery Import</div>
+                <br>
+                <div class="label">Transaction Reference</div>
+                <div class="copy">
+                    <div class="small" id="txRef" style="font-weight: 700;">UBS-INT-20260214-3847</div>
+                    <button id="copyBtn">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <div class="flow-step">
+                <div class="bank-icon">🏦</div>
+                <div style="font-size:12px; font-weight:bold">Sender Bank</div>
+                <div class="swift-code">UBSWCHZH80A</div>
+                <div class="status-tag" id="debtor-status">Sent</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">🏛️</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary 1</div>
+                <div class="swift-code">COBADEFF (Frankfurt)</div>
+                <div class="status-tag" id="intermediary1-status">Processed</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">🏛️</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary 2</div>
+                <div class="swift-code">CITIUS33 (New York)</div>
+                <div class="status-tag" id="intermediary2-status">Processed</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">🏛️</div>
+                <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
+                <div class="swift-code">ISBKTRISXXX</div>
+                <div class="status-tag" id="beneficiary-status">Completed (Credited)</div>
+            </div>
+        </div>
+
+        <div class="btns">
+            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF)</button>
+            <button class="secondary" onclick="alert('Support: support@verify-swift.com\n24/7 SWIFT gpi Tracking Support')">Help Center</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successStyle = { bg: '#16a34a', color: '#fff' };
+        const processedStyle = { bg: '#3b82f6', color: '#fff' };
+
+        const updateEl = (id, text, bgColor, textColor = '#fff') => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.style.background = bgColor; 
+                el.style.color = textColor;
+                el.innerText = text;
+            }
+        };
+
+        updateEl('topStatus', 'Completed', successStyle.bg);
+        updateEl('debtor-status', 'Sent', processedStyle.bg);
+        updateEl('intermediary1-status', 'Processed', processedStyle.bg);
+        updateEl('intermediary2-status', 'Processed', processedStyle.bg);
+        updateEl('beneficiary-status', 'Completed (Credited to beneficiary)', successStyle.bg);
+    });
+
+    const setupCopy = (btnId, valId) => {
+        document.getElementById(btnId).addEventListener('click', function() {
+            const txt = document.getElementById(valId).innerText;
+            navigator.clipboard.writeText(txt).then(() => {
+                const old = this.innerText; this.innerText = 'Copied!';
+                setTimeout(() => this.innerText = old, 1500);
+            });
+        });
+    };
+    setupCopy('copyUetrBtn', 'uetrVal');
+    setupCopy('copyBtn', 'txRef');
+
+    // PROFESSIONAL PDF GENERATION
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Header
+        doc.setFillColor(15, 23, 42); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("SWIFT", 20, 25);
+        doc.setFontSize(10); doc.text("GLOBAL PAYMENT CONFIRMATION - DUAL INTERMEDIARY", 120, 25);
+
+        // Amount Box
+        doc.setFillColor(248, 250, 252); doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
+        doc.setTextColor(100, 116, 139); doc.setFontSize(9); doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
+        doc.setFontSize(22); doc.setTextColor(11, 107, 255); doc.text(document.getElementById('amountVal').innerText, 30, 75);
+
+        // Data Table
+        let y = 105;
+        const addRow = (label, value) => {
+            doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(100, 116, 139); doc.text(label.toUpperCase(), 20, y);
+            doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(15, 23, 42);
+            const splitVal = doc.splitTextToSize(String(value), 120);
+            doc.text(splitVal, 70, y);
+            y += (splitVal.length * 5) + 5;
+            doc.setDrawColor(226, 232, 240); doc.line(20, y - 4, 190, y - 4); y += 5;
+        };
+
+        addRow("Transaction Status", "Completed (Amount credited to beneficiary account)");
+        addRow("UETR Code", document.getElementById('uetrVal').innerText);
+        addRow("Transaction Ref", document.getElementById('txRef').innerText);
+        addRow("Sent Date", document.getElementById('sentDate').innerText);
+        addRow("Value Date", document.getElementById('valDate').innerText);
+        addRow("Ordering Party", document.getElementById('orderBen').innerText);
+        addRow("Sender Bank", "UBS Switzerland AG (UBSWCHZH80A)");
+        addRow("Intermediary Bank 1", "Commerzbank AG Frankfurt (COBADEFF)");
+        addRow("Intermediary Bank 2", "Citibank N.A. New York (CITIUS33)");
+        addRow("Beneficiary", document.getElementById('benCust').innerText);
+        addRow("Beneficiary IBAN", document.getElementById('beneficiaryIban').innerText);
+        addRow("Receiving Bank", "Türkiye İş Bankası A.Ş. (ISBKTRISXXX)");
+        addRow("Purpose", document.getElementById('purpose').innerText);
+
+        // Footer
+        doc.setFontSize(8); doc.setTextColor(150, 150, 150);
+        doc.text("This is an official SWIFT gpi payment confirmation with dual intermediary routing.", 20, 280);
+        doc.text("All banks in the chain have confirmed processing. Generated: " + new Date().toLocaleDateString(), 20, 285);
+
+        doc.save('SWIFT_Receipt_Dual_Intermediary_' + document.getElementById('txRef').innerText + '.pdf');
+    });
+</script>
+</body>
+</html>
