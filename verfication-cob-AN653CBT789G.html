@@ -241,7 +241,7 @@
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">COBADEFFXXX</div>
-                <div class="status-tag" id="intermediary-status1">Processing</div>
+                <div class="status-tag" id="intermediary-status1">Processed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
@@ -333,25 +333,26 @@
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
-        const procStyle = { bg: '#facc15', color: '#92400e' };
+        const processedStyle = { bg: '#10b981', color: '#fff' }; // Yaşıl - Processed
+        const procStyle = { bg: '#facc15', color: '#92400e' }; // Sarı - Processing
         const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
 
-        const updateEl = (id, style, blink = false) => {
+        const updateEl = (id, style, text, blink = false) => {
             const el = document.getElementById(id);
             if(el) {
                 el.style.background = style.bg; 
                 el.style.color = style.color;
-                el.innerText = style.bg === '#16a34a' ? 'Sent' : 
-                              (style.bg === '#facc15' ? 'Processing' : 'Pending');
+                el.innerText = text;
                 if(blink && style.bg === '#facc15') el.classList.add('blinking');
+                else el.classList.remove('blinking');
             }
         };
 
-        updateEl('topStatus', sentStyle);
-        updateEl('debtor-status', sentStyle);
-        updateEl('intermediary-status1', procStyle, true);
-        updateEl('intermediary-status2', procStyle, true);
-        updateEl('beneficiary-status', pendStyle);
+        updateEl('topStatus', sentStyle, 'Sent');
+        updateEl('debtor-status', sentStyle, 'Sent');
+        updateEl('intermediary-status1', processedStyle, 'Processed'); // COBADEFFXXX - Processed (yaşıl)
+        updateEl('intermediary-status2', procStyle, 'Processing', true); // CHASDEFXXXX - Processing (yanıb-sönən)
+        updateEl('beneficiary-status', pendStyle, 'Pending');
         
         // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
@@ -506,7 +507,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y); // Value date 26 Fevral
+        doc.text(":32A:260226EUR20000000,00", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -517,7 +518,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y); // Value date 26 Fevral
+        doc.text(":32A:260226EUR20000000,00", 25, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
