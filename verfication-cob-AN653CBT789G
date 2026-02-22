@@ -82,7 +82,7 @@
 
         <div class="label">UETR code</div>
         <div class="copy" style="margin-bottom: 10px;">
-            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">a87f43b2-19d8-4c3e-9a64-815ecc2f7d41</div>
+            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">f6f204bc-c9ab-4640-8fe9-e8585f17e4ff</div>
             <button id="copyUetrBtn">Copy</button>
         </div>
 
@@ -97,11 +97,11 @@
             </div>
             <div class="col">
                 <div class="label">Sent date:</div>
-                <div class="value" id="sentDate">14-Feb-2026</div>
+                <div class="value" id="sentDate">23-Feb-2026</div>
             </div>
             <div class="col">
                 <div class="label">Value date:</div>
-                <div class="value" id="valDate">17-Feb-2026</div>
+                <div class="value" id="valDate">26-Feb-2026</div>
             </div>
         </div>
 
@@ -109,20 +109,20 @@
 
         <div class="row">
             <div class="col">
-                <div class="label">Ordering Party</div>
-                <div class="value" id="orderBen">Vantage Holdings International</div>
-                <br>
+
                 <div class="label">Sender Bank</div>
-                <div class="value" id="senderBank">UBS Switzerland AG</div>
-                <div class="small">Bahnhofstrasse 45, 8001 Zurich, Switzerland</div>
+                <div class="value" id="senderBank">Banque Cramer & Cie Sa </div>
+                <div class="small">Avenue de Miremont 22 1206 Genève.</div>
                 <br>
                 <div class="label">Beneficiary Customer</div>
-                <div class="value" id="benCust">Anatolia Tekstil Sanayi ve Ticaret A.S.</div>
-                <div class="small">Organize Sanayi Bölgesi, 5. Cadde No:12, Denizli, Türkiye</div>
+                <div class="value" id="benCust">Q Real Investment Fund S.à r.l</div>
+                <div class="small">rue de l'Industrie, 8069, Strassen, Luxembourg
+</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value" id="recvBank">Türkiye İş Bankası A.Ş.</div>
-                <div class="small">İş Kuleleri, 34330 Levent/İstanbul, Türkiye</div>
+                <div class="value" id="recvBank">Revolut Bank UAB</div>
+                <div class="small">Konstitucijos ave. 21B, 08130, Vilnius, Lithuania
+</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
