@@ -355,12 +355,6 @@
         
         // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
-        
-        // Tarixləri yenilə
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
-        document.getElementById('sentDate').innerText = formattedDate;
-        document.getElementById('valDate').innerText = formattedDate;
     });
 
     // Copy Logic
@@ -382,12 +376,8 @@
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Tarix formatı: 23-Feb-2026 -> 230226 (YYMMDD)
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const year = String(today.getFullYear()).slice(-2);
-        const valueDate = day + month + year;
+        // Value date: 26 Fevral 2026 -> 260226
+        const valueDate = "260226";
         
         // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
@@ -399,7 +389,7 @@
         // Mesajı qur
         let message = header +
             ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +  // UETR-in ilk 16 simvolu
+            ":21:" + uetr.substring(0, 16) + "\n" +
             ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
@@ -428,8 +418,8 @@
         // Məlumatları topla
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText;
-        const valDate = document.getElementById('valDate').innerText;
+        const sentDate = document.getElementById('sentDate').innerText; // 23-Feb-2026
+        const valDate = document.getElementById('valDate').innerText;   // 26-Feb-2026
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
@@ -516,7 +506,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:" + valDate.replace(/-/g, '') + "EUR20000000,00", 25, y);
+        doc.text(":32A:260226EUR20000000,00", 25, y); // Value date 26 Fevral
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -527,7 +517,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:" + valDate.replace(/-/g, '') + "EUR20000000,00", 25, y);
+        doc.text(":32A:260226EUR20000000,00", 25, y); // Value date 26 Fevral
         
         // Footer
         doc.setFont("helvetica", "italic");
