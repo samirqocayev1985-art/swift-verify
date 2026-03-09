@@ -206,7 +206,7 @@
                 <div class="small">Room 1603, 16 th Floor, Build in g 3, No. 58, Jing guang South Road, Erqi District , Zhengzhou City , Henan Province</div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Industrial Bank</div>
+                <div class="value">Industrial Bank Co., Ltd</div>
                 <div class="small">Zhengzhou, China</div>
             </div>
             <div class="col">
@@ -265,7 +265,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA171122565789-100326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU171122565789-100326...
                     </div>
                 </div>
                 
@@ -278,11 +278,11 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA171122565789-100326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU171122565789-100326...
                     </div>
                 </div>
                 
-                <!-- Additional Connector for multiple intermediaries -->
+                <!-- Bank Connectors -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
                     <span>🔹 CRAMCHGGXXX</span>
                     <span>⬇️</span>
@@ -313,20 +313,20 @@
 </div>
 
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
+    // Full IBAN (kept private, used only in MT messages)
     const FULL_BENEFICIARY_IBAN = "LT11000117398567894490";
     
-    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
+    // Partially masked IBAN (displayed on screen)
     const MASKED_BENEFICIARY_IBAN = "4620 **** **** **** 4652";
 
-    // Cari tarix və məbləğ
+    // Current amount and currency
     const CURRENT_AMOUNT = "20000000.00";
     const CURRENT_CURRENCY = "EUR";
 
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
-        const processingStyle = { bg: '#3b82f6', color: '#fff' }; // Göy rəng - Processing
+        const processingStyle = { bg: '#3b82f6', color: '#fff' }; // Blue - Processing
         const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
 
         const updateEl = (id, style, text, blink = false) => {
@@ -342,11 +342,11 @@
 
         updateEl('topStatus', sentStyle, 'Sent');
         updateEl('debtor-status', sentStyle, 'Sent');
-        // COBADEFFXXX - Processing (göy rəngdə yanıb-sönən)
+        // DEUTDEFFXXX - Processing (blinking blue)
         updateEl('intermediary-status1', processingStyle, 'Processing', true); 
         updateEl('beneficiary-status', pendStyle, 'Pending');
         
-        // IBAN-ı qismən gizlət
+        // Mask IBAN display
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
     });
 
@@ -363,10 +363,10 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - TAM IBAN İSTİFADƏ OLUNUR
+    // MT900/MT910 Format - Using FULL IBAN
     function showMTMessage(type) {
-        const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;
+        const txRef = document.getElementById('txRef').innerText; // DEU171122565789-100326
+        const uetr = document.getElementById('uetrVal').innerText; // e98583b7-8b14-439f-b0f5-df13f49a1377
         const purpose = document.getElementById('purpose').innerText;
         
         // Value date: 13 MAR 2026 -> 130326
@@ -379,13 +379,14 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur - transaction reference və UETR düzgün formatda
+        // Construct message with corrected transaction reference and intermediary
         let message = header +
-            ":20:" + txRef + "\n" +  // Transaction Reference Number
-            ":21:" + uetr.substring(0, 16) + "\n" + // Related Reference (UETR-nin ilk 16 simvolu)
+            ":20:" + txRef + "\n" +  // Transaction Reference Number (now DEU...)
+            ":21:" + uetr.substring(0, 16) + "\n" + // Related Reference (UETR first 16 chars)
             ":25:" + FULL_BENEFICIARY_IBAN + "\n" + // Account IBAN
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" + // Value date, currency, amount
-            ":52A:CRAMCHGGXXX\n" + // Ordering Institution
+            ":52A:CRAMCHGGXXX\n" + // Ordering Institution (Sender Bank)
+            ":56A:DEUTDEFFXXX\n" + // Intermediary Bank (now DEUTDEFFXXX)
             ":72:/BENEF/ " + purpose + "\n" + // Purpose of payment
             "-}";
 
@@ -403,14 +404,14 @@
         });
     }
 
-    // PDF Funksiyası - Təkmilləşdirilmiş
+    // PDF Function - Enhanced with correct data
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Məlumatları topla
+        // Collect data
         const uetr = document.getElementById('uetrVal').innerText;
-        const txRef = document.getElementById('txRef').innerText;
+        const txRef = document.getElementById('txRef').innerText; // DEU171122565789-100326
         const sentDate = document.getElementById('sentDate').innerText; // 10-MAR-2026
         const valDate = document.getElementById('valDate').innerText;   // 13-MAR-2026
         const orderBen = document.getElementById('orderBen').innerText;
@@ -475,10 +476,10 @@
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Industrial Bank (FJIBCNBA880)");
+        addRow("Receiving Bank", "Industrial Bank Co., Ltd (FJIBCNBA880)");
         addRow("Purpose", purpose);
         
-        // SWIFT Messages bölməsi
+        // SWIFT Messages section
         if (y > 220) {
             doc.addPage();
             y = 20;
@@ -493,24 +494,28 @@
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text("MT900 (Confirmation of Debit):", 20, y);
+        doc.text("MT900 (Confirmation of Debit - Sender → Intermediary):", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
         doc.text(":32A:130326EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":56A:DEUTDEFFXXX", 25, y); // Intermediary bank
         y += 8;
         
         doc.setFont("helvetica", "normal");
         doc.setTextColor(100, 116, 139);
-        doc.text("MT910 (Confirmation of Credit):", 20, y);
+        doc.text("MT910 (Confirmation of Credit - Intermediary → Beneficiary):", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
         doc.text(":32A:130326EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":56A:DEUTDEFFXXX", 25, y); // Intermediary bank
         
         // Footer
         doc.setFont("helvetica", "italic");
@@ -522,7 +527,7 @@
         doc.save('SWIFT_Receipt_' + txRef + '.pdf');
     });
 
-    // Escape düyməsi ilə modalı bağla
+    // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeModal();
