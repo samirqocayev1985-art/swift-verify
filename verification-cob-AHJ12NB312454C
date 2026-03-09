@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Incoming Payment — Customer View</title>
+    <style>
+        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+        
+        body {
+            font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+            margin: 0; padding: 24px; color: #0f172a; min-height: 100vh;
+            background-color: #f3f4f6;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            position: relative; overflow-x: hidden;
+        }
+
+        .wrap{max-width:840px;margin:0 auto; position: relative;}
+        .custom-top-logo { width: 140px; height: auto; display: block; margin-bottom: 15px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }
+
+        .card{
+            background:var(--card); border-radius:16px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding:28px; margin-bottom:16px; border: 1px solid rgba(255,255,255,0.8);
+            position: relative; backdrop-filter: blur(10px);
+        }
+
+        h1{font-size:18px;margin:0 0 8px; font-weight: bold;}
+        p.lead{margin:0;color:var(--muted)}
+        .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+        .col{flex:1;min-width:180px}
+        .label{font-size:12px;color:var(--muted);margin-bottom:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+        .value{font-weight:600;font-size:16px}
+        .amount{font-size:18px; color:var(--accent); font-weight: 800;}
+        .small{font-size:13px;color:var(--muted)}
+        
+        .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
+        .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
+        
+        .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
+        .copy button{background:transparent;color:var(--accent);padding:4px 8px;border-radius:6px;border:none; font-size: 12px; font-weight:bold; cursor:pointer;}
+        
+        .iban-box { background: #f1f5f9; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #cbd5e1; }
+
+        .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
+        .flow-step{text-align:center;position:relative;min-width:180px}
+        .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
+        .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+        .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
+        .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
+
+        @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
+        .blinking { animation: blink 1s infinite; }
+
+        .mt-button {
+            background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        .mt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .mt-modal-content { background: white; padding: 24px; border-radius: 16px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; }
+        .mt-message { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-family: 'Courier New', monospace; font-size: 14px; margin: 16px 0; white-space: pre-wrap; }
+        .mt-modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: var(--muted); }
+
+        .btns{display:flex;gap:10px;margin-top:20px}
+        button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
+        button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0; padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;}
+
+        /* SWIFT Message Flow Styles */
+        .swift-flow-container {
+            margin: 30px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .swift-flow-header {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        
+        .swift-flow-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .swift-message-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .swift-message-badge {
+            background: #0b6bff;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .swift-message-badge.mt900 { background: #f59e0b; }
+        .swift-message-badge.mt910 { background: #10b981; }
+        
+        .swift-message-preview {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            flex: 1;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .swift-message-preview:hover {
+            background: #e2e8f0;
+        }
+        
+        .swift-connector-line {
+            width: 2px;
+            height: 30px;
+            background: linear-gradient(to bottom, #0b6bff, #f59e0b);
+            margin-left: 35px;
+        }
+        
+        .swift-direction-icon {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        
+        @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .copy{flex-wrap:wrap;} }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+<div class="wrap">
+    <a href="https://verify-swift.com">
+        <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="SWIFT" class="custom-top-logo">
+    </a>
+
+    <div class="card">
+        <h1>Incoming Payment</h1>
+        <p class="lead">Detailed transaction tracking for high-value transfer.</p>
+        
+        <div class="muted-line"></div>
+
+        <div class="label">Uetr code</div>
+        <div class="copy" style="margin-bottom: 10px;">
+            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">f6f204bc-c9ab-4640-8fe9-e8585f17e4ff</div>
+            <button id="copyUetrBtn">Copy</button>
+            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
+            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
+        </div>
+
+<div class="row">
+    <div class="col">
+        <div class="label">Status</div>
+        <div class="value"><span class="status" id="topStatus">Sent</span></div>
+    </div>
+    <div class="col">
+        <div class="label">Amount</div>
+        <div class="value amount" style="font-weight: 400;">EUR 20,000,000.00</div>
+    </div>
+    <div class="col">
+        <div class="label">Sent date:</div>
+        <div class="value" id="sentDate" style="font-weight: 400;">23-Feb-2026</div>
+    </div>
+    <div class="col">
+        <div class="label">Value date:</div>
+        <div class="value" id="valDate" style="font-weight: 400;">26-Feb-2026</div>
+    </div>
+</div>
+
+        <div class="muted-line"></div>
+
+        <div class="row">
+            <div class="col">
+                <div class="label">Ordering Party</div>
+                <div class="value" id="orderBen">MMG Capital Limited</div>
+                <br>
+                <div class="label">Sender Bank</div>
+                <div class="value">Banque Cramer & Cie SA</div>
+                <div class="small">Avenue de Miremont 22 1206 Geneva</div>
+                <br>
+                <div class="label">Beneficiary Customer</div>
+                <div class="value" id="benCust">Q Real Investment Fund S.à r.l</div>
+                <div class="small">rue de l'Industrie, 8069, Strassen, Luxembourg</div>
+                <br>
+                <div class="label">Receiving Bank</div>
+                <div class="value">Revolut Bank UAB</div>
+                <div class="small">Konstitucijos ave. 21B, 08130, Vilnius, Lithuania</div>
+            </div>
+            <div class="col">
+                <div class="label">Payment Details</div>
+                <div class="iban-box">
+                    <div class="label" style="font-size:10px;">Sender IBAN</div>
+                    <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
+                    <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
+                    <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">LT11 0001 **** **** 4490</div>
+                </div>
+                <div class="label">Purpose</div>
+                <div class="value small" id="purpose">Payment for Agreement No. AG/SJU-005824</div>
+                <br>
+                <div class="label">Transaction Reference</div>
+                <div class="copy">
+                    <div class="small" id="txRef" style="font-weight: 700;">CBA17112248B401-230226</div>
+                    <button id="copyBtn">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Flow Diagram -->
+        <div class="flow-container">
+            <div class="flow-step">
+                <div class="bank-icon">🏦</div>
+                <div style="font-size:12px; font-weight:bold">Sender Bank</div>
+                <div class="swift-code">CRAMCHGGXXX</div>
+                <div class="status-tag" id="debtor-status">Sent</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">⚙️</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div class="swift-code">COBADEFFXXX</div>
+                <div class="status-tag" id="intermediary-status1">Processed</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">⚙️</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div class="swift-code">CHASDEFXXXX</div>
+                <div class="status-tag" id="intermediary-status2">Processing</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
+                <div class="bank-icon">🏛️</div>
+                <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
+                <div class="swift-code">REVOLT21XXX</div>
+                <div class="status-tag" id="beneficiary-status">Pending</div>
+            </div>
+        </div>
+
+        <!-- SWIFT Message Flow with Connectors -->
+        <div class="swift-flow-container">
+            <div class="swift-flow-header">
+                📨 SWIFT Message Flow (MT900 / MT910)
+            </div>
+            <div class="swift-flow-content">
+                <!-- MT900 Message -->
+                <div class="swift-message-row">
+                    <span class="swift-message-badge mt900">MT900</span>
+                    <span style="font-size:13px; color:#475569;">Confirmation of Debit</span>
+                    <span class="swift-direction-icon">⬆️</span>
+                    <span style="font-size:13px;">Sender → Intermediary</span>
+                    <div class="swift-message-preview" onclick="showMTMessage('900')">
+                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                    </div>
+                </div>
+                
+                <div class="swift-connector-line"></div>
+                
+                <!-- MT910 Message -->
+                <div class="swift-message-row">
+                    <span class="swift-message-badge mt910">MT910</span>
+                    <span style="font-size:13px; color:#475569;">Confirmation of Credit</span>
+                    <span class="swift-direction-icon">⬇️</span>
+                    <span style="font-size:13px;">Intermediary → Beneficiary</span>
+                    <div class="swift-message-preview" onclick="showMTMessage('910')">
+                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                    </div>
+                </div>
+                
+                <!-- Additional Connector for multiple intermediaries -->
+                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
+                    <span>🔹 COBADEFFXXX</span>
+                    <span>⬇️</span>
+                    <span>🔹 CHASDEFXXXX</span>
+                    <span>⬇️</span>
+                    <span>🔹 REVOLT21XXX</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="btns">
+            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF)</button>
+            <button class="secondary" onclick="alert('Support: support@verify-swift.com')">Help Center</button>
+        </div>
+    </div>
+</div>
+
+<div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
+    <div class="mt-modal-content">
+        <span class="mt-modal-close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">SWIFT Message</h2>
+        <div id="modalContent" class="mt-message"></div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="secondary" onclick="closeModal()">Close</button>
+            <button class="primary-btn" onclick="copyModalContent()">Copy Message</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
+    const FULL_BENEFICIARY_IBAN = "LT11000117398567894490";
+    
+    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
+    const MASKED_BENEFICIARY_IBAN = "LT11 0001 **** **** 4490";
+
+    // Cari tarix və məbləğ
+    const CURRENT_AMOUNT = "20000000.00";
+    const CURRENT_CURRENCY = "EUR";
+
+    // Status Logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const sentStyle = { bg: '#16a34a', color: '#fff' };
+        const processedStyle = { bg: '#10b981', color: '#fff' }; // Yaşıl - Processed
+        const procStyle = { bg: '#facc15', color: '#92400e' }; // Sarı - Processing
+        const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
+
+        const updateEl = (id, style, text, blink = false) => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.style.background = style.bg; 
+                el.style.color = style.color;
+                el.innerText = text;
+                if(blink && style.bg === '#facc15') el.classList.add('blinking');
+                else el.classList.remove('blinking');
+            }
+        };
+
+        updateEl('topStatus', sentStyle, 'Sent');
+        updateEl('debtor-status', sentStyle, 'Sent');
+        updateEl('intermediary-status1', processedStyle, 'Processed'); // COBADEFFXXX - Processed (yaşıl)
+        updateEl('intermediary-status2', procStyle, 'Processing', true); // CHASDEFXXXX - Processing (yanıb-sönən)
+        updateEl('beneficiary-status', pendStyle, 'Pending');
+        
+        // IBAN-ı qismən gizlət
+        document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
+    });
+
+    // Copy Logic
+    const setupCopy = (btnId, valId) => {
+        document.getElementById(btnId).addEventListener('click', function() {
+            const txt = document.getElementById(valId).innerText;
+            navigator.clipboard.writeText(txt).then(() => {
+                const old = this.innerText; this.innerText = 'Copied!';
+                setTimeout(() => this.innerText = old, 1500);
+            });
+        });
+    };
+    setupCopy('copyUetrBtn', 'uetrVal');
+    setupCopy('copyBtn', 'txRef');
+
+    // MT900/MT910 Formatı - TAM IBAN İSTİFADƏ OLUNUR
+    function showMTMessage(type) {
+        const txRef = document.getElementById('txRef').innerText;
+        const uetr = document.getElementById('uetrVal').innerText;
+        const purpose = document.getElementById('purpose').innerText;
+        
+        // Value date: 26 Fevral 2026 -> 260226
+        const valueDate = "260226";
+        
+        // Basic header
+        const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
+        const messageType = type === '900' ? 'O900' : 'O910';
+        const messageRest = "1611060216TCZBTR2AXXX50621189242302061705N}{3:{108:XXXXX}}{4:\n";
+        
+        const header = basicHeader + messageType + messageRest;
+        
+        // Mesajı qur
+        let message = header +
+            ":20:" + txRef + "\n" +
+            ":21:" + uetr.substring(0, 16) + "\n" +
+            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+            ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
+            ":52A:CRAMCHGGXXX\n" +
+            ":72:/BENEF/ " + purpose + "\n" +
+            "-}";
+
+        document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type + ' - ' + 
+            (type === '900' ? 'Confirmation of Debit (Sender → Intermediary)' : 'Confirmation of Credit (Intermediary → Beneficiary)');
+        document.getElementById('modalContent').innerText = message;
+        document.getElementById('mtModal').style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('mtModal').style.display = 'none'; }
+    
+    function copyModalContent() {
+        navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => {
+            alert('MT Message copied to clipboard!');
+        });
+    }
+
+    // PDF Funksiyası - Təkmilləşdirilmiş
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Məlumatları topla
+        const uetr = document.getElementById('uetrVal').innerText;
+        const txRef = document.getElementById('txRef').innerText;
+        const sentDate = document.getElementById('sentDate').innerText; // 23-Feb-2026
+        const valDate = document.getElementById('valDate').innerText;   // 26-Feb-2026
+        const orderBen = document.getElementById('orderBen').innerText;
+        const benCust = document.getElementById('benCust').innerText;
+        const purpose = document.getElementById('purpose').innerText;
+        
+        // Header
+        doc.setFillColor(11, 107, 255); 
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); 
+        doc.setFontSize(22); 
+        doc.text("SWIFT", 20, 25);
+        doc.setFontSize(10); 
+        doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 25);
+        doc.text("www.verify-swift.com", 130, 32);
+
+        // Amount
+        doc.setFillColor(248, 250, 252); 
+        doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
+        doc.setTextColor(100, 116, 139); 
+        doc.setFontSize(9); 
+        doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
+        doc.setFontSize(22); 
+        doc.setTextColor(11, 107, 255); 
+        doc.text("EUR 20,000,000.00", 30, 75);
+
+        let y = 95;
+        const addRow = (label, value) => {
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            
+            doc.setFont("helvetica", "bold"); 
+            doc.setFontSize(9); 
+            doc.setTextColor(100, 116, 139); 
+            doc.text(label.toUpperCase(), 20, y);
+            
+            doc.setFont("helvetica", "normal"); 
+            doc.setFontSize(10); 
+            doc.setTextColor(15, 23, 42);
+            
+            let xPos = 70;
+            if (label === "UETR Code" || label === "Transaction Ref") {
+                doc.setFont("courier", "normal");
+            }
+            
+            const splitVal = doc.splitTextToSize(String(value), 120);
+            doc.text(splitVal, xPos, y);
+            
+            y += (splitVal.length * 5) + 8;
+            doc.setDrawColor(226, 232, 240); 
+            doc.line(20, y - 4, 190, y - 4); 
+            y += 5;
+        };
+
+        addRow("UETR Code", uetr);
+        addRow("Transaction Ref", txRef);
+        addRow("Sent Date", sentDate);
+        addRow("Value Date", valDate);
+        addRow("Ordering Party", orderBen);
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
+        addRow("Beneficiary", benCust);
+        addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
+        addRow("Receiving Bank", "Revolut Bank UAB (REVOLT21XXX)");
+        addRow("Purpose", purpose);
+        
+        // SWIFT Messages bölməsi
+        if (y > 220) {
+            doc.addPage();
+            y = 20;
+        }
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(11, 107, 255);
+        doc.text("SWIFT Messages", 20, y);
+        y += 10;
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        doc.text("MT900 (Confirmation of Debit):", 20, y);
+        y += 5;
+        doc.setFont("courier", "normal");
+        doc.setTextColor(15, 23, 42);
+        doc.text(":20:" + txRef, 25, y);
+        y += 5;
+        doc.text(":32A:260226EUR20000000,00", 25, y);
+        y += 8;
+        
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 116, 139);
+        doc.text("MT910 (Confirmation of Credit):", 20, y);
+        y += 5;
+        doc.setFont("courier", "normal");
+        doc.setTextColor(15, 23, 42);
+        doc.text(":20:" + txRef, 25, y);
+        y += 5;
+        doc.text(":32A:260226EUR20000000,00", 25, y);
+        
+        // Footer
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.setTextColor(156, 163, 175);
+        doc.text("Generated by verify-swift.com • " + new Date().toLocaleString(), 20, 280);
+        doc.text("This is a computer-generated document. No signature is required.", 20, 285);
+
+        doc.save('SWIFT_Receipt_' + txRef + '.pdf');
+    });
+
+    // Escape düyməsi ilə modalı bağla
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+</script>
+</body>
+</html>
