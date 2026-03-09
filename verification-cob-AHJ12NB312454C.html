@@ -241,9 +241,8 @@
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">COBADEFFXXX</div>
-                <div class="status-tag" id="intermediary-status1">Processed</div>
+                <div class="status-tag" id="intermediary-status1">Processing</div>
             </div>
-           
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
@@ -266,7 +265,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                        {1:F01CRAMCHGGAXXX...} :20:CBA171122565789-100326...
                     </div>
                 </div>
                 
@@ -279,7 +278,7 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                        {1:F01CRAMCHGGAXXX...} :20:CBA171122565789-100326...
                     </div>
                 </div>
                 
@@ -327,8 +326,7 @@
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
         const sentStyle = { bg: '#16a34a', color: '#fff' };
-        const processedStyle = { bg: '#10b981', color: '#fff' }; // Yaşıl - Processed
-        const procStyle = { bg: '#facc15', color: '#92400e' }; // Sarı - Processing
+        const processingStyle = { bg: '#3b82f6', color: '#fff' }; // Göy rəng - Processing
         const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
 
         const updateEl = (id, style, text, blink = false) => {
@@ -337,15 +335,15 @@
                 el.style.background = style.bg; 
                 el.style.color = style.color;
                 el.innerText = text;
-                if(blink && style.bg === '#facc15') el.classList.add('blinking');
+                if(blink) el.classList.add('blinking');
                 else el.classList.remove('blinking');
             }
         };
 
         updateEl('topStatus', sentStyle, 'Sent');
         updateEl('debtor-status', sentStyle, 'Sent');
-        updateEl('intermediary-status1', processedStyle, 'Processed'); // COBADEFFXXX - Processed (yaşıl)
-        updateEl('intermediary-status2', procStyle, 'Processing', true); // CHASDEFXXXX - Processing (yanıb-sönən)
+        // COBADEFFXXX - Processing (göy rəngdə yanıb-sönən)
+        updateEl('intermediary-status1', processingStyle, 'Processing', true); 
         updateEl('beneficiary-status', pendStyle, 'Pending');
         
         // IBAN-ı qismən gizlət
@@ -371,8 +369,8 @@
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Value date: 26 Fevral 2026 -> 260226
-        const valueDate = "260226";
+        // Value date: 13 MAR 2026 -> 130326
+        const valueDate = "130326";
         
         // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
@@ -381,14 +379,14 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur
+        // Mesajı qur - transaction reference və UETR düzgün formatda
         let message = header +
-            ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +
-            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
-            ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
-            ":52A:CRAMCHGGXXX\n" +
-            ":72:/BENEF/ " + purpose + "\n" +
+            ":20:" + txRef + "\n" +  // Transaction Reference Number
+            ":21:" + uetr.substring(0, 16) + "\n" + // Related Reference (UETR-nin ilk 16 simvolu)
+            ":25:" + FULL_BENEFICIARY_IBAN + "\n" + // Account IBAN
+            ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" + // Value date, currency, amount
+            ":52A:CRAMCHGGXXX\n" + // Ordering Institution
+            ":72:/BENEF/ " + purpose + "\n" + // Purpose of payment
             "-}";
 
         document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type + ' - ' + 
@@ -413,8 +411,8 @@
         // Məlumatları topla
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText; // 23-Feb-2026
-        const valDate = document.getElementById('valDate').innerText;   // 26-Feb-2026
+        const sentDate = document.getElementById('sentDate').innerText; // 10-MAR-2026
+        const valDate = document.getElementById('valDate').innerText;   // 13-MAR-2026
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
@@ -477,7 +475,7 @@
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Revolut Bank UAB (REVOLT21XXX)");
+        addRow("Receiving Bank", "Industrial Bank (FJIBCNBA880)");
         addRow("Purpose", purpose);
         
         // SWIFT Messages bölməsi
@@ -501,7 +499,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y);
+        doc.text(":32A:130326EUR20000000,00", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -512,7 +510,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y);
+        doc.text(":32A:130326EUR20000000,00", 25, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
