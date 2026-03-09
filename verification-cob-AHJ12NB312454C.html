@@ -418,16 +418,17 @@
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Header
-        doc.setFillColor(11, 107, 255); 
-        doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); 
-        doc.setFontSize(22); 
-        doc.text("SWIFT", 20, 25);
-        doc.setFontSize(10); 
-        doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 25);<br>
-        doc.text("www.swift.com", 130, 32);
-        doc.text("www.verify-swift.com", 130, 32);
+            // Header
+    doc.setFillColor(11, 107, 255); 
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255, 255, 255); 
+    doc.setFontSize(22); 
+    doc.text("SWIFT", 20, 25);
+    doc.setFontSize(10); 
+    doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 25);
+    // Two URLs now properly spaced - one above the other
+    doc.text("www.swift.com", 130, 32);
+    doc.text("www.verify-swift.com", 130, 38);
 
         // Amount
         doc.setFillColor(248, 250, 252); 
