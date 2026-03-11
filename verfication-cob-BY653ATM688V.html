@@ -174,7 +174,7 @@
 <div class="row">
     <div class="col">
         <div class="label">Status</div>
-        <div class="value"><span class="status" id="topStatus">Sent</span></div>
+        <div class="value"><span class="status" id="topStatus">Processed</span></div>
     </div>
     <div class="col">
         <div class="label">Amount</div>
@@ -348,10 +348,10 @@
             }
         };
 
-        updateEl('topStatus', sentStyle, 'Sent');
+        updateEl('topStatus', processedStyle, 'Processed');
         updateEl('debtor-status', sentStyle, 'Sent');
-        updateEl('intermediary-status1', processedStyle, 'Processed'); // DEUTDEFFXXX - Processed (yaşıl)
-        updateEl('intermediary-status2', procStyle, 'Processing', true); // HFBDEFFXXX - Processing (yanıb-sönən)
+        updateEl('intermediary-status1', processedStyle, 'Processed');
+        updateEl('intermediary-status2', procStyle, 'Processing', true);
         updateEl('beneficiary-status', pendStyle, 'Pending');
         
         // IBAN-ı qismən gizlət
@@ -482,12 +482,12 @@
         addRow("Sent Date", sentDate);
         addRow("Value Date", valDate);
         addRow("Ordering Party", orderBen);
-        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Sent");
         addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
         addRow("Intermediary 2", "HFB Bank (HFBDEFFXXX) - Processing");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Exlm BANK DJIBOUTI (EXTNDJJDXXX)");
+        addRow("Receiving Bank", "Exim BANK Djibouti (EXTNDJJDXXX) - Pending");
         addRow("Purpose", purpose);
         
         // SWIFT Messages bölməsi
