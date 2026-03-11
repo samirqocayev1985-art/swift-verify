@@ -202,11 +202,11 @@
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
                 <br>
                 <div class="label">Beneficiary Customer</div>
-                <div class="value" id="benCust">CHINA AFRICA HORIZON INVESTMENT & DEVELOPMENT GROUP SARL</div>
+                <div class="value" id="benCust">China Africa Horizon Investment & Development Ggroup Sarl</div>
                 <div class="small"></div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Exlm BANK DJIBOUTI</div>
+                <div class="value">Exim BANK Djibouti</div>
                 <div class="small">13 Palce Lagarde, Djibouti City</div>
             </div>
             <div class="col">
@@ -272,7 +272,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-130326...
                     </div>
                 </div>
                 
@@ -285,17 +285,17 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:CBA17112248B401-230226...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-130326...
                     </div>
                 </div>
                 
                 <!-- Additional Connector for multiple intermediaries -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
-                    <span>🔹 COBADEFFXXX</span>
+                    <span>🔹 DEUTDEFFXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 CHASDEFXXXX</span>
+                    <span>🔹 HFBDEFFXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 REVOLT21XXX</span>
+                    <span>🔹 EXTNDJJDXXX</span>
                 </div>
             </div>
         </div>
@@ -321,10 +321,10 @@
 
 <script>
     // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
-    const FULL_BENEFICIARY_IBAN = "LT11000117398567894490";
+    const FULL_BENEFICIARY_IBAN = "DJ100001173985678944183";
     
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
-    const MASKED_BENEFICIARY_IBAN = "LT11 0001 **** **** 4490";
+    const MASKED_BENEFICIARY_IBAN = "DJ10 **** **** **** 4183";
 
     // Cari tarix və məbləğ
     const CURRENT_AMOUNT = "20000000.00";
@@ -350,8 +350,8 @@
 
         updateEl('topStatus', sentStyle, 'Sent');
         updateEl('debtor-status', sentStyle, 'Sent');
-        updateEl('intermediary-status1', processedStyle, 'Processed'); // COBADEFFXXX - Processed (yaşıl)
-        updateEl('intermediary-status2', procStyle, 'Processing', true); // CHASDEFXXXX - Processing (yanıb-sönən)
+        updateEl('intermediary-status1', processedStyle, 'Processed'); // DEUTDEFFXXX - Processed (yaşıl)
+        updateEl('intermediary-status2', procStyle, 'Processing', true); // HFBDEFFXXX - Processing (yanıb-sönən)
         updateEl('beneficiary-status', pendStyle, 'Pending');
         
         // IBAN-ı qismən gizlət
@@ -377,13 +377,13 @@
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Value date: 26 Fevral 2026 -> 260226
-        const valueDate = "260226";
+        // Value date: 15 Mart 2026 -> 150326
+        const valueDate = "150326";
         
         // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
         const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "1611060216TCZBTR2AXXX50621189242302061705N}{3:{108:XXXXX}}{4:\n";
+        const messageRest = "1611060216EXTNDJJDXXX50621189242302061705N}{3:{108:XXXXX}}{4:\n";
         
         const header = basicHeader + messageType + messageRest;
         
@@ -394,6 +394,8 @@
             ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
+            ":56A:DEUTDEFFXXX\n" +
+            ":57A:HFBDEFFXXX\n" +
             ":72:/BENEF/ " + purpose + "\n" +
             "-}";
 
@@ -419,8 +421,8 @@
         // Məlumatları topla
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText; // 23-Feb-2026
-        const valDate = document.getElementById('valDate').innerText;   // 26-Feb-2026
+        const sentDate = document.getElementById('sentDate').innerText; // 12-Mar-2026
+        const valDate = document.getElementById('valDate').innerText;   // 15-Mar-2026
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
@@ -481,9 +483,11 @@
         addRow("Value Date", valDate);
         addRow("Ordering Party", orderBen);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
+        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
+        addRow("Intermediary 2", "HFB Bank (HFBDEFFXXX) - Processing");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Revolut Bank UAB (REVOLT21XXX)");
+        addRow("Receiving Bank", "Exlm BANK DJIBOUTI (EXTNDJJDXXX)");
         addRow("Purpose", purpose);
         
         // SWIFT Messages bölməsi
@@ -507,7 +511,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y);
+        doc.text(":32A:150326EUR20000000,00", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -518,7 +522,7 @@
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260226EUR20000000,00", 25, y);
+        doc.text(":32A:150326EUR20000000,00", 25, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
