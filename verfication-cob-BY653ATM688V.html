@@ -178,11 +178,11 @@
     </div>
     <div class="col">
         <div class="label">Sent date:</div>
-        <div class="value" id="sentDate" style="font-weight: 400;">16-Mar-2026</div>
+        <div class="value" id="sentDate" style="font-weight: 400;">17-Mar-2026</div>
     </div>
     <div class="col">
         <div class="label">Value date:</div>
-        <div class="value" id="valDate" style="font-weight: 400;">19-Mar-2026</div>
+        <div class="value" id="valDate" style="font-weight: 400;">20-Mar-2026</div>
     </div>
 </div>
 
@@ -218,7 +218,7 @@
                 <br>
                 <div class="label">Transaction Reference</div>
                 <div class="copy">
-                    <div class="small" id="txRef" style="font-weight: 700;">DEU17112212C332-160326</div>
+                    <div class="small" id="txRef" style="font-weight: 700;">DEU17112212C332-170326</div>
                     <button id="copyBtn">Copy</button>
                 </div>
             </div>
@@ -268,7 +268,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-160326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-170326...
                     </div>
                 </div>
                 
@@ -281,7 +281,7 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-160326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-170326...
                     </div>
                 </div>
                 
@@ -379,7 +379,7 @@
         // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
         const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "1611060216EXTNDJJDXXX50621189242302061401N}{3:{108:XXXXX}}{4:\n";
+        const messageRest = "1611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
         
         const header = basicHeader + messageType + messageRest;
         
