@@ -161,7 +161,8 @@
 
         <div class="label">Uetr code</div>
         <div class="copy" style="margin-bottom: 10px;">
-            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">40fb91ed-19aa-4263-be97-dc75011ad83f</div>
+            <!-- UETR dəyəri tələbə uyğun yeniləndi -->
+            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">daf09c6b-d18d-429a-931b-aa85e657539a</div>
             <button id="copyUetrBtn">Copy</button>
             <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
             <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
@@ -211,6 +212,7 @@
                     <div class="label" style="font-size:10px;">Sender IBAN</div>
                     <div class="value" id="senderIban" style="font-family: monospace; font-size: 14px; margin-bottom: 8px;">CH45 **** **** **** 2002</div>
                     <div class="label" style="font-size:10px;">Beneficiary IBAN</div>
+                    <!-- Ekranda maskalanmış IBAN göstərilir, MT mesajlarında tam versiya istifadə olunur -->
                     <div class="value" id="beneficiaryIban" style="font-family: monospace; font-size: 14px;">DJ10 **** **** **** 4183</div>
                 </div>
                 <div class="label">Purpose</div>
@@ -316,7 +318,7 @@
 </div>
 
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
+    // TƏLƏBƏ UYĞUN YENİLƏNİB: Tam IBAN (MT mesajlarında istifadə olunur)
     const FULL_BENEFICIARY_IBAN = "DJ100001173985678944183";
     
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
@@ -325,6 +327,9 @@
     // Cari tarix və məbləğ
     const CURRENT_AMOUNT = "20000000.00";
     const CURRENT_CURRENCY = "EUR";
+
+    // UETR kodu - dəyişənə əlavə edildi ki, MT mesajlarında istifadə olunsun
+    const UETR_CODE = "daf09c6b-d18d-429a-931b-aa85e657539a";
 
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
@@ -367,13 +372,13 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - TAM IBAN İSTİFADƏ OLUNUR
+    // MT900/MT910 Formatı - YENİ UETR KODU İLƏ YENİLƏNDİ
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;
+        const uetr = UETR_CODE; // Sabit dəyərdən istifadə edirik
         const purpose = document.getElementById('purpose').innerText;
         
-        // Value date: 19 Mart 2026 -> 190326 (gün/ay/yıl formatında)
+        // Value date: 19 Mart 2026 -> 190326 (gün/ay/il formatında)
         const valueDate = "190326";
         
         // Basic header
@@ -383,11 +388,11 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur
+        // Mesajı qur - UETR və tam IBAN istifadə olunur
         let message = header +
             ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +
-            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+            ":21:" + uetr.substring(0, 16) + "\n" + // UETR-in ilk 16 simvolu
+            ":25:" + FULL_BENEFICIARY_IBAN + "\n" + // TAM IBAN
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
             ":56A:DEUTDEFFXXX\n" +
@@ -409,7 +414,7 @@
         });
     }
 
-    // PDF Funksiyası - Təkmilləşdirilmiş
+    // PDF Funksiyası - Təkmilləşdirilmiş (UETR kodu ilə uyğun)
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -423,16 +428,16 @@
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-// Header
-doc.setFillColor(11, 107, 255); 
-doc.rect(0, 0, 210, 40, 'F');
-doc.setTextColor(255, 255, 255); 
-doc.setFontSize(22); 
-doc.text("SWIFT", 20, 25);
-doc.setFontSize(8); 
-doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 20);
-doc.text("www.swift.com", 130, 28);
-doc.text("www.verify-swift.com", 130, 36);
+        // Header
+        doc.setFillColor(11, 107, 255); 
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); 
+        doc.setFontSize(22); 
+        doc.text("SWIFT", 20, 25);
+        doc.setFontSize(8); 
+        doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 20);
+        doc.text("www.swift.com", 130, 28);
+        doc.text("www.verify-swift.com", 130, 36);
 
         // Amount
         doc.setFillColor(248, 250, 252); 
