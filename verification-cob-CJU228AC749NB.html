@@ -53,8 +53,11 @@
         .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
-        @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
-        .blinking { animation: blink 1s infinite; }
+        @keyframes blink { 
+            0%, 50%, 100% { opacity: 1; } 
+            25%, 75% { opacity: 0.3; } 
+        }
+        .blinking { animation: blink 1.5s infinite; }
 
         .mt-button {
             background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
@@ -224,7 +227,7 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram -->
+        <!-- Bank Flow Diagram - DÜZƏLDİLDİ: Rənglər düzgün -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
@@ -235,14 +238,14 @@
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
-                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary 1</div>
                 <div class="swift-code">DEUTDEFFXXX</div>
                 <div class="status-tag" id="intermediary-status1">Processed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
-                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary 2</div>
                 <div class="swift-code">UBSWCHZH80A</div>
                 <div class="status-tag" id="intermediary-status2">Processing</div>
             </div>
@@ -326,12 +329,19 @@
     const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
 
-    // Status Logic
+    // Status Logic - DÜZƏLDİLDİ: Rənglər düzgün təyin edildi
     document.addEventListener('DOMContentLoaded', function() {
+        // Sent - Yaşıl (yanır)
         const sentStyle = { bg: '#16a34a', color: '#fff' };
+        
+        // Processed - Yaşıl (yanır)
         const processedStyle = { bg: '#10b981', color: '#fff' };
-        const procStyle = { bg: '#facc15', color: '#92400e' };
-        const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
+        
+        // Processing - Göy rəng (yanıb-sönür)
+        const procStyle = { bg: '#3b82f6', color: '#fff' };
+        
+        // Pending - Boz (yanmır)
+        const pendStyle = { bg: '#94a3b8', color: '#fff' };
 
         const updateEl = (id, style, text, blink = false) => {
             const el = document.getElementById(id);
@@ -339,16 +349,28 @@
                 el.style.background = style.bg; 
                 el.style.color = style.color;
                 el.innerText = text;
-                if(blink && style.bg === '#facc15') el.classList.add('blinking');
-                else el.classList.remove('blinking');
+                if(blink) {
+                    el.classList.add('blinking');
+                } else {
+                    el.classList.remove('blinking');
+                }
             }
         };
 
-        updateEl('topStatus', processedStyle, 'Processed');
-        updateEl('debtor-status', sentStyle, 'Sent');
-        updateEl('intermediary-status1', processedStyle, 'Processed');
+        // Ümumi status
+        updateEl('topStatus', processedStyle, 'Processed', false);
+        
+        // Sender Bank - Sent (Yaşıl, yanır)
+        updateEl('debtor-status', sentStyle, 'Sent', false);
+        
+        // Intermediary 1 - Processed (Yaşıl, yanır)
+        updateEl('intermediary-status1', processedStyle, 'Processed', false);
+        
+        // Intermediary 2 - Processing (Göy, yanıb-sönür)
         updateEl('intermediary-status2', procStyle, 'Processing', true);
-        updateEl('beneficiary-status', pendStyle, 'Pending');
+        
+        // Beneficiary Bank - Pending (Boz, yanmır)
+        updateEl('beneficiary-status', pendStyle, 'Pending', false);
         
         // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
@@ -367,10 +389,10 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - YENİ UETR İSTİFADƏ OLUNUR
+    // MT900/MT910 Formatı
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;  // Yeni UETR: 11fb308f-38ce-49d3-950b-284d4b23e0a6
+        const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
         // Value date: 24 Mart 2026 -> 240326
@@ -383,10 +405,10 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur - UETR-in ilk 16 simvolu istifadə olunur
+        // Mesajı qur
         let message = header +
             ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +  // "11fb308f-38ce-49d3"
+            ":21:" + uetr.substring(0, 16) + "\n" +
             ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
@@ -409,19 +431,11 @@
         });
     }
 
-    // PDF Funksiyası - YENİ UETR İSTİFADƏ OLUNUR
+    // PDF Funksiyası
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
         // Məlumatları topla
-        const uetr = document.getElementById('uetrVal').innerText;  // Yeni UETR
-        const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText;
-        const valDate = document.getElementById('valDate').innerText;
-        const orderBen = document.getElementById('orderBen').innerText;
-        const benCust = document.getElementById('benCust').innerText;
-        const purpose = document.getElementById('purpose').innerText;
-        
-        // Header
-        doc.setFillColor
+        const uetr = document.getElementById('uetrVal').innerText;
+        const txRef = document.getElementB
