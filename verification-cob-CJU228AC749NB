@@ -161,7 +161,7 @@
 
         <div class="label">Uetr code</div>
         <div class="copy" style="margin-bottom: 10px;">
-            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">7b1fdc5e-0598-4b05-ae7e-0b7b6ec7a0fd</div>
+            <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">40fb91ed-19aa-4263-be97-dc75011ad83f</div>
             <button id="copyUetrBtn">Copy</button>
             <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
             <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
@@ -224,7 +224,7 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram - Simplified with single intermediary -->
+        <!-- Bank Flow Diagram -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
@@ -241,6 +241,13 @@
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
+                <div class="bank-icon">⚙️</div>
+                <div style="font-size:12px; font-weight:bold">Intermediary</div>
+                <div class="swift-code">BHFBDEFFXXX</div>
+                <div class="status-tag" id="intermediary-status2">Processing</div>
+            </div>
+            <div class="connector-line"></div>
+            <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">EXTNDJJDXXX</div>
@@ -248,7 +255,7 @@
             </div>
         </div>
 
-        <!-- SWIFT Message Flow with simplified connector -->
+        <!-- SWIFT Message Flow with Connectors -->
         <div class="swift-flow-container">
             <div class="swift-flow-header">
                 📨 SWIFT Message Flow (MT900 / MT910)
@@ -278,9 +285,11 @@
                     </div>
                 </div>
                 
-                <!-- Simplified connector line -->
+                <!-- Additional Connector for multiple intermediaries -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
                     <span>🔹 DEUTDEFFXXX</span>
+                    <span>⬇️</span>
+                    <span>🔹 BHFBDEFFXXX</span>
                     <span>⬇️</span>
                     <span>🔹 EXTNDJJDXXX</span>
                 </div>
@@ -338,6 +347,7 @@
         updateEl('topStatus', processedStyle, 'Processed');
         updateEl('debtor-status', sentStyle, 'Sent');
         updateEl('intermediary-status1', processedStyle, 'Processed');
+        updateEl('intermediary-status2', procStyle, 'Processing', true);
         updateEl('beneficiary-status', pendStyle, 'Pending');
         
         // IBAN-ı qismən gizlət
@@ -373,7 +383,7 @@
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur - BHFBDEFFXXX çıxarıldı
+        // Mesajı qur
         let message = header +
             ":20:" + txRef + "\n" +
             ":21:" + uetr.substring(0, 16) + "\n" +
@@ -381,7 +391,7 @@
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
             ":56A:DEUTDEFFXXX\n" +
-            ":57A:EXTNDJJDXXX\n" +
+            ":57A:BHFBDEFFXXX\n" +
             ":72:/BENEF/ " + purpose + "\n" +
             "-}";
 
@@ -399,7 +409,7 @@
         });
     }
 
-    // PDF Funksiyası - Təkmilləşdirilmiş (BHFBDEFFXXX çıxarıldı)
+    // PDF Funksiyası - Təkmilləşdirilmiş
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -413,16 +423,16 @@
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Header
-        doc.setFillColor(11, 107, 255); 
-        doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); 
-        doc.setFontSize(22); 
-        doc.text("SWIFT", 20, 25);
-        doc.setFontSize(8); 
-        doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 20);
-        doc.text("www.swift.com", 130, 28);
-        doc.text("www.verify-swift.com", 130, 36);
+// Header
+doc.setFillColor(11, 107, 255); 
+doc.rect(0, 0, 210, 40, 'F');
+doc.setTextColor(255, 255, 255); 
+doc.setFontSize(22); 
+doc.text("SWIFT", 20, 25);
+doc.setFontSize(8); 
+doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 20);
+doc.text("www.swift.com", 130, 28);
+doc.text("www.verify-swift.com", 130, 36);
 
         // Amount
         doc.setFillColor(248, 250, 252); 
@@ -470,7 +480,8 @@
         addRow("Value Date", valDate);
         addRow("Ordering Party", orderBen);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Sent");
-        addRow("Intermediary", "Deutsche Bank (DEUTDEFFXXX) - Processed");
+        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
+        addRow("Intermediary 2", "ODDO BHF SE (BHFBDEFFXXX) - Processing");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
         addRow("Receiving Bank", "Exim Bank (Djibouti) S.A. (EXTNDJJDXXX) - Pending");
