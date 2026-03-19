@@ -174,15 +174,15 @@
     </div>
     <div class="col">
         <div class="label">Amount</div>
-        <div class="value amount" style="font-weight: 400;">EUR 20,000,000.00</div>
+        <div class="value amount" style="font-weight: 400;">EUR 25,000,000.00</div>
     </div>
     <div class="col">
         <div class="label">Sent date:</div>
-        <div class="value" id="sentDate" style="font-weight: 400;">17-Mar-2026</div>
+        <div class="value" id="sentDate" style="font-weight: 400;">20-Mar-2026</div>
     </div>
     <div class="col">
         <div class="label">Value date:</div>
-        <div class="value" id="valDate" style="font-weight: 400;">20-Mar-2026</div>
+        <div class="value" id="valDate" style="font-weight: 400;">24-Mar-2026</div>
     </div>
 </div>
 
@@ -198,12 +198,12 @@
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
                 <br>
                 <div class="label">Beneficiary Customer</div>
-                <div class="value" id="benCust">China Africa Horizon Investment & Development Group Sarl</div>
+                <div class="value" id="benCust">Lima Project j.d.o.o.</div>
                 <div class="small"></div>
                 <br>
                 <div class="label">Receiving Bank</div>
-                <div class="value">Exim Bank (Djibouti) S.A. </div>
-                <div class="small">13 Palce Lagarde, Djibouti City</div>
+                <div class="value">Erste&Steiermarkische Bank d.d.</div>
+                <div class="small">Jadranski trg 3a, 51000 Rijeka, Republika Hrvatska</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -317,13 +317,13 @@
 
 <script>
     // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
-    const FULL_BENEFICIARY_IBAN = "DJ100001173985678944183";
+    const FULL_BENEFICIARY_IBAN = "HR 28052795521";
     
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
-    const MASKED_BENEFICIARY_IBAN = "DJ10 **** **** **** 4183";
+    const MASKED_BENEFICIARY_IBAN = "HR28**** **** **** 5521";
 
     // Cari tarix və məbləğ
-    const CURRENT_AMOUNT = "20000000.00";
+    const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
 
     // Status Logic
@@ -442,7 +442,7 @@ doc.text("www.verify-swift.com", 130, 36);
         doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
         doc.setFontSize(22); 
         doc.setTextColor(11, 107, 255); 
-        doc.text("EUR 20,000,000.00", 30, 75);
+        doc.text("EUR 25,000,000.00", 30, 75);
 
         let y = 95;
         const addRow = (label, value) => {
@@ -508,7 +508,7 @@ doc.text("www.verify-swift.com", 130, 36);
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:190326EUR20000000,00", 25, y);
+        doc.text(":32A:190326EUR25000000,00", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -519,7 +519,7 @@ doc.text("www.verify-swift.com", 130, 36);
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
-        doc.text(":32A:190326EUR20000000,00", 25, y);
+        doc.text(":32A:190326EUR25000000,00", 25, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
