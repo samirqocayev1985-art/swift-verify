@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Incoming Payment — Customer View</title>
+    <title>Incoming Payment — Customer View (MAR 2026)</title>
     <style>
         :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
         
@@ -181,11 +181,11 @@
     </div>
     <div class="col">
         <div class="label">Sent date:</div>
-        <div class="value" id="sentDate" style="font-weight: 400;">20-Mar-2026</div>
+        <div class="value" id="sentDate" style="font-weight: 400;">23-Mar-2026</div>
     </div>
     <div class="col">
         <div class="label">Value date:</div>
-        <div class="value" id="valDate" style="font-weight: 400;">24-Mar-2026</div>
+        <div class="value" id="valDate" style="font-weight: 400;">26-Mar-2026</div>
     </div>
 </div>
 
@@ -221,7 +221,7 @@
                 <br>
                 <div class="label">Transaction Reference</div>
                 <div class="copy">
-                    <div class="small" id="txRef" style="font-weight: 700;">DEU349827091C679-200326</div>
+                    <div class="small" id="txRef" style="font-weight: 700;">DEU349827091C679-230326</div>
                     <button id="copyBtn">Copy</button>
                 </div>
             </div>
@@ -271,7 +271,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU349827091C679-200326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU349827091C679-230326...
                     </div>
                 </div>
                 
@@ -284,7 +284,7 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-170326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU349827091C679-230326...
                     </div>
                 </div>
                 
@@ -325,9 +325,12 @@
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
     const MASKED_BENEFICIARY_IBAN = "HR28**** **** **** 5521";
 
-    // Cari tarix və məbləğ
+    // Cari tarix və məbləğ (value date = 26 mart 2026 -> 260326)
     const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
+    const VALUE_DATE_SWIFT = "260326";  // 26 Mart 2026
+    const SENT_DATE = "23-Mar-2026";
+    const VALUE_DATE = "26-Mar-2026";
 
     // Status Logic - DÜZƏLDİLDİ: Rənglər düzgün təyin edildi
     document.addEventListener('DOMContentLoaded', function() {
@@ -374,6 +377,10 @@
         
         // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
+        
+        // Tarixləri düzgün təyin et
+        document.getElementById('sentDate').innerText = SENT_DATE;
+        document.getElementById('valDate').innerText = VALUE_DATE;
     });
 
     // Copy Logic
@@ -389,14 +396,14 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı
+    // MT900/MT910 Formatı - TARİX 260326 OLARAQ DÜZƏLDİLDİ
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Value date: 24 Mart 2026 -> 240326
-        const valueDate = "240326";
+        // Value date: 26 Mart 2026 -> 260326
+        const valueDate = VALUE_DATE_SWIFT; // "260326"
         
         // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
@@ -431,7 +438,7 @@
         });
     }
 
-    // PDF Funksiyası
+    // PDF Funksiyası - TARİX 26 MART 2026 OLARAQ DÜZƏLDİLDİ
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -439,8 +446,8 @@
         // Məlumatları topla
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText;
-        const valDate = document.getElementById('valDate').innerText;
+        const sentDate = document.getElementById('sentDate').innerText; // "23-Mar-2026"
+        const valDate = document.getElementById('valDate').innerText;   // "26-Mar-2026"
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
@@ -532,7 +539,7 @@
         y += 5;
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
-        doc.text(":32A:240326EUR25000000,00", 25, y);
+        doc.text(":32A:260326EUR25000000,00", 25, y);  // DÜZƏLDİ: 260326
         y += 5;
         doc.text(":57A:UBSWCHZH80A", 25, y);
         y += 8;
@@ -547,7 +554,7 @@
         y += 5;
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
-        doc.text(":32A:240326EUR25000000,00", 25, y);
+        doc.text(":32A:260326EUR25000000,00", 25, y);  // DÜZƏLDİ: 260326
         y += 5;
         doc.text(":57A:ESBCHR22XXX", 25, y);
         
