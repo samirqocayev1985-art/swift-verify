@@ -246,7 +246,7 @@
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">BHFBDEFFXXX</div>
-                <div class="status-tag" id="intermediary-status2">Processing</div>
+                <div class="status-tag" id="intermediary-status2">Processed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
@@ -355,7 +355,7 @@
         updateEl('topStatus', completedStyle, 'Completed');
         updateEl('debtor-status', sentStyle, 'Sent');
         updateEl('intermediary-status1', processedStyle, 'Processed');
-        updateEl('intermediary-status2', processedStyle, 'Processed'); // Processing -> Processed
+        updateEl('intermediary-status2', processedStyle, 'Processed');
         updateEl('beneficiary-status', completedStyle, 'Completed');
         
         // IBAN-ı qismən gizlət
@@ -379,7 +379,7 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - YENİ UETR KODU İLƏ YENİLƏNDİ - COMPLETED
+    // MT900/MT910 Formatı - 57A DÜZƏLDİLDİ
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = UETR_CODE;
@@ -400,7 +400,7 @@
                 ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
                 ":52A:CRAMCHGGXXX\n" +
                 ":56A:DEUTDEFFXXX\n" +
-                ":57A:BHFBDEFFXXX\n" +
+                ":57A:EXTNDJJDXXX\n" +  // DÜZƏLDİ: BHFBDEFFXXX əvəzinə EXTNDJJDXXX
                 ":72:/BENEF/ " + purpose + "\n" +
                 ":77T:/UETR/" + uetr + "\n" +
                 "-}";
@@ -415,7 +415,7 @@
                 ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
                 ":52A:CRAMCHGGXXX\n" +
                 ":56A:DEUTDEFFXXX\n" +
-                ":57A:BHFBDEFFXXX\n" +
+                ":57A:EXTNDJJDXXX\n" +  // DÜZƏLDİ: BHFBDEFFXXX əvəzinə EXTNDJJDXXX
                 ":72:/BENEF/ " + purpose + "\n" +
                 ":77T:/UETR/" + uetr + "\n" +
                 ":58A:EXTNDJJDXXX\n" +
@@ -545,6 +545,8 @@
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
         doc.text(":32A:" + valDate.replace(/-/g, '').substring(0,6) + "EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":57A:EXTNDJJDXXX", 25, y); // DÜZƏLDİ
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -558,6 +560,8 @@
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
         doc.text(":32A:" + valDate.replace(/-/g, '').substring(0,6) + "EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":57A:EXTNDJJDXXX", 25, y); // DÜZƏLDİ
         y += 5;
         doc.text(":77T:/UETR/" + uetr, 25, y);
         
