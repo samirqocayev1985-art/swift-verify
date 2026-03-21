@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT199 - Bank Confirmation Message</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        /* Mesaj Container - Kompüter üçün normal ölçü */
+        .message-container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* PDF Çap Bölməsi */
+        .pdf-toolbar {
+            background: #1e293b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 3px solid #ffcc00;
+        }
+
+        .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-title h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .pdf-badge {
+            background: #ffcc00;
+            color: #1e293b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pdf-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pdf-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pdf-btn:hover {
+            background: #ffcc00;
+            color: #1e293b;
+            border-color: #ffcc00;
+        }
+
+        .pdf-btn.print {
+            background: #ffcc00;
+            color: #1e293b;
+            border: none;
+        }
+
+        .pdf-btn.print:hover {
+            background: #e6b800;
+        }
+
+        /* Message Status */
+        .message-status {
+            background: #f8fafc;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .message-ref {
+            font-family: monospace;
+            color: #475569;
+            font-size: 14px;
+            background: #e9eef2;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .message-date {
+            color: #64748b;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+
+        /* Swift Banner */
+        .swift-banner {
+            background: linear-gradient(135deg, #003366 0%, #1a4b7a 100%);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .swift-logo {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .swift-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .swift-badge {
+            background: #ffcc00;
+            color: #003366;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* Mesaj Header */
+        .message-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .bank-info {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .bank-info-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .bank-info-content {
+            font-size: 15px;
+        }
+
+        .bank-info-content p {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .bank-label {
+            width: 120px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .bank-value {
+            color: #0a2540;
+            font-weight: 500;
+            font-size: 15px;
+            flex: 1;
+        }
+
+        .swift-code {
+            font-family: monospace;
+            background: #e9eef2;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        /* Transaction Info */
+        .transaction-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin: 0 24px 24px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .transaction-code {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .code-label {
+            color: #0369a1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .code-value {
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0c4a6e;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid #bae6fd;
+        }
+
+        .amount-display {
+            background: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: 1px solid #bae6fd;
+        }
+
+        .amount-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a2540;
+        }
+
+        .amount-currency {
+            color: #64748b;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        /* Mesaj Text */
+        .message-text-container {
+            padding: 0 24px 24px 24px;
+        }
+
+        .message-text {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+            font-size: 15px;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+
+        .message-text p {
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: #fef9c3;
+            padding: 3px 6px;
+            font-weight: 600;
+            color: #854d0e;
+            border-radius: 4px;
+        }
+
+        /* Narrative Section - Səliqəli */
+        .narrative-section {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin: 20px 0 25px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        
+        .narrative-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .narrative-title span {
+            background: #dbeafe;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1e3a8a;
+        }
+        
+        .narrative-content {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #1e293b;
+            line-height: 1.7;
+        }
+        
+        .narrative-content p {
+            margin-bottom: 12px;
+        }
+
+        /* Signature Box - YENİ: Yan-yana düzülmüş officer və altında PIN */
+        .signature-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .officers-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            margin-bottom: 25px;
+        }
+
+        .officer-card {
+            flex: 1 1 250px;
+        }
+
+        .officer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2540;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+        }
+
+        .pins-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            border-top: 1px solid #d1d5db;
+            padding-top: 20px;
+        }
+
+        .pin-card {
+            flex: 1 1 250px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .pin-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .pin-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: #075985;
+            background: #e6f0f9;
+            padding: 4px 14px;
+            border-radius: 30px;
+        }
+        
+        .date-field {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .date-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 14px;
+        }
+        
+        .date-value {
+            font-weight: 600;
+            color: #0a2540;
+        }
+
+        /* Təhlükəsizlik Bölməsi */
+        .security-footer {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
+            padding: 24px;
+            border-top: 3px solid #ffcc00;
+        }
+
+        .payment-cards {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-icon.visa {
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            font-style: italic;
+            background: #1a1f71;
+            padding: 6px 18px;
+            border-radius: 8px;
+        }
+
+        .card-icon.mastercard {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .mastercard-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .circle-left {
+            background: #eb001b;
+            opacity: 0.9;
+        }
+
+        .circle-right {
+            background: #f79e1b;
+            margin-left: -15px;
+            opacity: 0.9;
+        }
+
+        .card-icon.amex {
+            color: white;
+            font-size: 26px;
+            font-weight: 600;
+            background: #006fcf;
+            padding: 6px 18px;
+            border-radius: 8px;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .secure-badge span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verification-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .verify-label {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verify-shield {
+            color: #ffcc00;
+            font-size: 18px;
+        }
+
+        .verify-code {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ffcc00;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .verify-status {
+            color: #10b981;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .security-note {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-top: 18px;
+            line-height: 1.6;
+        }
+
+        /* Çap üçün stil */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .pdf-toolbar {
+                display: none;
+            }
+            
+            .message-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                max-width: 100%;
+            }
+            
+            .status-dot {
+                animation: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .header-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .transaction-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .officers-row, .pins-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            .message-status {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .message-date {
+                margin-left: 0;
+            }
+            
+            .swift-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .swift-badge {
+                margin-left: 0;
+            }
+            
+            .bank-info-content p {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .bank-label {
+                width: 100%;
+            }
+            
+            .verification-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .pdf-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .pdf-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- MT199 Mesajı -->
+    <div class="message-container">
+        <!-- PDF Çap Bölməsi -->
+        <div class="pdf-toolbar">
+            <div class="pdf-title">
+                <h2>MT199 BANK CONFIRMATION LETTER</h2>
+                <span class="pdf-badge">OFFICIAL SWIFT DOCUMENT</span>
+            </div>
+            <div class="pdf-buttons">
+                <button class="pdf-btn" onclick="window.print()">
+                    <span>🖨️</span>
+                    <span>Print / PDF</span>
+                </button>
+                <button class="pdf-btn print" onclick="downloadPDF()">
+                    <span>📥</span>
+                    <span>Download PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Message Status -->
+        <div class="message-status">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">NETWORK ACK/RECEIVED</span>
+            </div>
+            <div class="message-ref">CRAMCHGGXXX/2026/MT199</div>
+            <div class="message-date">
+                <span>📅</span>
+                <span>March 20, 2026 - 14:30 UTC</span>
+            </div>
+        </div>
+
+        <!-- SWIFT Banner -->
+        <div class="swift-banner">
+            <div class="swift-logo">SWIFT</div>
+            <div class="swift-title">MT199 FREE FORMAT MESSAGE</div>
+            <div class="swift-badge">BANK CONFIRMATION</div>
+        </div>
+
+        <!-- Bank məlumatları -->
+        <div class="message-header">
+            <div class="header-grid">
+                <!-- SENDER -->
+                <div class="bank-info">
+                    <div class="bank-info-title">SENDER BANK</div>
+                    <div class="bank-info-content">
+                        <p>
+                            <span class="bank-label">Bank Name:</span>
+                            <span class="bank-value">Banque Cramer & Cie SA (Zurich Branch)</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">SWIFT Code:</span>
+                            <span class="bank-value swift-code">CRAMCHGGXXX</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Address:</span>
+                            <span class="bank-value">Sihlstrasee 24, CH-8021 Zurich, Switzerland</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Account Name:</span>
+                            <span class="bank-value">MMG Capital Limited</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Account No:</span>
+                            <span class="bank-value swift-code">CH7208727128643152001 (USD)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- RECEIVER -->
+                <div class="bank-info">
+                    <div class="bank-info-title">RECEIVER BANK</div>
+                    <div class="bank-info-content">
+                        <p>
+                            <span class="bank-label">Bank Name:</span>
+                            <span class="bank-value">United Bank for Africa (UBA PLC)</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">SWIFT Code:</span>
+                            <span class="bank-value swift-code">UNAFNGLAXXX</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Address:</span>
+                            <span class="bank-value">57 Marina, Lagos Island, Nigeria</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Account Name:</span>
+                            <span class="bank-value">Stepsun Ventures Nigeria Limited</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Account No:</span>
+                            <span class="bank-value swift-code">3002722884 (USD)</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Info - DƏYİŞİKLİK BURADADIR -->
+        <div class="transaction-info">
+            <div class="transaction-code">
+                <span class="code-label">SWIFT OUTPUT REFERENCE:</span>
+                <span class="code-value">RCAS/29016976-S</span>
+            </div>
+            <div class="transaction-code">
+                <span class="code-label">RELATED REFERENCE:</span>
+                <span class="code-value">TRF260323MT199</span>
+            </div>
+            <div class="amount-display">
+                <span class="amount-value">Currency: US (Dollar) 6,000,000.00</span>
+                <!-- <span class="amount-currency">USD</span> silindi -->
+            </div>
+        </div>
+
+        <!-- Mesaj Text -->
+        <div class="message-text-container">
+            <div class="message-text">
+                <!-- Narrative hissəsi - səliqəyə salındı -->
+                <div class="narrative-section">
+                    <div class="narrative-title">
+                        📄 NARRATIVE DESCRIPTION OF THE ORIGINAL MESSAGE / COMMENTS
+                        <span>FREE FORMAT</span>
+                    </div>
+                    <div class="narrative-content">
+                        <p>We, <strong>Banque Cramer & Cie Sa Bank (Zurich Branch)</strong> having our registered office at Sihlstrasee 24, Case Postale, Ch-8021 Zurich, Switzerland, hereby confirm, in strict accordance with the mandate and instructions of our client, MMG Capital Limited, duly represented by its Managing Director, Mr. Hanns Thomas Grothe, being the authorised signatory, and with reference to the client’s USD account No. CH7208727128643152001, that we hold full banking responsibility in respect of the said client.</p>
+                        
+                        <p>We further confirm that the above-mentioned account holds a minimum balance of  <span class="highlight">US $6,000,000.00 (Six Million Dollars Only)</span> which is fully available and may be utilized to meet the payment obligations relating to the purchase of 500 MT (Five hundred Metric Tons) of copper cathodes under Transaction Code No. RCAS/29016976-S.</p>
+                        
+                        <p>Subject to a satisfactory inspection of agreements and reports issued by SGS and/or CCIC at the designated port of discharge, being Yangshan Port, Shanghai, China, we irrevocably undertake that payment for the goods shall be effected by means of an ISO 20022 compliant cash wire transfer, in accordance with standard international banking practices.</p>
+                        
+                        <p>The authenticity, validity, and enforceability of this confirmation may be verified by the receiving bank through established interbank channels, including authenticated SWIFT communication, official telephone verification, or secure electronic correspondence.</p>
+                        
+                        <p>Note: This confirmation constitutes an operative banking instrument, subject to bank-to-bank verification via SWIFT MT199 (Free Format Message). It is fully assignable, transferable, and divisible, in accordance with the Uniform Customs and Practice for Documentary Credits (UCP), as issued by the International Chamber of Commerce, Paris (latest revision), and shall be governed by and construed in accordance with the laws of France.</p>
+                        
+                        <p style="margin-top: 20px;"><em>Issued for and on behalf of the Issuing Bank.</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signature Box - YENİ DÜZÜLÜŞ: Officer-lər yan-yana, PIN-lər altda -->
+            <div class="signature-box">
+                <!-- Tarix -->
+                <div class="date-field">
+                    <span class="date-label">DATE RECORDED:</span>
+                    <span class="date-value">MARCH 20, 2026</span>
+                </div>
+                
+                <!-- Officer-lər yan-yana -->
+                <div class="officers-row">
+                    <div class="officer-card">
+                        <div class="officer-name">Mr. Marc-Henri Balma</div>
+                        <div style="color:#475569; font-size:14px;">Chief Operating Officer</div>
+                    </div>
+                    <div class="officer-card">
+                        <div class="officer-name">Mr. Christoph Bangert</div>
+                        <div style="color:#475569; font-size:14px;">Account Manager</div>
+                    </div>
+                </div>
+                
+                <!-- PIN-lər yan-yana (alt sıra) -->
+                <div class="pins-row">
+                    <div class="pin-card">
+                        <span class="pin-label">PIN:</span>
+                        <span class="pin-value">CRAM48-CH-020</span>
+                    </div>
+                    <div class="pin-card">
+                        <span class="pin-label">PIN:</span>
+                        <span class="pin-value">CRAM48-CH-015</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Təhlükəsizlik Bölməsi -->
+        <div class="security-footer">
+            <!-- Payment Cards -->
+            <div class="payment-cards">
+                <div class="card-icon visa">VISA</div>
+                <div class="card-icon mastercard">
+                    <div class="mastercard-circle circle-left"></div>
+                    <div class="mastercard-circle circle-right"></div>
+                </div>
+                <div class="card-icon amex">AMEX</div>
+                <div style="color: white; font-size: 28px; font-weight: 600;">🔒</div>
+            </div>
+
+            <!-- Secure Badges -->
+            <div class="secure-badge">
+                <span>✅ Verified by Visa</span>
+                <span>🛡️ MasterCard SecureCode</span>
+                <span>🔐 Amex SafeKey</span>
+            </div>
+
+            <!-- Verification Bar -->
+            <div class="verification-bar">
+                <div class="verify-label">
+                    <span class="verify-shield">🛡️</span>
+                    <span>3D SECURE VERIFICATION</span>
+                </div>
+                <div class="verify-code">MT199-6M-USD</div>
+                <div class="verify-status">
+                    <span>✓</span>
+                    <span>VERIFIED</span>
+                </div>
+            </div>
+
+            <!-- Security Note -->
+            <div class="security-note">
+                This MT199 message is secured with 256-bit SSL encryption • Verified by Visa Secure • MasterCard Identity Check • PCI DSS Compliant • SWIFT Certified
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
