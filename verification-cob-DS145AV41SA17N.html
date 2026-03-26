@@ -74,7 +74,6 @@
         button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
         button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0; padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;}
 
-        /* SWIFT Message Flow Styles */
         .swift-flow-container {
             margin: 30px 0;
             border: 1px solid #e2e8f0;
@@ -227,7 +226,7 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram - ORİJINAL DİZAYN: Intermediary 2 = BKAUATWWXXX -->
+        <!-- Bank Flow Diagram - BÜTÜN MƏLUMATLAR UYĞUN: Intermediary 2 = KTAGDEFFXXX -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
@@ -271,7 +270,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU549325112B147-260326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU549325112B147-270326...
                     </div>
                 </div>
                 
@@ -284,15 +283,17 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU549325112B147-260326...
+                        {1:F01DEUTDEFFXXXXXX...} :20:DEU549325112B147-270326...
                     </div>
                 </div>
                 
-                <!-- Additional Connector for multiple intermediaries - ORİJINAL: BKAUATWWXXX -->
+                <!-- Routing path - KTAGDEFFXXX ilə vahid -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
+                    <span>🔹 CRAMCHGGXXX</span>
+                    <span>⬇️</span>
                     <span>🔹 DEUTDEFFXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 BKAUATWWXXX</span>
+                    <span>🔹 KTAGDEFFXXX</span>
                     <span>⬇️</span>
                     <span>🔹 JMBNRSBGXXX</span>
                 </div>
@@ -319,7 +320,7 @@
 </div>
 
 <script>
-    // Tam IBAN (MT mesajlarında istifadə olunur)
+    // Tam IBAN
     const FULL_BENEFICIARY_IBAN = "RS351050081234567891697";
     const FULL_SENDER_IBAN = "CH4504835000123452002";
     
@@ -327,13 +328,13 @@
     const MASKED_BENEFICIARY_IBAN = "RS35**** **** **** 1697";
     const MASKED_SENDER_IBAN = "CH45**** **** **** 2002";
 
-    // Cari tarix və məbləğ (sent date = 26 mart 2026, value date = 30 mart 2026)
+    // BÜTÜN MƏLUMATLAR VAHİD VƏ UYĞUN
     const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
-    const VALUE_DATE_SWIFT = "300326";  // 30 Mart 2026
-    const SENT_DATE = "26-Mar-2026";
-    const VALUE_DATE = "30-Mar-2026";
-    const TX_REFERENCE = "DEU549325112B147-260326";
+    const VALUE_DATE_SWIFT = "310326";  // 31 Mart 2026
+    const SENT_DATE = "27-Mar-2026";
+    const VALUE_DATE = "31-Mar-2026";
+    const TX_REFERENCE = "DEU549325112B147-270326";
     const UETR_CODE = "001d2d46-28a9-11f1-a3aa-325096b39f47";
     const PURPOSE_TEXT = "Payment for Agreement No. AG/SJU-005824";
 
@@ -371,6 +372,8 @@
         document.getElementById('txRef').innerText = TX_REFERENCE;
         document.getElementById('uetrVal').innerText = UETR_CODE;
         document.getElementById('purpose').innerText = PURPOSE_TEXT;
+        document.getElementById('benCust').innerText = "Nopal Lux Doo Bačka Palanka";
+        document.getElementById('orderBen').innerText = "MMG Capital Limited";
     });
 
     // Copy Logic
@@ -389,34 +392,43 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - VALUE DATE = 30 MART 2026 (300326)
+    // MT900/MT910 - HƏR İKİ MESAJDA KTAGDEFFXXX (Intermediary 2)
     function showMTMessage(type) {
         const txRef = TX_REFERENCE;
         const uetr = UETR_CODE;
         const purpose = PURPOSE_TEXT;
-        
         const valueDate = VALUE_DATE_SWIFT;
         
-        const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
-        const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "1611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
+        let message = "";
         
-        const header = basicHeader + messageType + messageRest;
-        
-        let message = header +
-            ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +
-            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
-            ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
-            ":52A:CRAMCHGGXXX\n" +
-            ":56A:DEUTDEFFXXX\n" +
-            ":57A:BKAUATWWXXX\n" +
-            ":58A:JMBNRSBGXXX\n" +
-            ":72:/BENEF/ " + purpose + "\n" +
-            "-}";
+        if (type === '900') {
+            message = "{1:F01CRAMCHGGAXXX8291722562}{2:O9001611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n" +
+                ":20:" + txRef + "\n" +
+                ":21:" + uetr.substring(0, 16) + "\n" +
+                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
+                ":52A:CRAMCHGGXXX\n" +
+                ":56A:DEUTDEFFXXX\n" +
+                ":57A:KTAGDEFFXXX\n" +
+                ":58A:JMBNRSBGXXX\n" +
+                ":72:/BENEF/ " + purpose + "\n" +
+                "-}";
+        } else {
+            message = "{1:F01DEUTDEFFXXXXXX1722563}{2:O9101611060318KTAGDEFFXXX50621189242303171402N}{3:{108:YYYYY}}{4:\n" +
+                ":20:" + txRef + "\n" +
+                ":21:" + uetr.substring(0, 16) + "\n" +
+                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
+                ":52A:CRAMCHGGXXX\n" +
+                ":56A:DEUTDEFFXXX\n" +
+                ":57A:KTAGDEFFXXX\n" +
+                ":58A:JMBNRSBGXXX\n" +
+                ":72:/REC/ " + purpose + "\n" +
+                "-}";
+        }
 
         document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type + ' - ' + 
-            (type === '900' ? 'Confirmation of Debit (Sender → Intermediary)' : 'Confirmation of Credit (Intermediary → Beneficiary)');
+            (type === '900' ? 'Confirmation of Debit' : 'Confirmation of Credit');
         document.getElementById('modalContent').innerText = message;
         document.getElementById('mtModal').style.display = 'flex';
     }
@@ -429,7 +441,7 @@
         });
     }
 
-    // PDF Funksiyası - ORİJINAL DİZAYNA UYĞUN: BKAUATWWXXX, Beneficiary IBAN uyğun, Alta Banka
+    // PDF - BÜTÜN MƏLUMATLAR MT İLƏ EYNİ (KTAGDEFFXXX, Nopal Lux Doo Bačka Palanka)
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -495,13 +507,13 @@
         addRow("Sent Date", sentDate);
         addRow("Value Date", valDate);
         addRow("Ordering Party", orderBen);
-        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Sent");
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX)");
         addRow("Sender IBAN", MASKED_SENDER_IBAN);
-        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
-        addRow("Intermediary 2", "Unicredit Bank Austria AG (BKAUATWWXXX) - Processing");
+        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX)");
+        addRow("Intermediary 2", "Kommerzbank AG (KTAGDEFFXXX)");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Alta Banka Ad Beograd (JMBNRSBGXXX) - Pending");
+        addRow("Receiving Bank", "Alta Banka Ad Beograd (JMBNRSBGXXX)");
         addRow("Purpose", purpose);
         
         if (y > 220) {
@@ -512,42 +524,25 @@
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(11, 107, 255);
-        doc.text("SWIFT Messages", 20, y);
+        doc.text("SWIFT Message Details", 20, y);
         y += 10;
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text("MT900 (Confirmation of Debit):", 20, y);
-        y += 5;
+        doc.text("MT900 / MT910:", 20, y);
+        y += 6;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
-        doc.text(":20:" + txRef, 25, y);
+        doc.text(":20: " + txRef, 25, y);
         y += 5;
-        doc.text(":21:" + uetr.substring(0, 16), 25, y);
+        doc.text(":21: " + uetr.substring(0, 16), 25, y);
         y += 5;
-        doc.text(":32A:300326EUR25000000,00", 25, y);
+        doc.text(":32A: 310326" + CURRENT_CURRENCY + "25000000,00", 25, y);
         y += 5;
-        doc.text(":57A:BKAUATWWXXX", 25, y);
+        doc.text(":57A: KTAGDEFFXXX", 25, y);
         y += 5;
-        doc.text(":58A:JMBNRSBGXXX", 25, y);
-        y += 8;
-        
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 116, 139);
-        doc.text("MT910 (Confirmation of Credit):", 20, y);
-        y += 5;
-        doc.setFont("courier", "normal");
-        doc.setTextColor(15, 23, 42);
-        doc.text(":20:" + txRef, 25, y);
-        y += 5;
-        doc.text(":21:" + uetr.substring(0, 16), 25, y);
-        y += 5;
-        doc.text(":32A:300326EUR25000000,00", 25, y);
-        y += 5;
-        doc.text(":57A:BKAUATWWXXX", 25, y);
-        y += 5;
-        doc.text(":58A:JMBNRSBGXXX", 25, y);
+        doc.text(":58A: JMBNRSBGXXX", 25, y);
         
         doc.setFont("helvetica", "italic");
         doc.setFontSize(8);
