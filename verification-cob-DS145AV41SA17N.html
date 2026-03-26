@@ -227,7 +227,7 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram - DÜZƏLDİLDİ: Rənglər düzgün -->
+        <!-- Bank Flow Diagram - ORİJINAL DİZAYN: Intermediary 2 = BKAUATWWXXX -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
@@ -271,7 +271,7 @@
                     <span class="swift-direction-icon">⬆️</span>
                     <span style="font-size:13px;">Sender → Intermediary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU349827091C679-230326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU549325112B147-260326...
                     </div>
                 </div>
                 
@@ -284,17 +284,17 @@
                     <span class="swift-direction-icon">⬇️</span>
                     <span style="font-size:13px;">Intermediary → Beneficiary</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU349827091C679-230326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU549325112B147-260326...
                     </div>
                 </div>
                 
-                <!-- Additional Connector for multiple intermediaries -->
+                <!-- Additional Connector for multiple intermediaries - ORİJINAL: BKAUATWWXXX -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
                     <span>🔹 DEUTDEFFXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 UBSWCHZH80A</span>
+                    <span>🔹 BKAUATWWXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 ESBCHR22XXX</span>
+                    <span>🔹 JMBNRSBGXXX</span>
                 </div>
             </div>
         </div>
@@ -319,31 +319,29 @@
 </div>
 
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
-    const FULL_BENEFICIARY_IBAN = "HR28052795521";
+    // Tam IBAN (MT mesajlarında istifadə olunur)
+    const FULL_BENEFICIARY_IBAN = "RS351050081234567891697";
+    const FULL_SENDER_IBAN = "CH4504835000123452002";
     
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
-    const MASKED_BENEFICIARY_IBAN = "HR28**** **** **** 5521";
+    const MASKED_BENEFICIARY_IBAN = "RS35**** **** **** 1697";
+    const MASKED_SENDER_IBAN = "CH45**** **** **** 2002";
 
-    // Cari tarix və məbləğ (value date = 26 mart 2026 -> 260326)
+    // Cari tarix və məbləğ (sent date = 26 mart 2026, value date = 30 mart 2026)
     const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
-    const VALUE_DATE_SWIFT = "260326";  // 26 Mart 2026
-    const SENT_DATE = "23-Mar-2026";
-    const VALUE_DATE = "26-Mar-2026";
+    const VALUE_DATE_SWIFT = "300326";  // 30 Mart 2026
+    const SENT_DATE = "26-Mar-2026";
+    const VALUE_DATE = "30-Mar-2026";
+    const TX_REFERENCE = "DEU549325112B147-260326";
+    const UETR_CODE = "001d2d46-28a9-11f1-a3aa-325096b39f47";
+    const PURPOSE_TEXT = "Payment for Agreement No. AG/SJU-005824";
 
-    // Status Logic - DÜZƏLDİLDİ: Rənglər düzgün təyin edildi
+    // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
-        // Sent - Yaşıl (yanır)
         const sentStyle = { bg: '#16a34a', color: '#fff' };
-        
-        // Processed - Yaşıl (yanır)
         const processedStyle = { bg: '#10b981', color: '#fff' };
-        
-        // Processing - Göy rəng (yanıb-sönür)
         const procStyle = { bg: '#3b82f6', color: '#fff' };
-        
-        // Pending - Boz (yanmır)
         const pendStyle = { bg: '#94a3b8', color: '#fff' };
 
         const updateEl = (id, style, text, blink = false) => {
@@ -360,59 +358,51 @@
             }
         };
 
-        // Ümumi status
         updateEl('topStatus', processedStyle, 'Processed', false);
-        
-        // Sender Bank - Sent (Yaşıl, yanır)
         updateEl('debtor-status', sentStyle, 'Sent', false);
-        
-        // Intermediary 1 - Processed (Yaşıl, yanır)
         updateEl('intermediary-status1', processedStyle, 'Processed', false);
-        
-        // Intermediary 2 - Processing (Göy, yanıb-sönür)
         updateEl('intermediary-status2', procStyle, 'Processing', true);
-        
-        // Beneficiary Bank - Pending (Boz, yanmır)
         updateEl('beneficiary-status', pendStyle, 'Pending', false);
         
-        // IBAN-ı qismən gizlət
         document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
-        
-        // Tarixləri düzgün təyin et
+        document.getElementById('senderIban').innerText = MASKED_SENDER_IBAN;
         document.getElementById('sentDate').innerText = SENT_DATE;
         document.getElementById('valDate').innerText = VALUE_DATE;
+        document.getElementById('txRef').innerText = TX_REFERENCE;
+        document.getElementById('uetrVal').innerText = UETR_CODE;
+        document.getElementById('purpose').innerText = PURPOSE_TEXT;
     });
 
     // Copy Logic
     const setupCopy = (btnId, valId) => {
-        document.getElementById(btnId).addEventListener('click', function() {
-            const txt = document.getElementById(valId).innerText;
-            navigator.clipboard.writeText(txt).then(() => {
-                const old = this.innerText; this.innerText = 'Copied!';
-                setTimeout(() => this.innerText = old, 1500);
+        const btn = document.getElementById(btnId);
+        if(btn) {
+            btn.addEventListener('click', function() {
+                const txt = document.getElementById(valId).innerText;
+                navigator.clipboard.writeText(txt).then(() => {
+                    const old = this.innerText; this.innerText = 'Copied!';
+                    setTimeout(() => this.innerText = old, 1500);
+                });
             });
-        });
+        }
     };
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - TARİX 260326 OLARAQ DÜZƏLDİLDİ
+    // MT900/MT910 Formatı - VALUE DATE = 30 MART 2026 (300326)
     function showMTMessage(type) {
-        const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;
-        const purpose = document.getElementById('purpose').innerText;
+        const txRef = TX_REFERENCE;
+        const uetr = UETR_CODE;
+        const purpose = PURPOSE_TEXT;
         
-        // Value date: 26 Mart 2026 -> 260326
-        const valueDate = VALUE_DATE_SWIFT; // "260326"
+        const valueDate = VALUE_DATE_SWIFT;
         
-        // Basic header
         const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
         const messageType = type === '900' ? 'O900' : 'O910';
         const messageRest = "1611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
         
         const header = basicHeader + messageType + messageRest;
         
-        // Mesajı qur
         let message = header +
             ":20:" + txRef + "\n" +
             ":21:" + uetr.substring(0, 16) + "\n" +
@@ -420,7 +410,8 @@
             ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
             ":52A:CRAMCHGGXXX\n" +
             ":56A:DEUTDEFFXXX\n" +
-            ":57A:UBSWCHZH80A\n" +
+            ":57A:BKAUATWWXXX\n" +
+            ":58A:JMBNRSBGXXX\n" +
             ":72:/BENEF/ " + purpose + "\n" +
             "-}";
 
@@ -438,21 +429,19 @@
         });
     }
 
-    // PDF Funksiyası - TARİX 26 MART 2026 OLARAQ DÜZƏLDİLDİ
+    // PDF Funksiyası - ORİJINAL DİZAYNA UYĞUN: BKAUATWWXXX, Beneficiary IBAN uyğun, Alta Banka
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Məlumatları topla
-        const uetr = document.getElementById('uetrVal').innerText;
-        const txRef = document.getElementById('txRef').innerText;
-        const sentDate = document.getElementById('sentDate').innerText; // "23-Mar-2026"
-        const valDate = document.getElementById('valDate').innerText;   // "26-Mar-2026"
-        const orderBen = document.getElementById('orderBen').innerText;
-        const benCust = document.getElementById('benCust').innerText;
-        const purpose = document.getElementById('purpose').innerText;
+        const uetr = UETR_CODE;
+        const txRef = TX_REFERENCE;
+        const sentDate = SENT_DATE;
+        const valDate = VALUE_DATE;
+        const orderBen = "MMG Capital Limited";
+        const benCust = "Nopal Lux Doo Bačka Palanka";
+        const purpose = PURPOSE_TEXT;
         
-        // Header
         doc.setFillColor(11, 107, 255); 
         doc.rect(0, 0, 210, 40, 'F');
         doc.setTextColor(255, 255, 255); 
@@ -463,7 +452,6 @@
         doc.text("www.swift.com", 130, 28);
         doc.text("www.verify-swift.com", 130, 36);
 
-        // Amount
         doc.setFillColor(248, 250, 252); 
         doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
         doc.setTextColor(100, 116, 139); 
@@ -474,7 +462,7 @@
         doc.text("EUR 25,000,000.00", 30, 75);
 
         let y = 95;
-        const addRow = (label, value) => {
+        const addRow = (label, value, monospace = false) => {
             if (y > 250) {
                 doc.addPage();
                 y = 20;
@@ -485,17 +473,16 @@
             doc.setTextColor(100, 116, 139); 
             doc.text(label.toUpperCase(), 20, y);
             
-            doc.setFont("helvetica", "normal"); 
+            if (monospace) {
+                doc.setFont("courier", "normal");
+            } else {
+                doc.setFont("helvetica", "normal");
+            }
             doc.setFontSize(10); 
             doc.setTextColor(15, 23, 42);
             
-            let xPos = 70;
-            if (label === "UETR Code" || label === "Transaction Ref") {
-                doc.setFont("courier", "normal");
-            }
-            
             const splitVal = doc.splitTextToSize(String(value), 120);
-            doc.text(splitVal, xPos, y);
+            doc.text(splitVal, 70, y);
             
             y += (splitVal.length * 5) + 8;
             doc.setDrawColor(226, 232, 240); 
@@ -503,20 +490,20 @@
             y += 5;
         };
 
-        addRow("UETR Code", uetr);
-        addRow("Transaction Ref", txRef);
+        addRow("UETR Code", uetr, true);
+        addRow("Transaction Ref", txRef, true);
         addRow("Sent Date", sentDate);
         addRow("Value Date", valDate);
         addRow("Ordering Party", orderBen);
         addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Sent");
+        addRow("Sender IBAN", MASKED_SENDER_IBAN);
         addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
-        addRow("Intermediary 2", "UBS Switzerland AG (UBSWCHZH80A) - Processing");
+        addRow("Intermediary 2", "Unicredit Bank Austria AG (BKAUATWWXXX) - Processing");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Erste&Steiermaerkische Bank d.d. (ESBCHR22XXX) - Pending");
+        addRow("Receiving Bank", "Alta Banka Ad Beograd (JMBNRSBGXXX) - Pending");
         addRow("Purpose", purpose);
         
-        // SWIFT Messages bölməsi
         if (y > 220) {
             doc.addPage();
             y = 20;
@@ -539,9 +526,11 @@
         y += 5;
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
-        doc.text(":32A:260326EUR25000000,00", 25, y);  // DÜZƏLDİ: 260326
+        doc.text(":32A:300326EUR25000000,00", 25, y);
         y += 5;
-        doc.text(":57A:UBSWCHZH80A", 25, y);
+        doc.text(":57A:BKAUATWWXXX", 25, y);
+        y += 5;
+        doc.text(":58A:JMBNRSBGXXX", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
@@ -554,11 +543,12 @@
         y += 5;
         doc.text(":21:" + uetr.substring(0, 16), 25, y);
         y += 5;
-        doc.text(":32A:260326EUR25000000,00", 25, y);  // DÜZƏLDİ: 260326
+        doc.text(":32A:300326EUR25000000,00", 25, y);
         y += 5;
-        doc.text(":57A:ESBCHR22XXX", 25, y);
+        doc.text(":57A:BKAUATWWXXX", 25, y);
+        y += 5;
+        doc.text(":58A:JMBNRSBGXXX", 25, y);
         
-        // Footer
         doc.setFont("helvetica", "italic");
         doc.setFontSize(8);
         doc.setTextColor(156, 163, 175);
@@ -568,7 +558,6 @@
         doc.save('SWIFT_Receipt_' + txRef + '.pdf');
     });
 
-    // Escape düyməsi ilə modalı bağla
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeModal();
