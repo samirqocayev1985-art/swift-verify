@@ -200,12 +200,12 @@
                 <div class="small">Avenue de Miremont 22 1206 Geneva</div>
                 <br>
                 <div class="label">Beneficiary Customer</div>
-                <div class="value" id="benCust">Nopal Lux Doo Baka Palanka</div>
+                <div class="value" id="benCust">Nopal Lux Doo Backa Palanka</div>
                 <div class="small"></div>
                 <br>
                 <div class="label">Receiving Bank</div>
                 <div class="value">Alta Banka Ad Beograd</div>
-                <div class="small">Bulevar Zorana Đinđića 121 11070 Belgrade Republic of Serbia</div>
+                <div class="small">Bulevar Zorana Djindjica 121 11070 Belgrade Republic of Serbia</div>
             </div>
             <div class="col">
                 <div class="label">Payment Details</div>
@@ -226,7 +226,7 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram - BÜTÜN MƏLUMATLAR UYĞUN: Intermediary 2 = KTAGDEFFXXX -->
+        <!-- Bank Flow Diagram - Intermediary 2 = KTAGDEFFXXX -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
@@ -263,7 +263,6 @@
                 📨 SWIFT Message Flow (MT900 / MT910)
             </div>
             <div class="swift-flow-content">
-                <!-- MT900 Message -->
                 <div class="swift-message-row">
                     <span class="swift-message-badge mt900">MT900</span>
                     <span style="font-size:13px; color:#475569;">Confirmation of Debit</span>
@@ -276,7 +275,6 @@
                 
                 <div class="swift-connector-line"></div>
                 
-                <!-- MT910 Message -->
                 <div class="swift-message-row">
                     <span class="swift-message-badge mt910">MT910</span>
                     <span style="font-size:13px; color:#475569;">Confirmation of Credit</span>
@@ -287,7 +285,6 @@
                     </div>
                 </div>
                 
-                <!-- Routing path - KTAGDEFFXXX ilə vahid -->
                 <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
                     <span>🔹 CRAMCHGGXXX</span>
                     <span>⬇️</span>
@@ -324,19 +321,22 @@
     const FULL_BENEFICIARY_IBAN = "RS351050081234567891697";
     const FULL_SENDER_IBAN = "CH4504835000123452002";
     
-    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
+    // Qismən gizlədilmiş IBAN
     const MASKED_BENEFICIARY_IBAN = "RS35**** **** **** 1697";
     const MASKED_SENDER_IBAN = "CH45**** **** **** 2002";
 
-    // BÜTÜN MƏLUMATLAR VAHİD VƏ UYĞUN
+    // BÜTÜN MƏLUMATLAR VAHİD - INGLIS HERFLERI ILE
     const CURRENT_AMOUNT = "25000000.00";
     const CURRENT_CURRENCY = "EUR";
-    const VALUE_DATE_SWIFT = "310326";  // 31 Mart 2026
+    const VALUE_DATE_SWIFT = "310326";
     const SENT_DATE = "27-Mar-2026";
     const VALUE_DATE = "31-Mar-2026";
     const TX_REFERENCE = "DEU549325112B147-270326";
     const UETR_CODE = "001d2d46-28a9-11f1-a3aa-325096b39f47";
     const PURPOSE_TEXT = "Payment for Agreement No. AG/SJU-005824";
+    const BENEFICIARY_NAME = "Nopal Lux Doo Backa Palanka";
+    const ORDERING_PARTY = "MMG Capital Limited";
+    const RECEIVING_BANK_ADDRESS = "Bulevar Zorana Djindjica 121 11070 Belgrade Republic of Serbia";
 
     // Status Logic
     document.addEventListener('DOMContentLoaded', function() {
@@ -372,8 +372,8 @@
         document.getElementById('txRef').innerText = TX_REFERENCE;
         document.getElementById('uetrVal').innerText = UETR_CODE;
         document.getElementById('purpose').innerText = PURPOSE_TEXT;
-        document.getElementById('benCust').innerText = "Nopal Lux Doo Baka Palanka";
-        document.getElementById('orderBen').innerText = "MMG Capital Limited";
+        document.getElementById('benCust').innerText = BENEFICIARY_NAME;
+        document.getElementById('orderBen').innerText = ORDERING_PARTY;
     });
 
     // Copy Logic
@@ -392,7 +392,7 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 - HƏR İKİ MESAJDA KTAGDEFFXXX (Intermediary 2)
+    // MT900/MT910
     function showMTMessage(type) {
         const txRef = TX_REFERENCE;
         const uetr = UETR_CODE;
@@ -427,8 +427,7 @@
                 "-}";
         }
 
-        document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type + ' - ' + 
-            (type === '900' ? 'Confirmation of Debit' : 'Confirmation of Credit');
+        document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type;
         document.getElementById('modalContent').innerText = message;
         document.getElementById('mtModal').style.display = 'flex';
     }
@@ -441,7 +440,7 @@
         });
     }
 
-    // PDF - BÜTÜN MƏLUMATLAR MT İLƏ EYNİ (KTAGDEFFXXX, Nopal Lux Doo Bačka Palanka)
+    // PDF - Beneficiary adi INGLIS HERFLERI ILE
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -450,8 +449,8 @@
         const txRef = TX_REFERENCE;
         const sentDate = SENT_DATE;
         const valDate = VALUE_DATE;
-        const orderBen = "MMG Capital Limited";
-        const benCust = "Nopal Lux Doo Bačka Palanka";
+        const orderBen = ORDERING_PARTY;
+        const benCust = BENEFICIARY_NAME;
         const purpose = PURPOSE_TEXT;
         
         doc.setFillColor(11, 107, 255); 
