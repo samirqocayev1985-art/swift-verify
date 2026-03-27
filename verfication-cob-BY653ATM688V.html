@@ -3,18 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Incoming Payment — Customer View (Completed)</title>
+    <title>Incoming Payment — Customer View (Cancelled)</title>
     <style>
-        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
+        :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--cancelled:#991b1b;--bank-icon:#1d4ed8}
         
         body {
             font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
             margin: 0; padding: 24px; color: #0f172a; min-height: 100vh;
             background-color: #f3f4f6;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(11, 107, 255, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(219, 194, 149, 0.12) 0px, transparent 40%),
-                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(153, 27, 27, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(220, 38, 38, 0.08) 0px, transparent 40%);
             background-attachment: fixed;
             position: relative; overflow-x: hidden;
         }
@@ -39,6 +38,7 @@
         .small{font-size:13px;color:var(--muted)}
         
         .status{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700; font-size: 13px;}
+        .status.cancelled{background:#991b1b; color:white;}
         .muted-line{height:1px;background:#f1f5f9;margin:20px -28px}
         
         .copy{display:inline-flex;align-items:center;gap:8px;background:#f8fafc;padding:8px 12px;border-radius:10px;border:1px solid #e2e8f0}
@@ -48,16 +48,16 @@
 
         .flow-container{display:flex;align-items:center;justify-content:center;margin:40px 0;position:relative}
         .flow-step{text-align:center;position:relative;min-width:180px}
-        .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #1d4ed8, #3b82f6);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
+        .flow-step .bank-icon{width:60px;height:60px;background:linear-gradient(135deg, #6b7280, #9ca3af);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:white;font-size:24px;}
         .flow-step .status-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
         .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
-        /* Tamamlanmış statusunda heç bir blinking animasiya tələb olunmur */
         .mt-button {
-            background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
+            background: #f1f5f9; color: #6b7280; border: 1px solid #e2e8f0;
             padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
-            cursor: pointer; transition: all 0.2s; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
+            cursor: not-allowed; margin-left: 8px; display: inline-flex; align-items: center; gap: 4px;
+            opacity: 0.6;
         }
 
         .mt-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
@@ -66,23 +66,34 @@
         .mt-modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: var(--muted); }
 
         .btns{display:flex;gap:10px;margin-top:20px}
-        button.primary-btn{background:var(--accent);border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
+        button.primary-btn{background:#991b1b;border:none;color:#fff;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;transition: all 0.2s;}
         button.secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0; padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:600;}
 
-        /* SWIFT Message Flow Styles */
+        .cancelled-banner {
+            background: #fee2e2;
+            border-left: 4px solid #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #991b1b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
         .swift-flow-container {
             margin: 30px 0;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             overflow: hidden;
+            background: #fef2f2;
         }
         
         .swift-flow-header {
-            background: #f8fafc;
+            background: #fee2e2;
             padding: 12px 16px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #fecaca;
             font-weight: bold;
-            color: #0f172a;
+            color: #991b1b;
         }
         
         .swift-flow-content {
@@ -90,54 +101,18 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-        }
-        
-        .swift-message-row {
-            display: flex;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .swift-message-badge {
-            background: #0b6bff;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 12px;
-            min-width: 60px;
             text-align: center;
         }
         
-        .swift-message-badge.mt900 { background: #10b981; } /* completed olaraq yaşıl vurğu */
-        .swift-message-badge.mt910 { background: #10b981; }
-        
-        .swift-message-preview {
-            background: #f1f5f9;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            flex: 1;
-            cursor: pointer;
-            border: 1px solid #e2e8f0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .swift-connector-line {
-            width: 2px;
-            height: 30px;
-            background: linear-gradient(to bottom, #10b981, #10b981);
-            margin-left: 35px;
-        }
-        
-        .swift-direction-icon {
-            color: #10b981;
+        .cancelled-message {
+            color: #991b1b;
             font-size: 14px;
-            margin: 0 5px;
+            font-weight: 600;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #fecaca;
         }
         
         @media (max-width:768px){ .flow-container{flex-direction:column;gap:30px} .connector-line{display:none} .copy{flex-wrap:wrap;} }
@@ -152,8 +127,12 @@
     </a>
 
     <div class="card">
+        <div class="cancelled-banner">
+            ⚠️ TRANSACTION CANCELLED — This payment has been cancelled and will not be processed.
+        </div>
+        
         <h1>Incoming Payment</h1>
-        <p class="lead">Detailed transaction tracking for high-value transfer — fully completed & settled.</p>
+        <p class="lead">Transaction tracking — this transfer has been cancelled and reversed.</p>
         
         <div class="muted-line"></div>
 
@@ -161,28 +140,28 @@
         <div class="copy" style="margin-bottom: 10px;">
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">40fb91ed-19aa-4263-be97-dc75011ad83f</div>
             <button id="copyUetrBtn">Copy</button>
-            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900 (Completed)</button>
-            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910 (Completed)</button>
+            <button class="mt-button" disabled>📄 MT900 (Cancelled)</button>
+            <button class="mt-button" disabled>📄 MT910 (Cancelled)</button>
         </div>
 
-<div class="row">
-    <div class="col">
-        <div class="label">Status</div>
-        <div class="value"><span class="status" id="topStatus" style="background:#10b981; color:white;">Completed</span></div>
-    </div>
-    <div class="col">
-        <div class="label">Amount</div>
-        <div class="value amount" style="font-weight: 400;">EUR 20,000,000.00</div>
-    </div>
-    <div class="col">
-        <div class="label">Sent date:</div>
-        <div class="value" id="sentDate" style="font-weight: 400;">23-Mar-2026</div>
-    </div>
-    <div class="col">
-        <div class="label">Value date:</div>
-        <div class="value" id="valDate" style="font-weight: 400;">26-Mar-2026</div>
-    </div>
-</div>
+        <div class="row">
+            <div class="col">
+                <div class="label">Status</div>
+                <div class="value"><span class="status cancelled" id="topStatus">Cancelled</span></div>
+            </div>
+            <div class="col">
+                <div class="label">Amount</div>
+                <div class="value amount" style="font-weight: 400; color: #6b7280;">EUR 20,000,000.00</div>
+            </div>
+            <div class="col">
+                <div class="label">Sent date:</div>
+                <div class="value" id="sentDate" style="font-weight: 400;">23-Mar-2026</div>
+            </div>
+            <div class="col">
+                <div class="label">Cancellation date:</div>
+                <div class="value" id="cancelDate" style="font-weight: 400;">27-Mar-2026</div>
+            </div>
+        </div>
 
         <div class="muted-line"></div>
 
@@ -219,85 +198,63 @@
                     <div class="small" id="txRef" style="font-weight: 700;">DEU17112212C332-230326</div>
                     <button id="copyBtn">Copy</button>
                 </div>
+                <br>
+                <div class="label">Cancellation Reason</div>
+                <div class="value small" style="color: #991b1b; background: #fee2e2; padding: 6px; border-radius: 6px;">Cancelled by ordering party — instruction revoked before settlement</div>
             </div>
         </div>
 
-        <!-- Bank Flow Diagram - Bütün statuslar Tamamlanmış / Completed -->
+        <!-- Bank Flow Diagram - Bütün statuslar Cancelled -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
                 <div style="font-size:12px; font-weight:bold">Sender Bank</div>
                 <div class="swift-code">CRAMCHGGXXX</div>
-                <div class="status-tag" id="debtor-status" style="background:#10b981; color:white;">Completed</div>
+                <div class="status-tag" id="debtor-status" style="background:#991b1b; color:white;">Cancelled</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">DEUTDEFFXXX</div>
-                <div class="status-tag" id="intermediary-status1" style="background:#10b981; color:white;">Completed</div>
+                <div class="status-tag" id="intermediary-status1" style="background:#991b1b; color:white;">Cancelled</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">BHFBDEFFXXX</div>
-                <div class="status-tag" id="intermediary-status2" style="background:#10b981; color:white;">Completed</div>
+                <div class="status-tag" id="intermediary-status2" style="background:#991b1b; color:white;">Cancelled</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">EXTNDJJDXXX</div>
-                <div class="status-tag" id="beneficiary-status" style="background:#10b981; color:white;">Completed</div>
+                <div class="status-tag" id="beneficiary-status" style="background:#991b1b; color:white;">Cancelled</div>
             </div>
         </div>
 
-        <!-- SWIFT Message Flow with Connectors - completed message flow (MT900/MT910 final settlement) -->
+        <!-- SWIFT Message Flow - Cancelled status with MT199 Cancellation -->
         <div class="swift-flow-container">
             <div class="swift-flow-header">
-                📨 SWIFT Message Flow (MT900 / MT910) — Final Settlement Completed
+                🚫 SWIFT Message Flow — Transaction Cancelled / Reversed
             </div>
             <div class="swift-flow-content">
-                <!-- MT900 Message - fully acknowledged -->
-                <div class="swift-message-row">
-                    <span class="swift-message-badge mt900">MT900</span>
-                    <span style="font-size:13px; color:#065f46;">Confirmation of Debit (Settled)</span>
-                    <span class="swift-direction-icon">✅</span>
-                    <span style="font-size:13px;">Sender → Intermediary (Final)</span>
-                    <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-230326... :32A:260326EUR20000000,00
-                    </div>
+                <div class="cancelled-message">
+                    <strong>⚠️ MT199 — Cancellation Advice</strong><br>
+                    Payment order has been cancelled by originator.<br>
+                    All settlement instructions have been revoked.<br>
+                    <span style="font-size: 11px; margin-top: 10px; display: block;">:79: Transaction DEU17112212C332-230326 cancelled per originator request. No funds transferred.</span>
                 </div>
-                
-                <div class="swift-connector-line"></div>
-                
-                <!-- MT910 Message - funds credited to beneficiary -->
-                <div class="swift-message-row">
-                    <span class="swift-message-badge mt910">MT910</span>
-                    <span style="font-size:13px; color:#065f46;">Confirmation of Credit (Beneficiary Account)</span>
-                    <span class="swift-direction-icon">✅</span>
-                    <span style="font-size:13px;">Intermediary → Beneficiary Bank (Completed)</span>
-                    <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01EXTNDJJDXXXX...} :20:DEU17112212C332-260326... :32A:260326EUR20000000,00
-                    </div>
-                </div>
-                
-                <!-- Additional Connector for multiple intermediaries - completed chain -->
-                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #065f46; justify-content: center;">
-                    <span>✅ CRAMCHGGXXX</span>
-                    <span>⬇️</span>
-                    <span>✅ DEUTDEFFXXX</span>
-                    <span>⬇️</span>
-                    <span>✅ BHFBDEFFXXX</span>
-                    <span>⬇️</span>
-                    <span>✅ EXTNDJJDXXX</span>
+                <div style="font-size: 12px; color: #991b1b;">
+                    ❌ No MT900/MT910 messages generated — transfer cancelled before execution
                 </div>
             </div>
         </div>
 
         <div class="btns">
-            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF) — Completed</button>
+            <button id="downloadBtn" class="primary-btn">Download Cancellation Confirmation (PDF)</button>
             <button class="secondary" onclick="alert('Support: support@verify-swift.com')">Help Center</button>
         </div>
     </div>
@@ -306,7 +263,7 @@
 <div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
     <div class="mt-modal-content">
         <span class="mt-modal-close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">SWIFT Message (Completed Settlement)</h2>
+        <h2 id="modalTitle">SWIFT Message (Cancelled)</h2>
         <div id="modalContent" class="mt-message"></div>
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <button class="secondary" onclick="closeModal()">Close</button>
@@ -316,45 +273,42 @@
 </div>
 
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur) — completed vəziyyətinə uyğun
     const FULL_BENEFICIARY_IBAN = "DJ100001173985678944183";
-    
-    // Qismən gizlədilmiş IBAN (ekranda göstərilir)
     const MASKED_BENEFICIARY_IBAN = "DJ10 **** **** **** 4183";
-
-    // Cari tarix və məbləğ
     const CURRENT_AMOUNT = "20000000.00";
     const CURRENT_CURRENCY = "EUR";
 
-    // === Bütün statuslar COMPLETED olaraq təyin edilir ===
     document.addEventListener('DOMContentLoaded', function() {
-        // Ümumi status badge
+        // Top status
         const topStatus = document.getElementById('topStatus');
         if(topStatus) {
-            topStatus.innerText = 'Completed';
-            topStatus.style.backgroundColor = '#10b981';
-            topStatus.style.color = 'white';
+            topStatus.innerText = 'Cancelled';
+            topStatus.className = 'status cancelled';
         }
         
-        // Bank axınındakı bütün elementlərin tamamlanmış statusu
+        // Bank flow status elements - all cancelled
         const statusIds = ['debtor-status', 'intermediary-status1', 'intermediary-status2', 'beneficiary-status'];
         statusIds.forEach(id => {
             const el = document.getElementById(id);
             if(el) {
-                el.innerText = 'Completed';
-                el.style.backgroundColor = '#10b981';
+                el.innerText = 'Cancelled';
+                el.style.backgroundColor = '#991b1b';
                 el.style.color = 'white';
-                el.classList.remove('blinking'); // blinking varsa sil
             }
         });
         
-        // IBAN-ı qismən gizlət
+        // IBAN
         const beneficiaryIbanSpan = document.getElementById('beneficiaryIban');
         if(beneficiaryIbanSpan) beneficiaryIbanSpan.innerText = MASKED_BENEFICIARY_IBAN;
         
-        // Əgər hər hansı blinking elementi varsa tam təmizlə
+        // Remove any blinking elements if existed
         const allBlink = document.querySelectorAll('.blinking');
         allBlink.forEach(el => el.classList.remove('blinking'));
+        
+        // Add cancellation date
+        const today = new Date();
+        const cancelDateStr = today.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
+        document.getElementById('cancelDate').innerText = cancelDateStr;
     });
 
     // Copy Logic
@@ -373,99 +327,60 @@
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - TAM IBAN, final settlement tarixi və completed statusuna uyğun məzmun
-    function showMTMessage(type) {
-        const txRef = document.getElementById('txRef').innerText;
-        const uetr = document.getElementById('uetrVal').innerText;
-        const purpose = document.getElementById('purpose').innerText;
-        
-        // Value date: 26 Mart 2026 -> 260326 (gün/ay/il formatında)
-        const valueDate = "260326";
-        
-        // Tamamlanmış əməliyyat üçün hər iki mesajda gecikmə olmadan settlement göstərilir
-        // MT900 (debit confirmation) tamamlanmış, MT910 (credit confirmation) tamamlanmış
-        let header, message;
-        
-        if(type === '900') {
-            // MT900 Sender Bank tərəfindən tam çıxış
-            const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:O9001611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
-            header = basicHeader;
-            message = header +
-                ":20:" + txRef + "\n" +
-                ":21:" + uetr.substring(0, 16) + "\n" +
-                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
-                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
-                ":52A:CRAMCHGGXXX\n" +
-                ":56A:DEUTDEFFXXX\n" +
-                ":57A:BHFBDEFFXXX\n" +
-                ":72:/SETTLED/ " + purpose + " - Completed on " + new Date().toLocaleDateString() + "\n" +
-                "-}";
-            document.getElementById('modalTitle').innerHTML = 'SWIFT MT900 - Confirmation of Debit (Fully Completed)';
-        } else {
-            // MT910 Beneficiary Bank'a kredit tamamlanmış
-            const basicHeader910 = "{1:F01EXTNDJJDXXXA1234567890}{2:O9101711060317CRAMCHGGAXXX50621189242303171401N}{3:{108:MT910FINAL}}{4:\n";
-            header = basicHeader910;
-            message = header +
-                ":20:" + txRef + "\n" +
-                ":21:" + uetr.substring(0, 16) + "\n" +
-                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
-                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
-                ":57A:EXTNDJJDXXX\n" +
-                ":58A:" + FULL_BENEFICIARY_IBAN + "\n" +
-                ":72:/REC/ " + purpose + " - Value credited. Final settlement executed.\n" +
-                "-}";
-            document.getElementById('modalTitle').innerHTML = 'SWIFT MT910 - Confirmation of Credit (Completed & Value Dated)';
-        }
-        
-        document.getElementById('modalContent').innerText = message;
-        document.getElementById('mtModal').style.display = 'flex';
-    }
-
     function closeModal() { document.getElementById('mtModal').style.display = 'none'; }
     
     function copyModalContent() {
         navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => {
-            alert('MT Message (Completed) copied to clipboard!');
+            alert('Cancellation message copied to clipboard!');
         });
     }
 
-    // PDF Funksiyası - Bütün məlumatlar tamamlanmış statusa uyğun, MT mesajları ilə tam uyğunlaşdırılmış
+    // PDF Funksiyası - Cancelled transaction confirmation
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Məlumatları topla
         const uetr = document.getElementById('uetrVal').innerText;
         const txRef = document.getElementById('txRef').innerText;
         const sentDate = document.getElementById('sentDate').innerText;
-        const valDate = document.getElementById('valDate').innerText;
+        const cancelDate = document.getElementById('cancelDate').innerText;
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
         const fullAmount = "EUR 20,000,000.00";
         
-        // Header
-        doc.setFillColor(11, 107, 255); 
+        // Header - red/cancelled theme
+        doc.setFillColor(153, 27, 27); 
         doc.rect(0, 0, 210, 40, 'F');
         doc.setTextColor(255, 255, 255); 
         doc.setFontSize(22); 
         doc.text("SWIFT", 20, 25);
         doc.setFontSize(8); 
-        doc.text("GLOBAL PAYMENT CONFIRMATION — COMPLETED", 130, 20);
+        doc.text("CANCELLATION CONFIRMATION", 130, 20);
         doc.text("www.swift.com", 130, 28);
         doc.text("www.verify-swift.com", 130, 36);
 
-        // Amount
+        // Amount - crossed out effect
         doc.setFillColor(248, 250, 252); 
         doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
         doc.setTextColor(100, 116, 139); 
         doc.setFontSize(9); 
-        doc.text("TOTAL TRANSFER AMOUNT (SETTLED)", 30, 62);
+        doc.text("ORIGINAL TRANSFER AMOUNT (CANCELLED)", 30, 62);
         doc.setFontSize(22); 
-        doc.setTextColor(11, 107, 255); 
+        doc.setTextColor(153, 27, 27); 
         doc.text(fullAmount, 30, 75);
+        doc.setDrawColor(153, 27, 27);
+        doc.setLineWidth(1.5);
+        doc.line(28, 73, 110, 80);
+        
+        // Cancellation banner
+        doc.setFillColor(254, 226, 226);
+        doc.roundedRect(20, 95, 170, 18, 3, 3, 'F');
+        doc.setTextColor(153, 27, 27);
+        doc.setFontSize(11);
+        doc.text("⚠️ TRANSACTION CANCELLED — NO FUNDS TRANSFERRED", 30, 107);
 
-        let y = 95;
+        let y = 120;
         const addRow = (label, value) => {
             if (y > 250) {
                 doc.addPage();
@@ -494,18 +409,17 @@
 
         addRow("UETR Code", uetr);
         addRow("Transaction Ref", txRef);
-        addRow("Sent Date", sentDate);
-        addRow("Value Date", valDate + " (settled)");
+        addRow("Sent Date (Original)", sentDate);
+        addRow("Cancellation Date", cancelDate);
         addRow("Ordering Party", orderBen);
-        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Completed");
-        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Completed");
-        addRow("Intermediary 2", "ODDO BHF SE (BHFBDEFFXXX) - Completed");
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - CANCELLED");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Exim Bank (Djibouti) S.A. (EXTNDJJDXXX) - Completed");
+        addRow("Receiving Bank", "Exim Bank (Djibouti) S.A. (EXTNDJJDXXX) - CANCELLED");
         addRow("Purpose", purpose);
+        addRow("Cancellation Reason", "Cancelled by ordering party — instruction revoked before settlement. No funds were debited or transferred.");
         
-        // SWIFT Messages bölməsi - MT900 və MT910 tam uyğun final mesajlar
+        // Cancellation Message
         if (y > 220) {
             doc.addPage();
             y = 20;
@@ -513,47 +427,40 @@
         
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
-        doc.setTextColor(11, 107, 255);
-        doc.text("SWIFT Messages (Final Settlement)", 20, y);
+        doc.setTextColor(153, 27, 27);
+        doc.text("Cancellation Advice (MT199)", 20, y);
         y += 10;
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text("MT900 (Confirmation of Debit - Completed):", 20, y);
+        doc.text("SWIFT MT199 — Cancellation Notification:", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
-        doc.text(":20:" + txRef, 25, y);
+        doc.text(":20: " + txRef, 25, y);
         y += 5;
-        doc.text(":32A:260326EUR20000000,00", 25, y);
+        doc.text(":79: Payment order cancelled by originator. All settlement instructions revoked.", 25, y);
         y += 5;
-        doc.text(":72:/SETTLED/ " + purpose.substring(0, 45) + "...", 25, y);
+        doc.text("No funds transferred. No MT900/MT910 issued.", 25, y);
         y += 8;
         
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(100, 116, 139);
-        doc.text("MT910 (Confirmation of Credit - Beneficiary Credited):", 20, y);
-        y += 5;
-        doc.setFont("courier", "normal");
-        doc.setTextColor(15, 23, 42);
-        doc.text(":20:" + txRef, 25, y);
-        y += 5;
-        doc.text(":32A:260326EUR20000000,00", 25, y);
-        y += 5;
-        doc.text(":72:/REC/ Value credited to " + MASKED_BENEFICIARY_IBAN, 25, y);
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(9);
+        doc.setTextColor(153, 27, 27);
+        doc.text("This transaction was cancelled and will not be processed further.", 20, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
         doc.setFontSize(8);
         doc.setTextColor(156, 163, 175);
-        doc.text("Generated by verify-swift.com • Final confirmation - Completed " + new Date().toLocaleString(), 20, 280);
-        doc.text("This is a computer-generated settlement confirmation. No signature is required.", 20, 285);
+        doc.text("Generated by verify-swift.com • Cancellation confirmation " + new Date().toLocaleString(), 20, 280);
+        doc.text("This is an official cancellation confirmation. No payment was executed.", 20, 285);
 
-        doc.save('SWIFT_Completed_Receipt_' + txRef + '.pdf');
+        doc.save('SWIFT_Cancellation_Confirmation_' + txRef + '.pdf');
     });
 
-    // Escape düyməsi ilə modalı bağla
+    // Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeModal();
