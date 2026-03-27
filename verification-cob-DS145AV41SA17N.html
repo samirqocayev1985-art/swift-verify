@@ -249,14 +249,14 @@
             </div>
         </div>
 
-        <!-- SWIFT Message Flow - Cancelled status with MT103 Cancellation -->
+        <!-- SWIFT Message Flow - Cancelled status with MT199 Cancellation -->
         <div class="swift-flow-container">
             <div class="swift-flow-header">
                 🚫 SWIFT Message Flow — Transaction Cancelled
             </div>
             <div class="swift-flow-content">
                 <div class="cancelled-message">
-                    <strong>⚠️ MT103 — Cancellation Advice</strong><br><br>
+                    <strong>⚠️ MT199 — Cancellation Advice</strong><br><br>
                     Payment order has been cancelled by originator.<br>
                     All settlement instructions have been revoked.<br>
                     No funds were transferred.<br><br>
@@ -265,8 +265,8 @@
                     UETR: 001d2d46-28a9-11f1-a3aa-325096b39f47<br>
                     Cancellation Date: 28-Mar-2026<br>
                     Reason: Instruction revoked by ordering party before settlement<br><br>
-                    <strong>MT103 Full Message:</strong>
-                    <pre>{1:F01CRAMCHGGAXXX8291722562}{2:O1031611060317JMBNRSBGXXX50621189242303171401N}{3:{108:CANCEL002}}{4:
+                    <strong>MT199 Full Message:</strong>
+                    <pre>{1:F01CRAMCHGGAXXX8291722562}{2:O1991611060317JMBNRSBGXXX50621189242303171401N}{3:{108:CANCEL002}}{4:
 :20:DEU549325112B147-270326
 :21:001d2d46-28a9-11
 :79:
@@ -498,13 +498,13 @@ This cancellation advice serves as official confirmation that the above referenc
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(153, 27, 27);
-        doc.text("Cancellation Advice (MT103)", 20, y);
+        doc.text("Cancellation Advice (MT199)", 20, y);
         y += 10;
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text("SWIFT MT103 — Cancellation Notification:", 20, y);
+        doc.text("SWIFT MT199 — Cancellation Notification:", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
