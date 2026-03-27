@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Incoming Payment — Customer View</title>
+    <title>Incoming Payment — Customer View (Completed)</title>
     <style>
         :root{--bg:#f8fafc;--card:#fff;--accent:#0b6bff;--muted:#6b7280;--success:#065f46;--pending:#f59e0b;--processing:#3b82f6;--bank-icon:#1d4ed8}
         
@@ -53,9 +53,7 @@
         .flow-step .swift-code{font-size:11px;color:#64748b;margin-top:4px;font-weight:600;}
         .connector-line{flex:1;height:2px;margin:0 10px;max-width:120px; background: #e2e8f0;}
 
-        @keyframes blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0.3; } }
-        .blinking { animation: blink 1s infinite; }
-
+        /* Tamamlanmış statusunda heç bir blinking animasiya tələb olunmur */
         .mt-button {
             background: #f1f5f9; color: #0b6bff; border: 1px solid #e2e8f0;
             padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
@@ -112,7 +110,7 @@
             text-align: center;
         }
         
-        .swift-message-badge.mt900 { background: #f59e0b; }
+        .swift-message-badge.mt900 { background: #10b981; } /* completed olaraq yaşıl vurğu */
         .swift-message-badge.mt910 { background: #10b981; }
         
         .swift-message-preview {
@@ -132,12 +130,12 @@
         .swift-connector-line {
             width: 2px;
             height: 30px;
-            background: linear-gradient(to bottom, #0b6bff, #f59e0b);
+            background: linear-gradient(to bottom, #10b981, #10b981);
             margin-left: 35px;
         }
         
         .swift-direction-icon {
-            color: #64748b;
+            color: #10b981;
             font-size: 14px;
             margin: 0 5px;
         }
@@ -155,7 +153,7 @@
 
     <div class="card">
         <h1>Incoming Payment</h1>
-        <p class="lead">Detailed transaction tracking for high-value transfer.</p>
+        <p class="lead">Detailed transaction tracking for high-value transfer — fully completed & settled.</p>
         
         <div class="muted-line"></div>
 
@@ -163,14 +161,14 @@
         <div class="copy" style="margin-bottom: 10px;">
             <div class="value" id="uetrVal" style="font-family: monospace; color: #475569; letter-spacing: 0.5px; font-size: 14px;">40fb91ed-19aa-4263-be97-dc75011ad83f</div>
             <button id="copyUetrBtn">Copy</button>
-            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900</button>
-            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910</button>
+            <button class="mt-button" onclick="showMTMessage('900')">📄 MT900 (Completed)</button>
+            <button class="mt-button" onclick="showMTMessage('910')">📄 MT910 (Completed)</button>
         </div>
 
 <div class="row">
     <div class="col">
         <div class="label">Status</div>
-        <div class="value"><span class="status" id="topStatus">Processed</span></div>
+        <div class="value"><span class="status" id="topStatus" style="background:#10b981; color:white;">Completed</span></div>
     </div>
     <div class="col">
         <div class="label">Amount</div>
@@ -224,80 +222,82 @@
             </div>
         </div>
 
-        <!-- Bank Flow Diagram -->
+        <!-- Bank Flow Diagram - Bütün statuslar Tamamlanmış / Completed -->
         <div class="flow-container">
             <div class="flow-step">
                 <div class="bank-icon">🏦</div>
                 <div style="font-size:12px; font-weight:bold">Sender Bank</div>
                 <div class="swift-code">CRAMCHGGXXX</div>
-                <div class="status-tag" id="debtor-status">Sent</div>
+                <div class="status-tag" id="debtor-status" style="background:#10b981; color:white;">Completed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">DEUTDEFFXXX</div>
-                <div class="status-tag" id="intermediary-status1">Processed</div>
+                <div class="status-tag" id="intermediary-status1" style="background:#10b981; color:white;">Completed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">⚙️</div>
                 <div style="font-size:12px; font-weight:bold">Intermediary</div>
                 <div class="swift-code">BHFBDEFFXXX</div>
-                <div class="status-tag" id="intermediary-status2">Processing</div>
+                <div class="status-tag" id="intermediary-status2" style="background:#10b981; color:white;">Completed</div>
             </div>
             <div class="connector-line"></div>
             <div class="flow-step">
                 <div class="bank-icon">🏛️</div>
                 <div style="font-size:12px; font-weight:bold">Beneficiary Bank</div>
                 <div class="swift-code">EXTNDJJDXXX</div>
-                <div class="status-tag" id="beneficiary-status">Pending</div>
+                <div class="status-tag" id="beneficiary-status" style="background:#10b981; color:white;">Completed</div>
             </div>
         </div>
 
-        <!-- SWIFT Message Flow with Connectors -->
+        <!-- SWIFT Message Flow with Connectors - completed message flow (MT900/MT910 final settlement) -->
         <div class="swift-flow-container">
             <div class="swift-flow-header">
-                📨 SWIFT Message Flow (MT900 / MT910)
+                📨 SWIFT Message Flow (MT900 / MT910) — Final Settlement Completed
             </div>
             <div class="swift-flow-content">
-                <!-- MT900 Message -->
+                <!-- MT900 Message - fully acknowledged -->
                 <div class="swift-message-row">
                     <span class="swift-message-badge mt900">MT900</span>
-                    <span style="font-size:13px; color:#475569;">Confirmation of Debit</span>
-                    <span class="swift-direction-icon">⬆️</span>
-                    <span style="font-size:13px;">Sender → Intermediary</span>
+                    <span style="font-size:13px; color:#065f46;">Confirmation of Debit (Settled)</span>
+                    <span class="swift-direction-icon">✅</span>
+                    <span style="font-size:13px;">Sender → Intermediary (Final)</span>
                     <div class="swift-message-preview" onclick="showMTMessage('900')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-230326...
+                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-230326... :32A:260326EUR20000000,00
                     </div>
                 </div>
                 
                 <div class="swift-connector-line"></div>
                 
-                <!-- MT910 Message -->
+                <!-- MT910 Message - funds credited to beneficiary -->
                 <div class="swift-message-row">
                     <span class="swift-message-badge mt910">MT910</span>
-                    <span style="font-size:13px; color:#475569;">Confirmation of Credit</span>
-                    <span class="swift-direction-icon">⬇️</span>
-                    <span style="font-size:13px;">Intermediary → Beneficiary</span>
+                    <span style="font-size:13px; color:#065f46;">Confirmation of Credit (Beneficiary Account)</span>
+                    <span class="swift-direction-icon">✅</span>
+                    <span style="font-size:13px;">Intermediary → Beneficiary Bank (Completed)</span>
                     <div class="swift-message-preview" onclick="showMTMessage('910')">
-                        {1:F01CRAMCHGGAXXX...} :20:DEU17112212C332-260326...
+                        {1:F01EXTNDJJDXXXX...} :20:DEU17112212C332-260326... :32A:260326EUR20000000,00
                     </div>
                 </div>
                 
-                <!-- Additional Connector for multiple intermediaries -->
-                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #64748b; justify-content: center;">
-                    <span>🔹 DEUTDEFFXXX</span>
+                <!-- Additional Connector for multiple intermediaries - completed chain -->
+                <div style="display: flex; gap: 10px; margin-top: 5px; font-size: 11px; color: #065f46; justify-content: center;">
+                    <span>✅ CRAMCHGGXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 BHFBDEFFXXX</span>
+                    <span>✅ DEUTDEFFXXX</span>
                     <span>⬇️</span>
-                    <span>🔹 EXTNDJJDXXX</span>
+                    <span>✅ BHFBDEFFXXX</span>
+                    <span>⬇️</span>
+                    <span>✅ EXTNDJJDXXX</span>
                 </div>
             </div>
         </div>
 
         <div class="btns">
-            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF)</button>
+            <button id="downloadBtn" class="primary-btn">Download Professional Receipt (PDF) — Completed</button>
             <button class="secondary" onclick="alert('Support: support@verify-swift.com')">Help Center</button>
         </div>
     </div>
@@ -306,7 +306,7 @@
 <div id="mtModal" class="mt-modal" onclick="if(event.target===this) closeModal()">
     <div class="mt-modal-content">
         <span class="mt-modal-close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">SWIFT Message</h2>
+        <h2 id="modalTitle">SWIFT Message (Completed Settlement)</h2>
         <div id="modalContent" class="mt-message"></div>
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <button class="secondary" onclick="closeModal()">Close</button>
@@ -316,7 +316,7 @@
 </div>
 
 <script>
-    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur)
+    // Tam IBAN (gizli saxlanılır, ancaq MT mesajlarında istifadə olunur) — completed vəziyyətinə uyğun
     const FULL_BENEFICIARY_IBAN = "DJ100001173985678944183";
     
     // Qismən gizlədilmiş IBAN (ekranda göstərilir)
@@ -326,77 +326,97 @@
     const CURRENT_AMOUNT = "20000000.00";
     const CURRENT_CURRENCY = "EUR";
 
-    // Status Logic
+    // === Bütün statuslar COMPLETED olaraq təyin edilir ===
     document.addEventListener('DOMContentLoaded', function() {
-        const sentStyle = { bg: '#16a34a', color: '#fff' };
-        const processedStyle = { bg: '#10b981', color: '#fff' }; // Yaşıl - Processed
-        const procStyle = { bg: '#facc15', color: '#92400e' }; // Sarı - Processing
-        const pendStyle = { bg: '#f1f5f9', color: '#64748b' };
-
-        const updateEl = (id, style, text, blink = false) => {
+        // Ümumi status badge
+        const topStatus = document.getElementById('topStatus');
+        if(topStatus) {
+            topStatus.innerText = 'Completed';
+            topStatus.style.backgroundColor = '#10b981';
+            topStatus.style.color = 'white';
+        }
+        
+        // Bank axınındakı bütün elementlərin tamamlanmış statusu
+        const statusIds = ['debtor-status', 'intermediary-status1', 'intermediary-status2', 'beneficiary-status'];
+        statusIds.forEach(id => {
             const el = document.getElementById(id);
             if(el) {
-                el.style.background = style.bg; 
-                el.style.color = style.color;
-                el.innerText = text;
-                if(blink && style.bg === '#facc15') el.classList.add('blinking');
-                else el.classList.remove('blinking');
+                el.innerText = 'Completed';
+                el.style.backgroundColor = '#10b981';
+                el.style.color = 'white';
+                el.classList.remove('blinking'); // blinking varsa sil
             }
-        };
-
-        updateEl('topStatus', processedStyle, 'Processed');
-        updateEl('debtor-status', sentStyle, 'Sent');
-        updateEl('intermediary-status1', processedStyle, 'Processed');
-        updateEl('intermediary-status2', procStyle, 'Processing', true);
-        updateEl('beneficiary-status', pendStyle, 'Pending');
+        });
         
         // IBAN-ı qismən gizlət
-        document.getElementById('beneficiaryIban').innerText = MASKED_BENEFICIARY_IBAN;
+        const beneficiaryIbanSpan = document.getElementById('beneficiaryIban');
+        if(beneficiaryIbanSpan) beneficiaryIbanSpan.innerText = MASKED_BENEFICIARY_IBAN;
+        
+        // Əgər hər hansı blinking elementi varsa tam təmizlə
+        const allBlink = document.querySelectorAll('.blinking');
+        allBlink.forEach(el => el.classList.remove('blinking'));
     });
 
     // Copy Logic
     const setupCopy = (btnId, valId) => {
-        document.getElementById(btnId).addEventListener('click', function() {
-            const txt = document.getElementById(valId).innerText;
-            navigator.clipboard.writeText(txt).then(() => {
-                const old = this.innerText; this.innerText = 'Copied!';
-                setTimeout(() => this.innerText = old, 1500);
+        const btn = document.getElementById(btnId);
+        if(btn) {
+            btn.addEventListener('click', function() {
+                const txt = document.getElementById(valId).innerText;
+                navigator.clipboard.writeText(txt).then(() => {
+                    const old = this.innerText; this.innerText = 'Copied!';
+                    setTimeout(() => this.innerText = old, 1500);
+                });
             });
-        });
+        }
     };
     setupCopy('copyUetrBtn', 'uetrVal');
     setupCopy('copyBtn', 'txRef');
 
-    // MT900/MT910 Formatı - TAM IBAN İSTİFADƏ OLUNUR
+    // MT900/MT910 Formatı - TAM IBAN, final settlement tarixi və completed statusuna uyğun məzmun
     function showMTMessage(type) {
         const txRef = document.getElementById('txRef').innerText;
         const uetr = document.getElementById('uetrVal').innerText;
         const purpose = document.getElementById('purpose').innerText;
         
-        // Value date: 19 Mart 2026 -> 190326 (gün/ay/yıl formatında)
+        // Value date: 26 Mart 2026 -> 260326 (gün/ay/il formatında)
         const valueDate = "260326";
         
-        // Basic header
-        const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:";
-        const messageType = type === '900' ? 'O900' : 'O910';
-        const messageRest = "1611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
+        // Tamamlanmış əməliyyat üçün hər iki mesajda gecikmə olmadan settlement göstərilir
+        // MT900 (debit confirmation) tamamlanmış, MT910 (credit confirmation) tamamlanmış
+        let header, message;
         
-        const header = basicHeader + messageType + messageRest;
+        if(type === '900') {
+            // MT900 Sender Bank tərəfindən tam çıxış
+            const basicHeader = "{1:F01CRAMCHGGAXXX8291722562}{2:O9001611060317EXTNDJJDXXX50621189242303171401N}{3:{108:XXXXX}}{4:\n";
+            header = basicHeader;
+            message = header +
+                ":20:" + txRef + "\n" +
+                ":21:" + uetr.substring(0, 16) + "\n" +
+                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
+                ":52A:CRAMCHGGXXX\n" +
+                ":56A:DEUTDEFFXXX\n" +
+                ":57A:BHFBDEFFXXX\n" +
+                ":72:/SETTLED/ " + purpose + " - Completed on " + new Date().toLocaleDateString() + "\n" +
+                "-}";
+            document.getElementById('modalTitle').innerHTML = 'SWIFT MT900 - Confirmation of Debit (Fully Completed)';
+        } else {
+            // MT910 Beneficiary Bank'a kredit tamamlanmış
+            const basicHeader910 = "{1:F01EXTNDJJDXXXA1234567890}{2:O9101711060317CRAMCHGGAXXX50621189242303171401N}{3:{108:MT910FINAL}}{4:\n";
+            header = basicHeader910;
+            message = header +
+                ":20:" + txRef + "\n" +
+                ":21:" + uetr.substring(0, 16) + "\n" +
+                ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
+                ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
+                ":57A:EXTNDJJDXXX\n" +
+                ":58A:" + FULL_BENEFICIARY_IBAN + "\n" +
+                ":72:/REC/ " + purpose + " - Value credited. Final settlement executed.\n" +
+                "-}";
+            document.getElementById('modalTitle').innerHTML = 'SWIFT MT910 - Confirmation of Credit (Completed & Value Dated)';
+        }
         
-        // Mesajı qur
-        let message = header +
-            ":20:" + txRef + "\n" +
-            ":21:" + uetr.substring(0, 16) + "\n" +
-            ":25:" + FULL_BENEFICIARY_IBAN + "\n" +
-            ":32A:" + valueDate + CURRENT_CURRENCY + CURRENT_AMOUNT.replace('.', ',') + "\n" +
-            ":52A:CRAMCHGGXXX\n" +
-            ":56A:DEUTDEFFXXX\n" +
-            ":57A:BHFBDEFFXXX\n" +
-            ":72:/BENEF/ " + purpose + "\n" +
-            "-}";
-
-        document.getElementById('modalTitle').innerHTML = 'SWIFT MT' + type + ' - ' + 
-            (type === '900' ? 'Confirmation of Debit (Sender → Intermediary)' : 'Confirmation of Credit (Intermediary → Beneficiary)');
         document.getElementById('modalContent').innerText = message;
         document.getElementById('mtModal').style.display = 'flex';
     }
@@ -405,11 +425,11 @@
     
     function copyModalContent() {
         navigator.clipboard.writeText(document.getElementById('modalContent').innerText).then(() => {
-            alert('MT Message copied to clipboard!');
+            alert('MT Message (Completed) copied to clipboard!');
         });
     }
 
-    // PDF Funksiyası - Təkmilləşdirilmiş
+    // PDF Funksiyası - Bütün məlumatlar tamamlanmış statusa uyğun, MT mesajları ilə tam uyğunlaşdırılmış
     document.getElementById('downloadBtn').addEventListener('click', function() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -422,27 +442,28 @@
         const orderBen = document.getElementById('orderBen').innerText;
         const benCust = document.getElementById('benCust').innerText;
         const purpose = document.getElementById('purpose').innerText;
+        const fullAmount = "EUR 20,000,000.00";
         
-// Header
-doc.setFillColor(11, 107, 255); 
-doc.rect(0, 0, 210, 40, 'F');
-doc.setTextColor(255, 255, 255); 
-doc.setFontSize(22); 
-doc.text("SWIFT", 20, 25);
-doc.setFontSize(8); 
-doc.text("GLOBAL PAYMENT CONFIRMATION", 130, 20);
-doc.text("www.swift.com", 130, 28);
-doc.text("www.verify-swift.com", 130, 36);
+        // Header
+        doc.setFillColor(11, 107, 255); 
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255); 
+        doc.setFontSize(22); 
+        doc.text("SWIFT", 20, 25);
+        doc.setFontSize(8); 
+        doc.text("GLOBAL PAYMENT CONFIRMATION — COMPLETED", 130, 20);
+        doc.text("www.swift.com", 130, 28);
+        doc.text("www.verify-swift.com", 130, 36);
 
         // Amount
         doc.setFillColor(248, 250, 252); 
         doc.roundedRect(20, 50, 170, 35, 3, 3, 'F');
         doc.setTextColor(100, 116, 139); 
         doc.setFontSize(9); 
-        doc.text("TOTAL TRANSFER AMOUNT", 30, 62);
+        doc.text("TOTAL TRANSFER AMOUNT (SETTLED)", 30, 62);
         doc.setFontSize(22); 
         doc.setTextColor(11, 107, 255); 
-        doc.text("EUR 20,000,000.00", 30, 75);
+        doc.text(fullAmount, 30, 75);
 
         let y = 95;
         const addRow = (label, value) => {
@@ -450,7 +471,6 @@ doc.text("www.verify-swift.com", 130, 36);
                 doc.addPage();
                 y = 20;
             }
-            
             doc.setFont("helvetica", "bold"); 
             doc.setFontSize(9); 
             doc.setTextColor(100, 116, 139); 
@@ -464,10 +484,8 @@ doc.text("www.verify-swift.com", 130, 36);
             if (label === "UETR Code" || label === "Transaction Ref") {
                 doc.setFont("courier", "normal");
             }
-            
             const splitVal = doc.splitTextToSize(String(value), 120);
             doc.text(splitVal, xPos, y);
-            
             y += (splitVal.length * 5) + 8;
             doc.setDrawColor(226, 232, 240); 
             doc.line(20, y - 4, 190, y - 4); 
@@ -477,17 +495,17 @@ doc.text("www.verify-swift.com", 130, 36);
         addRow("UETR Code", uetr);
         addRow("Transaction Ref", txRef);
         addRow("Sent Date", sentDate);
-        addRow("Value Date", valDate);
+        addRow("Value Date", valDate + " (settled)");
         addRow("Ordering Party", orderBen);
-        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Sent");
-        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Processed");
-        addRow("Intermediary 2", "ODDO BHF SE (BHFBDEFFXXX) - Processing");
+        addRow("Sender Bank", "Banque Cramer & Cie SA (CRAMCHGGXXX) - Completed");
+        addRow("Intermediary 1", "Deutsche Bank (DEUTDEFFXXX) - Completed");
+        addRow("Intermediary 2", "ODDO BHF SE (BHFBDEFFXXX) - Completed");
         addRow("Beneficiary", benCust);
         addRow("Beneficiary IBAN", MASKED_BENEFICIARY_IBAN);
-        addRow("Receiving Bank", "Exim Bank (Djibouti) S.A. (EXTNDJJDXXX) - Pending");
+        addRow("Receiving Bank", "Exim Bank (Djibouti) S.A. (EXTNDJJDXXX) - Completed");
         addRow("Purpose", purpose);
         
-        // SWIFT Messages bölməsi
+        // SWIFT Messages bölməsi - MT900 və MT910 tam uyğun final mesajlar
         if (y > 220) {
             doc.addPage();
             y = 20;
@@ -496,39 +514,43 @@ doc.text("www.verify-swift.com", 130, 36);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(11, 107, 255);
-        doc.text("SWIFT Messages", 20, y);
+        doc.text("SWIFT Messages (Final Settlement)", 20, y);
         y += 10;
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text("MT900 (Confirmation of Debit):", 20, y);
+        doc.text("MT900 (Confirmation of Debit - Completed):", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
         doc.text(":32A:260326EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":72:/SETTLED/ " + purpose.substring(0, 45) + "...", 25, y);
         y += 8;
         
         doc.setFont("helvetica", "normal");
         doc.setTextColor(100, 116, 139);
-        doc.text("MT910 (Confirmation of Credit):", 20, y);
+        doc.text("MT910 (Confirmation of Credit - Beneficiary Credited):", 20, y);
         y += 5;
         doc.setFont("courier", "normal");
         doc.setTextColor(15, 23, 42);
         doc.text(":20:" + txRef, 25, y);
         y += 5;
         doc.text(":32A:260326EUR20000000,00", 25, y);
+        y += 5;
+        doc.text(":72:/REC/ Value credited to " + MASKED_BENEFICIARY_IBAN, 25, y);
         
         // Footer
         doc.setFont("helvetica", "italic");
         doc.setFontSize(8);
         doc.setTextColor(156, 163, 175);
-        doc.text("Generated by verify-swift.com • " + new Date().toLocaleString(), 20, 280);
-        doc.text("This is a computer-generated document. No signature is required.", 20, 285);
+        doc.text("Generated by verify-swift.com • Final confirmation - Completed " + new Date().toLocaleString(), 20, 280);
+        doc.text("This is a computer-generated settlement confirmation. No signature is required.", 20, 285);
 
-        doc.save('SWIFT_Receipt_' + txRef + '.pdf');
+        doc.save('SWIFT_Completed_Receipt_' + txRef + '.pdf');
     });
 
     // Escape düyməsi ilə modalı bağla
