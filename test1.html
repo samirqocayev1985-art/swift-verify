@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT966 - Account Balance Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .message-container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .pdf-toolbar {
+            background: #1e293b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 3px solid #ffcc00;
+        }
+
+        .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-title h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .pdf-badge {
+            background: #ffcc00;
+            color: #1e293b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pdf-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pdf-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pdf-btn:hover {
+            background: #ffcc00;
+            color: #1e293b;
+            border-color: #ffcc00;
+        }
+
+        .pdf-btn.print {
+            background: #ffcc00;
+            color: #1e293b;
+            border: none;
+        }
+
+        .message-status {
+            background: #f8fafc;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .message-ref {
+            font-family: monospace;
+            color: #475569;
+            font-size: 14px;
+            background: #e9eef2;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .message-date {
+            color: #64748b;
+            font-size: 14px;
+            margin-left: auto;
+        }
+
+        .swift-banner {
+            background: linear-gradient(135deg, #003366 0%, #1a4b7a 100%);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .swift-logo {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .swift-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .swift-badge {
+            background: #ffcc00;
+            color: #003366;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .balance-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f4ff 100%);
+            border-radius: 20px;
+            margin: 24px;
+            padding: 24px;
+            border: 1px solid #bae6fd;
+        }
+
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .balance-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a2540;
+        }
+
+        .balance-currency {
+            font-size: 14px;
+            color: #64748b;
+            margin-left: 5px;
+        }
+
+        .balance-status {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .message-header {
+            padding: 0 24px;
+        }
+
+        .bank-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .bank-info {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .bank-info-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 15px;
+        }
+
+        .bank-info-content p {
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .bank-label {
+            width: 100px;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .bank-value {
+            color: #0a2540;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .narrative-section {
+            background: #f9fafb;
+            border-left: 4px solid #2563eb;
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin: 20px 24px;
+        }
+
+        .narrative-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 12px;
+        }
+
+        .narrative-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #1e293b;
+        }
+
+        .signature-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 0 24px 24px 24px;
+        }
+
+        .officers-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .officer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2540;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .security-footer {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
+            padding: 24px;
+            border-top: 3px solid #ffcc00;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .pdf-toolbar { display: none; }
+            .status-dot { animation: none; }
+        }
+
+        @media (max-width: 900px) {
+            .bank-info-grid { grid-template-columns: 1fr; }
+            .officers-row { flex-direction: column; }
+            .message-date { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="pdf-toolbar">
+            <div class="pdf-title">
+                <h2>MT966 - ACCOUNT BALANCE REPORT</h2>
+                <span class="pdf-badge">OFFICIAL BALANCE CONFIRMATION</span>
+            </div>
+            <div class="pdf-buttons">
+                <button class="pdf-btn" onclick="window.print()">🖨️ Print / PDF</button>
+            </div>
+        </div>
+
+        <div class="message-status">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">BALANCE REPORT GENERATED</span>
+            </div>
+            <div class="message-ref">CRAMCHGGXXX/2026/MT966</div>
+            <div class="message-date">📅 March 23, 2026 - 14:30 CET</div>
+        </div>
+
+        <div class="swift-banner">
+            <div class="swift-logo">SWIFT</div>
+            <div class="swift-title">MT966 - ACCOUNT BALANCE REPORT</div>
+            <div class="swift-badge">BALANCE CONFIRMATION</div>
+        </div>
+
+        <div class="message-header">
+            <div class="bank-info-grid">
+                <div class="bank-info">
+                    <div class="bank-info-title">ACCOUNT HOLDER</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Account Name:</span><span class="bank-value">MMG Capital Limited</span></p>
+                        <p><span class="bank-label">Account No:</span><span class="bank-value">CH7208727128643152001</span></p>
+                        <p><span class="bank-label">Currency:</span><span class="bank-value">USD - United States Dollar</span></p>
+                        <p><span class="bank-label">Bank:</span><span class="bank-value">Banque Cramer & Cie SA (Zurich Branch)</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value">CRAMCHGGXXX</span></p>
+                    </div>
+                </div>
+                <div class="bank-info">
+                    <div class="bank-info-title">REPORT RECIPIENT</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">United Bank for Africa (UBA) PLC</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value">UNAFNGLAXXX</span></p>
+                        <p><span class="bank-label">Attention:</span><span class="bank-value">Corporate Banking Division</span></p>
+                        <p><span class="bank-label">Reference:</span><span class="bank-value">RCAS/29016976-S</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="balance-container">
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <div class="balance-label">CURRENT BALANCE</div>
+                    <div class="balance-amount">6,000,000.00<span class="balance-currency">USD</span></div>
+                    <div class="balance-status">✓ AVAILABLE</div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">FROZEN / BLOCKED AMOUNT</div>
+                    <div class="balance-amount">0.00<span class="balance-currency">USD</span></div>
+                    <div class="balance-status">NO BLOCKED FUNDS</div>
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">AVAILABLE BALANCE</div>
+                    <div class="balance-amount">6,000,000.00<span class="balance-currency">USD</span></div>
+                    <div class="balance-status">✓ FULLY AVAILABLE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="narrative-section">
+            <div class="narrative-title">📄 BALANCE CONFIRMATION DETAILS</div>
+            <div class="narrative-content">
+                <p>We, <strong>Banque Cramer & Cie SA (Zurich Branch)</strong>, hereby confirm that as of March 23, 2026, the account of <strong>MMG Capital Limited</strong> (Account No: CH7208727128643152001 USD) holds a <strong>current balance of USD 6,000,000.00 (Six Million United States Dollars)</strong>.</p>
+                <p>This balance represents freely available funds with no liens, encumbrances, or any form of restrictions. The funds are cleared and settled, ready for immediate utilization in accordance with the account holder's instructions.</p>
+                <p>This MT966 Balance Report is issued at the request of the account holder and is intended for the purpose of confirming the availability of funds in connection with Transaction Reference: <strong>RCAS/29016976-S</strong> (Purchase of 500 MT Copper Cathodes).</p>
+                <p>This report is authenticated and may be verified through standard SWIFT interbank channels.</p>
+            </div>
+        </div>
+
+        <div class="signature-box">
+            <div class="officers-row">
+                <div>
+                    <div class="officer-name">Mr. Marc-Henri Balma</div>
+                    <div style="color:#475569;">Chief Operating Officer</div>
+                </div>
+                <div>
+                    <div class="officer-name">Mr. Christoph Bangert</div>
+                    <div style="color:#475569;">Account Manager</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 30px; flex-wrap: wrap; border-top: 1px solid #ddd; padding-top: 15px;">
+                <div><span style="font-weight:600;">AUTH CODE:</span> CRAM-MT966-0326</div>
+                <div><span style="font-weight:600;">SWIFT SESSION:</span> SES-2026-03-23-1430</div>
+            </div>
+        </div>
+
+        <div class="security-footer">
+            <div>✓ SWIFT Authenticated • 256-bit Encrypted • Verified Balance Report</div>
+            <div style="margin-top: 10px;">MT966 - Official Bank Balance Confirmation • Issued by Banque Cramer & Cie SA</div>
+        </div>
+    </div>
+    <script>function downloadPDF() { window.print(); }</script>
+</body>
+</html>
