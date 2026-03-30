@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT996 - Message Acknowledgement (SWIFT Format)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .message-container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .pdf-toolbar {
+            background: #1e293b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 3px solid #ffcc00;
+        }
+
+        .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-title h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .pdf-badge {
+            background: #ffcc00;
+            color: #1e293b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pdf-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pdf-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pdf-btn:hover {
+            background: #ffcc00;
+            color: #1e293b;
+            border-color: #ffcc00;
+        }
+
+        .pdf-btn.print {
+            background: #ffcc00;
+            color: #1e293b;
+            border: none;
+        }
+
+        .message-status {
+            background: #f8fafc;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .message-ref {
+            font-family: monospace;
+            color: #475569;
+            font-size: 14px;
+            background: #e9eef2;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .message-date {
+            color: #64748b;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+
+        .swift-banner {
+            background: linear-gradient(135deg, #006633 0%, #008844 100%);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .swift-logo {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .swift-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .swift-badge {
+            background: #ffcc00;
+            color: #006633;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .message-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .bank-info {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .bank-info-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .bank-info-content p {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .bank-label {
+            width: 100px;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .bank-value {
+            color: #0a2540;
+            font-weight: 500;
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .swift-code {
+            font-family: monospace;
+            background: #e9eef2;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .swift-fields {
+            background: #f1f5f9;
+            border-radius: 16px;
+            margin: 0 24px 24px 24px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .field-tag {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #075985;
+            background: #e0f2fe;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            min-width: 45px;
+        }
+
+        .field-row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .field-row:last-child {
+            border-bottom: none;
+        }
+
+        .field-content {
+            font-family: monospace;
+            font-size: 13px;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .reference-box {
+            background: #fef9e6;
+            border-left: 4px solid #ffcc00;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin: 0 24px 24px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .ref-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ref-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .ref-value {
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #664d03;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+        }
+
+        .message-text-container {
+            padding: 0 24px 24px 24px;
+        }
+
+        .message-text {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px;
+            line-height: 1.8;
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+
+        .narrative-section {
+            background: #f9fafb;
+            border-left: 4px solid #006633;
+            border-radius: 12px;
+            padding: 20px 28px;
+        }
+        
+        .narrative-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #006633;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .narrative-content {
+            font-size: 14px;
+            color: #1e293b;
+            line-height: 1.8;
+        }
+        
+        .narrative-content p {
+            margin-bottom: 16px;
+        }
+        
+        .narrative-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .signature-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .officers-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            margin-bottom: 25px;
+        }
+
+        .officer-card {
+            flex: 1 1 250px;
+        }
+
+        .officer-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0a2540;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+        }
+
+        .pins-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            border-top: 1px solid #d1d5db;
+            padding-top: 20px;
+        }
+
+        .pin-card {
+            flex: 1 1 250px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .pin-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+        }
+
+        .pin-value {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #075985;
+            background: #e6f0f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+        
+        .date-field {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .security-footer {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
+            padding: 20px;
+            border-top: 3px solid #ffcc00;
+            text-align: center;
+        }
+
+        .security-note {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .pdf-toolbar { display: none; }
+            .status-dot { animation: none; }
+        }
+
+        @media (max-width: 1000px) {
+            .header-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .header-grid { grid-template-columns: 1fr; }
+            .officers-row, .pins-row { flex-direction: column; gap: 20px; }
+            .message-date { margin-left: 0; }
+            .swift-badge { margin-left: 0; }
+            .reference-box { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="pdf-toolbar">
+            <div class="pdf-title">
+                <h2>MT996 - MESSAGE ACKNOWLEDGEMENT</h2>
+                <span class="pdf-badge">SWIFT FIELD STRUCTURE</span>
+            </div>
+            <div class="pdf-buttons">
+                <button class="pdf-btn" onclick="window.print()">🖨️ Print / PDF</button>
+                <button class="pdf-btn print" onclick="downloadPDF()">📥 Download PDF</button>
+            </div>
+        </div>
+
+        <div class="message-status">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">MESSAGE ACKNOWLEDGED</span>
+            </div>
+            <div class="message-ref">UNAFNGLAXXX/2026/MT996</div>
+            <div class="message-date">📅 March 30, 2026 - 14:05 PM WAT</div>
+        </div>
+
+        <div class="swift-banner">
+            <div class="swift-logo">SWIFT</div>
+            <div class="swift-title">MT996 - MESSAGE ACKNOWLEDGEMENT</div>
+            <div class="swift-badge">ACKNOWLEDGEMENT OF RECEIPT</div>
+        </div>
+
+        <!-- SWIFT FIELD TAGS -->
+        <div class="swift-fields">
+            <div class="field-row">
+                <span class="field-tag">20:</span>
+                <span class="field-content">UBA/ACK/MT996/03302026-001</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Sender's Reference</span>
+            </div>
+            <div class="field-row">
+                <span class="field-tag">21:</span>
+                <span class="field-content">CRAMCHGGXXX/2026/MT199</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Related Reference</span>
+            </div>
+            <div class="field-row">
+                <span class="field-tag">20A:</span>
+                <span class="field-content">2026-03-30-2020A76</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Transaction Reference / Session</span>
+            </div>
+            <div class="field-row">
+                <span class="field-tag">21A:</span>
+                <span class="field-content">RCAS/29016976-S</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Transaction Code / Output Ref</span>
+            </div>
+            <div class="field-row">
+                <span class="field-tag">79:</span>
+                <span class="field-content">Narrative / Free Format Text</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Message Content</span>
+            </div>
+        </div>
+
+        <div class="message-header">
+            <div class="header-grid">
+                <div class="bank-info">
+                    <div class="bank-info-title">SENDER BANK</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">United Bank for Africa (UBA) PLC</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">UNAFNGLAXXX</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">57 Marina, Lagos Island, Lagos, Nigeria</span></p>
+                    </div>
+                </div>
+
+                <div class="bank-info">
+                    <div class="bank-info-title">CORRESPONDENT BANK</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Deutsche Bank AG</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">DEUTDEFFXXX</span></p>
+                        <p><span class="bank-label">Location:</span><span class="bank-value">Frankfurt am Main, Germany</span></p>
+                        <p><span class="bank-label">Role:</span><span class="bank-value">Intermediary / Correspondent</span></p>
+                    </div>
+                </div>
+
+                <div class="bank-info">
+                    <div class="bank-info-title">RECEIVER BANK</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Banque Cramer & Cie SA (Zurich Branch)</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">CRAMCHGGXXX</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">Sihlstrasee 24, CH-8021 Zurich, Switzerland</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reference-box">
+            <div class="ref-item">
+                <span class="ref-label">20: SENDER'S REF:</span>
+                <span class="ref-value">UBA/ACK/MT996/03302026-001</span>
+            </div>
+            <div class="ref-item">
+                <span class="ref-label">21: RELATED REF:</span>
+                <span class="ref-value">CRAMCHGGXXX/2026/MT199</span>
+            </div>
+            <div class="ref-item">
+                <span class="ref-label">20A: SESSION:</span>
+                <span class="ref-value">2026-03-30-2020A76</span>
+            </div>
+            <div class="ref-item">
+                <span class="ref-label">21A: TRANSACTION:</span>
+                <span class="ref-value">RCAS/29016976-S</span>
+            </div>
+        </div>
+
+        <div class="message-text-container">
+            <div class="message-text">
+                <div class="narrative-section">
+                    <div class="narrative-title">📄 79: NARRATIVE / MESSAGE CONTENT</div>
+                    <div class="narrative-content">
+                        <p>United Bank for Africa (UBA) Plc, Lagos, Nigeria, hereby confirms receipt of your MT199 Free Format Message (Ref: CRAMCHGGXXX/2026/MT199) dated March 23, 2026, with SWIFT output reference RCAS/29016976-S.</p>
+                        
+                        <p>Our records confirm that the beneficiary, Stepsun Ventures Nigeria Limited (Account No: 3002722884 – USD), is a duly registered corporate entity in good standing with the Corporate Affairs Commission of Nigeria (CAC Registration No: RC 1689342). The beneficiary's account is active and compliant with all applicable KYC/AML regulations.</p>
+                        
+                        <p>Following consultation with our client, Stepsun Ventures Nigeria Limited, we will revert with detailed information via SWIFT in due course.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <div class="date-field">
+                    <span class="date-label">DATE ACKNOWLEDGED:</span>
+                    <span class="date-value">MARCH 30, 2026</span>
+                </div>
+                
+                <div class="officers-row">
+                    <div class="officer-card">
+                        <div class="officer-name">Mr. Oluwaseun Adebayo</div>
+                        <div style="color:#475569; font-size:13px;">Head, Corporate Banking Division</div>
+                    </div>
+                    <div class="officer-card">
+                        <div class="officer-name">Mrs. Fatima Bello</div>
+                        <div style="color:#475569; font-size:13px;">Senior Relationship Manager</div>
+                    </div>
+                </div>
+                
+                <div class="pins-row">
+                    <div class="pin-card">
+                        <span class="pin-label">AUTH PIN:</span>
+                        <span class="pin-value">UBA-LOS-ACK-996</span>
+                    </div>
+                    <div class="pin-card">
+                        <span class="pin-label">20A SESSION:</span>
+                        <span class="pin-value">2020A76</span>
+                    </div>
+                    <div class="pin-card">
+                        <span class="pin-label">SWIFT AUTH:</span>
+                        <span class="pin-value">SW-2020A76-UB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-footer">
+            <div class="security-note">
+                This MT996 message is SWIFT authenticated • Digital Signature Verified • Field 20A: 2026-03-30-2020A76 • Payment Corridor: UNAFNGLAXXX → DEUTDEFFXXX → CRAMCHGGXXX • 256-bit SSL Encrypted
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
