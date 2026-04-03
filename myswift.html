@@ -122,7 +122,7 @@
 
 <script>
 (function() {
-    // 1. SILENT CONSOLE PROTECTION (Your original logic)
+    // 1. SILENT CONSOLE PROTECTION
     const noop = () => {};
     const consoleMethods = ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table'];
     const silencedConsole = {};
@@ -132,8 +132,7 @@
     window.addEventListener('error', e => { e.preventDefault(); return true; }, true);
     window.addEventListener('unhandledrejection', e => { e.preventDefault(); return true; }, true);
 
-    // 2. ANTI-INSPECT PROTECTION (Your original logic)
-    document.addEventListener('contextmenu', e => e.preventDefault());
+    // 2. ANTI-INSPECT PROTECTION (RIGHT CLICK IS NOW ACTIVE)
     document.addEventListener('keydown', e => {
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
             e.preventDefault();
@@ -229,11 +228,6 @@
             err.style.display = 'block';
         }
     };
-
-    // User Select Block
-    const style = document.createElement('style');
-    style.textContent = 'body { user-select: none; -webkit-user-select: none; }';
-    document.head.appendChild(style);
 })();
 </script>
 </body>
