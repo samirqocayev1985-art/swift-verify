@@ -430,7 +430,6 @@
             border: 1px solid #e2e8f0;
         }
         
-        /* SECURITY FOOTER CUSTOMIZATION */
         .security-footer {
             background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
             padding: 30px 20px;
@@ -445,13 +444,13 @@
             gap: 30px;
             margin-bottom: 20px;
             flex-wrap: wrap;
-            /* Rəngləri bərpa etmək üçün filter və opacity silindi */
         }
 
         .security-logos img {
-            height: 35px; /* Loqoların daha aydın görünməsi üçün ölçünü bir az böyütdüm */
+            height: 35px;
             object-fit: contain;
         }
+
         .security-note {
             color: #94a3b8;
             font-size: 11px;
@@ -464,7 +463,6 @@
             body { background: white; padding: 0; }
             .pdf-toolbar { display: none; }
             .status-dot { animation: none; }
-            .security-logos { filter: none; opacity: 1; }
         }
 
         @media (max-width: 1000px) {
@@ -560,9 +558,9 @@
                 <div class="bank-info">
                     <div class="bank-info-title">RECEIVER BANK</div>
                     <div class="bank-info-content">
-                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Banque Cramer & Cie SA (Zurich Branch)</span></p>
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Banque Cramer & Cie SA (Zurich)</span></p>
                         <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">CRAMCHGGXXX</span></p>
-                        <p><span class="bank-label">Address:</span><span class="bank-value">Sihlstrasse 24, CH-8021 Zurich, Switzerland</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">Sihlstrasse 24, CH-8021 Zurich</span></p>
                     </div>
                 </div>
             </div>
@@ -592,10 +590,9 @@
                 <div class="narrative-section">
                     <div class="narrative-title">📄 79: NARRATIVE / MESSAGE CONTENT</div>
                     <div class="narrative-content">
-                        <p>In response to your request, we hereby confirm that the transfer from Banque Cramer in the amount of 20.000.000,00, dated 23.03.2026, with reference DEU17112212C332-230326, to our client’s account, Client China Africa Horizon Investment & Development Group Sarl, Account No. DJ100001173985678944183, has been received.
-
-Following the completion of our bank’s internal verification procedures by our Internal Compliance Department, the above-mentioned transfer will be made available to our client within the next 72 hours.</p>
-                </div>
+                        <p>In response to your request, we hereby confirm that the transfer from Banque Cramer in the amount of 20,000,000.00 EUR, dated 23.03.2026, with reference DEU17112212C332-230326, to our client’s account, China Africa Horizon Investment & Development Group Sarl (Acc No. DJ100001173985678944183), has been received.</p>
+                        <p>Following the completion of our bank’s internal verification procedures by our Internal Compliance Department, the above-mentioned transfer will be made available to our client within the next 72 hours.</p>
+                    </div>
                 </div>
             </div>
 
@@ -608,13 +605,13 @@ Following the completion of our bank’s internal verification procedures by our
                 <div class="officers-row">
                     <div class="officer-card">
                         <div class="officer-name">Mrs. Jacky Kayiteshonga</div>
-                        <div style="color:#475569; font-size:13px;">Managing Director & CEO</div>
+                        <div style="color:#475569; font-size:13px;">Chief Executive Officer (CEO)</div>
                         <div style="color:#64748b; font-size:11px; margin-top:4px;">Exim Bank (Djibouti) S.A.</div>
                     </div>
                     <div class="officer-card">
                         <div class="officer-name">Mr. Jaffari Matundu</div>
-                        <div style="color:#475569; font-size:13px;">Chief Executive Officer</div>
-                        <div style="color:#64748b; font-size:11px; margin-top:4px;">Exim Bank (Djibouti) S.A.</div>
+                        <div style="color:#475569; font-size:13px;">Group Chief Executive Officer</div>
+                        <div style="color:#64748b; font-size:11px; margin-top:4px;">Exim Bank Group</div>
                     </div>
                 </div>
                 
@@ -637,9 +634,9 @@ Following the completion of our bank’s internal verification procedures by our
 
         <div class="security-footer">
             <div class="security-logos">
-                <img src="https://static.vecteezy.com/system/resources/thumbnails/020/975/570/small/visa-logo-visa-icon-transparent-free-png.png">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/020/975/570/small/visa-logo-visa-icon-transparent-free-png.png" alt="Visa">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard">
-                <img src="https://spangenberggroep.nl/wp-content/uploads/2023/09/pci-dss-1.png.webp">
+                <img src="https://spangenberggroep.nl/wp-content/uploads/2023/09/pci-dss-1.png.webp" alt="PCI-DSS">
             </div>
             <div class="security-note">
                 This MT996 message is SWIFT authenticated • Digital Signature Verified • Field 20A: 2026-03-23-EXTN-DJ-2020A76 • Payment Corridor: EXTNDJJDXXX → DEUTDEFFXXX → CRAMCHGGXXX • 256-bit SSL Encrypted • Verified by VISA & Mastercard Identity Check.
