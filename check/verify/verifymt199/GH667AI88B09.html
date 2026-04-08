@@ -60,7 +60,6 @@
         .security-footer { background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%); padding: 20px; border-top: 3px solid #ffcc00; text-align: center; }
         .security-note { color: #94a3b8; font-size: 11px; }
         @media print { body { background: white; padding: 0; } .pdf-toolbar { display: none; } .status-dot { animation: none; } }
-        @media (max-width: 768px) { .header-grid { grid-template-columns: 1fr; } .officers-row, .pins-row { flex-direction: column; } .message-date { margin-left: 0; } }
     </style>
 </head>
 <body>
@@ -68,7 +67,7 @@
         <div class="pdf-toolbar">
             <div class="pdf-title">
                 <h2>MT996 - MESSAGE ACKNOWLEDGEMENT</h2>
-                <span class="pdf-badge">OFFICIAL SWIFT NOTIFICATION</span>
+                <span class="pdf-badge">SWIFT FIELD STRUCTURE</span>
             </div>
             <div class="pdf-buttons">
                 <button class="pdf-btn" onclick="window.print()">🖨️ Print / PDF</button>
@@ -79,7 +78,7 @@
         <div class="message-status">
             <div class="status-indicator">
                 <span class="status-dot"></span>
-                <span class="status-text">CONFIRMED & ACKNOWLEDGED</span>
+                <span class="status-text">ACKNOWLEDGEMENT CONFIRMED</span>
             </div>
             <div class="message-ref">EXIM/DJ/ACK/23032026-001</div>
             <div class="message-date">📅 April 08, 2026 - 14:05 PM EAT</div>
@@ -87,8 +86,8 @@
 
         <div class="swift-banner">
             <div class="swift-logo">SWIFT</div>
-            <div class="swift-title">MT996 - ACKNOWLEDGEMENT OF RECEIPT</div>
-            <div class="swift-badge">BANK CONFIRMATION</div>
+            <div class="swift-title">MT996 - EXIM BANK (DJIBOUTI) S.A.</div>
+            <div class="swift-badge">OFFICIAL RECEIPT</div>
         </div>
 
         <div class="swift-fields">
@@ -104,37 +103,37 @@
             </div>
             <div class="field-row">
                 <span class="field-tag">20A:</span>
-                <span class="field-content">2026-03-23-EXIM776</span>
-                <span style="color:#64748b; font-size:11px; margin-left:auto;">Session Identifier</span>
+                <span class="field-content">2026-03-23-EXTN-DJ-001</span>
+                <span style="color:#64748b; font-size:11px; margin-left:auto;">Session / Transaction ID</span>
             </div>
         </div>
 
         <div class="message-header">
             <div class="header-grid">
                 <div class="bank-info">
-                    <div class="bank-info-title">SENDER (CONFIRMING BANK)</div>
+                    <div class="bank-info-title">SENDER BANK</div>
                     <div class="bank-info-content">
-                        <p><span class="bank-label">Bank:</span><span class="bank-value">Exim Bank (Djibouti) S.A.</span></p>
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Exim Bank (Djibouti) S.A.</span></p>
                         <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">EXTNDJJDXXX</span></p>
                         <p><span class="bank-label">Address:</span><span class="bank-value">13 Place Lagarde, Djibouti</span></p>
                     </div>
                 </div>
 
                 <div class="bank-info">
-                    <div class="bank-info-title">INTERMEDIARY BANK</div>
+                    <div class="bank-info-title">INTERMEDIARY</div>
                     <div class="bank-info-content">
-                        <p><span class="bank-label">Bank:</span><span class="bank-value">Deutsche Bank AG</span></p>
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Deutsche Bank AG</span></p>
                         <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">DEUTDEFFXXX</span></p>
                         <p><span class="bank-label">Location:</span><span class="bank-value">Frankfurt, Germany</span></p>
                     </div>
                 </div>
 
                 <div class="bank-info">
-                    <div class="bank-info-title">RECEIVER BANK</div>
+                    <div class="bank-info-title">RECEIVER</div>
                     <div class="bank-info-content">
-                        <p><span class="bank-label">Bank:</span><span class="bank-value">Banque Cramer & Cie SA</span></p>
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Banque Cramer & Cie SA</span></p>
                         <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">CRAMCHGGXXX</span></p>
-                        <p><span class="bank-label">Location:</span><span class="bank-value">Zurich, Switzerland</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">Zurich, Switzerland</span></p>
                     </div>
                 </div>
             </div>
@@ -145,23 +144,23 @@
                 <div class="narrative-section">
                     <div class="narrative-title">📄 79: NARRATIVE / MESSAGE CONTENT</div>
                     <div class="narrative-content">
-                        <p>We hereby confirm the receipt of the incoming transfer from <strong>Banque Cramer & Cie SA</strong> for the total amount of <strong>EUR 20.000.000,00</strong>, executed on 23.03.2026, under transaction reference DEU17112212C332-230326.</p>
-                        <p>The funds are designated for our corporate client: <strong>China Africa Horizon Investment & Development Group Sarl</strong> (Account No: DJ100001173985678944183).</p>
-                        <p>Our Compliance and Verification Department is finalizing the standard internal checks. The funds will be credited and made available for the client's use within a maximum period of 72 banking hours from this acknowledgement.</p>
+                        <p>We hereby confirm the receipt of the incoming transfer from <strong>Banque Cramer & Cie SA</strong> in the amount of <strong>EUR 20.000.000,00</strong>, dated 23.03.2026, reference DEU17112212C332-230326.</p>
+                        <p>Beneficiary: <strong>China Africa Horizon Investment & Development Group Sarl</strong><br>Account Number: <strong>DJ100001173985678944183</strong></p>
+                        <p>The funds are currently undergoing internal compliance verification. Availability for the client is expected within 72 hours upon final clearance.</p>
                     </div>
                 </div>
             </div>
 
             <div class="signature-box">
                 <div class="date-field">
-                    <span class="date-label">OFFICIAL ACKNOWLEDGEMENT DATE:</span>
+                    <span class="date-label">SWIFT AUTH DATE:</span>
                     <span class="date-value">MARCH 23, 2026</span>
                 </div>
                 
                 <div class="officers-row">
                     <div class="officer-card">
                         <div class="officer-name">Mr. Sriram Venkateswaran</div>
-                        <div style="color:#475569; font-size:13px;">General Manager / CEO</div>
+                        <div style="color:#475569; font-size:13px;">General Manager & CEO</div>
                         <div style="color:#64748b; font-size:11px; margin-top:4px;">Exim Bank (Djibouti) S.A.</div>
                     </div>
                     <div class="officer-card">
@@ -173,16 +172,16 @@
                 
                 <div class="pins-row">
                     <div class="pin-card">
-                        <span class="pin-label">EXIM AUTH:</span>
-                        <span class="pin-value">EXIM-DJ-8892-ACK</span>
+                        <span class="pin-label">AUTH PIN:</span>
+                        <span class="pin-value">EXTN-DJ-ACK-2026</span>
                     </div>
                     <div class="pin-card">
-                        <span class="pin-label">SESSION:</span>
-                        <span class="pin-value">EXIM776</span>
+                        <span class="pin-label">SWIFT KEY:</span>
+                        <span class="pin-value">DJ-230326-EXTN</span>
                     </div>
                     <div class="pin-card">
-                        <span class="pin-label">DIGITAL SIGN:</span>
-                        <span class="pin-value">EXTN-AUTH-2026</span>
+                        <span class="pin-label">DIGITAL ID:</span>
+                        <span class="pin-value">EXIM-B-DJ-996</span>
                     </div>
                 </div>
             </div>
@@ -190,7 +189,7 @@
 
         <div class="security-footer">
             <div class="security-note">
-                Exim Bank (Djibouti) S.A. Official Correspondence • Authenticated via SWIFT Network • Payment Corridor: EXTNDJJDXXX → DEUTDEFFXXX → CRAMCHGGXXX • Verified by Internal Audit
+                Authenticated MT996 Message • Exim Bank (Djibouti) S.A. Security Protocol • Path: EXTNDJJDXXX → DEUTDEFFXXX → CRAMCHGGXXX • Secured via SWIFT Alliance Gateway
             </div>
         </div>
     </div>
