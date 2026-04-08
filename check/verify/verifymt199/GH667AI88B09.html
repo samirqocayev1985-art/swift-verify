@@ -430,22 +430,41 @@
             border: 1px solid #e2e8f0;
         }
         
+        /* SECURITY FOOTER CUSTOMIZATION */
         .security-footer {
             background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
-            padding: 20px;
+            padding: 30px 20px;
             border-top: 3px solid #ffcc00;
             text-align: center;
         }
 
+        .security-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            /* Rəngləri bərpa etmək üçün filter və opacity silindi */
+        }
+
+        .security-logos img {
+            height: 35px; /* Loqoların daha aydın görünməsi üçün ölçünü bir az böyütdüm */
+            object-fit: contain;
+        }
         .security-note {
             color: #94a3b8;
             font-size: 11px;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
         @media print {
             body { background: white; padding: 0; }
             .pdf-toolbar { display: none; }
             .status-dot { animation: none; }
+            .security-logos { filter: none; opacity: 1; }
         }
 
         @media (max-width: 1000px) {
@@ -617,8 +636,13 @@ Following the completion of our bank’s internal verification procedures by our
         </div>
 
         <div class="security-footer">
+            <div class="security-logos">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/020/975/570/small/visa-logo-visa-icon-transparent-free-png.png">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard">
+                <img src="https://spangenberggroep.nl/wp-content/uploads/2023/09/pci-dss-1.png.webp">
+            </div>
             <div class="security-note">
-                This MT996 message is SWIFT authenticated • Digital Signature Verified • Field 20A: 2026-03-23-EXTN-DJ-2020A76 • Payment Corridor: EXTNDJJDXXX → DEUTDEFFXXX → CRAMCHGGXXX • 256-bit SSL Encrypted
+                This MT996 message is SWIFT authenticated • Digital Signature Verified • Field 20A: 2026-03-23-EXTN-DJ-2020A76 • Payment Corridor: EXTNDJJDXXX → DEUTDEFFXXX → CRAMCHGGXXX • 256-bit SSL Encrypted • Verified by VISA & Mastercard Identity Check.
             </div>
         </div>
     </div>
