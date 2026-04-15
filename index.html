@@ -8273,9 +8273,9 @@ Discover our open positions now.</p></div>
     <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
         <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" 
-               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; opacity: 1;">
+               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
             <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
-            Brauzeriniz video dəstəkləmir.
+            Your browser does not support the video tag.
         </video>
 
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.1); z-index: 2;"></div>
@@ -8299,23 +8299,52 @@ Discover our open positions now.</p></div>
 
 <script>
     const v = document.getElementById('heroVideo');
-    const startAt = 18;
 
-    // Video yüklənən kimi saniyəni dəyiş
-    v.currentTime = startAt;
+    // Custom time segments for the background video
+    const parts = [
+        { start: 18, end: 22 }, // Segment 1
+        { start: 31, end: 40 }, // Segment 2
+        { start: 49, end: 60 }, // Segment 3
+        { start: 62, end: 66 }  // Segment 4
+    ];
+
+    // Initial jump to the start of the first segment
+    v.currentTime = parts[0].start;
 
     v.addEventListener('timeupdate', function() {
-        if (v.currentTime < startAt) {
-            v.currentTime = startAt;
+        const cur = v.currentTime;
+
+        // Transition from Segment 1 to Segment 2
+        if (cur >= parts[0].end && cur < parts[1].start) {
+            v.currentTime = parts[1].start;
+        } 
+        // Transition from Segment 2 to Segment 3
+        else if (cur >= parts[1].end && cur < parts[2].start) {
+            v.currentTime = parts[2].start;
+        } 
+        // Transition from Segment 3 to Segment 4
+        else if (cur >= parts[2].end && cur < parts[3].start) {
+            v.currentTime = parts[3].start;
+        } 
+        // Loop: Return to the beginning of Segment 1 after Segment 4 ends
+        else if (cur >= parts[3].end) {
+            v.currentTime = parts[0].start;
+        }
+
+        // Safety Check: Ensure video doesn't drift before the first segment
+        if (cur < parts[0].start && !v.seeking) {
+            v.currentTime = parts[0].start;
         }
     });
 
+    // Handle browser-led loop or replay to ensure it restarts at the correct timestamp
     v.addEventListener('play', function() {
-        if (v.currentTime < startAt) {
-            v.currentTime = startAt;
+        if (v.currentTime < parts[0].start) {
+            v.currentTime = parts[0].start;
         }
     });
 </script>
+  
     <div class="col-12 col-lg-4 mt-30 mt-lg-0 d-flex align-items-center justify-content-lg-end">
         <a href="https://www2.swift.com/go/book/book200769" 
            class="btn btn-primary-light btn-lg btn-icon btn-icon--left" 
