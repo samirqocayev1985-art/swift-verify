@@ -8268,10 +8268,12 @@ Discover our open positions now.</p></div>
                               
             
 
+
 <div class="break-free">
     <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
-        <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
+        <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" 
+               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0; transition: opacity 0.5s;">
             <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
             Brauzeriniz video dəstəkləmir.
         </video>
@@ -8297,28 +8299,29 @@ Discover our open positions now.</p></div>
 
 <script>
     const v = document.getElementById('heroVideo');
-    const startAt = 23; // Başlamalı olduğu saniyə
+    const startAt = 18;
 
-    // ƏN ETİBARLI ÜSUL: Video oynamağa başlayanda yoxla
-    v.onplaying = function() {
+    // Video məlumatları yüklənən kimi saniyəni dəyişməyə çalış
+    v.currentTime = startAt;
+
+    // Əsas fənd: Video oynamağa başlayanda saniyəni yoxla
+    v.addEventListener('timeupdate', function() {
+        if (v.currentTime < startAt) {
+            v.currentTime = startAt;
+        } else {
+            // Video artıq 23-cü saniyəyə çatdısa, onu göstər
+            v.style.opacity = '1';
+        }
+    });
+
+    // Loop (döngü) baş verəndə dərhal geri at
+    v.addEventListener('play', function() {
         if (v.currentTime < startAt) {
             v.currentTime = startAt;
         }
-    };
-
-    // Video bitib başa qayıdanda (loop) təkrar saniyəni qur
-    v.onseeked = function() {
-        if (v.currentTime < 1) {
-            v.currentTime = startAt;
-        }
-    };
-
-    // Bəzi hallarda metadata gecikir, bu zəmanət verir
-    v.addEventListener('loadeddata', function() {
-        v.currentTime = startAt;
     });
 </script>
-  
+
 <!-- Məsafə üçün boşluq əlavə edirəm -->
 <div style="height: 40px;"></div>
 
