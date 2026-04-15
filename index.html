@@ -8268,7 +8268,6 @@ Discover our open positions now.</p></div>
                               
             
 
-
 <div class="break-free">
     <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
@@ -8298,22 +8297,28 @@ Discover our open positions now.</p></div>
 
 <script>
     const v = document.getElementById('heroVideo');
-    const startSecond = 23; // Buranı istədiyin saniyəyə (məs. 30) dəyişə bilərsən
+    const startAt = 23; // Başlamalı olduğu saniyə
 
-    // Video oynamağa başlayanda saniyəni təyin et
-    v.addEventListener('canplay', function() {
-        if (v.currentTime < startSecond) {
-            v.currentTime = startSecond;
+    // ƏN ETİBARLI ÜSUL: Video oynamağa başlayanda yoxla
+    v.onplaying = function() {
+        if (v.currentTime < startAt) {
+            v.currentTime = startAt;
         }
-    });
+    };
 
-    // Loop zamanı 0-a qayıtmasın deyə nəzarət (Daha etibarlı yol)
-    v.addEventListener('timeupdate', function() {
-        if (v.loop && v.currentTime < 1) { // Əgər video başa qayıdıbsa (0 saniyəyə yaxındırsa)
-            v.currentTime = startSecond;
+    // Video bitib başa qayıdanda (loop) təkrar saniyəni qur
+    v.onseeked = function() {
+        if (v.currentTime < 1) {
+            v.currentTime = startAt;
         }
+    };
+
+    // Bəzi hallarda metadata gecikir, bu zəmanət verir
+    v.addEventListener('loadeddata', function() {
+        v.currentTime = startAt;
     });
 </script>
+  
 <!-- Məsafə üçün boşluq əlavə edirəm -->
 <div style="height: 40px;"></div>
 
