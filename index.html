@@ -8269,13 +8269,13 @@ Discover our open positions now.</p></div>
             
 
 
-<div class="break-free" style="position: relative; width: 100%; height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
-    <div class="position-relative w-100 h-100">
+<div class="break-free">
+    <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
-        <video id="heroVideo" muted autoplay loop playsinline class="w-100" 
-               style="height: 115%; object-fit: cover; object-position: top; position: absolute; top: 0; left: 0; z-index: 1;">
+        <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" 
+               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
             <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
-            Your browser does not support the video tag.
+            Brauzeriniz video dəstəkləmir.
         </video>
 
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.1); z-index: 2;"></div>
@@ -8286,69 +8286,79 @@ Discover our open positions now.</p></div>
                     <h1 class="text-white display-4 font-weight-bold" style="text-shadow: 4px 4px 15px rgba(0,0,0,0.8);">
                         Shaping the future of finance, together.
                     </h1>
-                    <div class="d-flex flex-wrap gap-3 mt-4">
-                        <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
-                           class="btn btn-primary btn-lg px-5 py-3" 
-                           target="_blank">
-                            Watch now
-                        </a>
-                        
-                        <a href="https://www2.swift.com/go/book/book200769" 
-                           class="btn btn-outline-light btn-lg d-flex align-items-center" 
-                           target="_blank" rel="noopener noreferrer">
-                            <svg class="icon mr-2" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 116 0v2H7V7z"></path>
-                            </svg>
-                            <span>Read more</span>
-                        </a>
-                    </div>
+                    <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
+                       class="btn btn-primary btn-lg mt-4 px-5 py-3" 
+                       target="_blank">
+                        Watch now
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div style="clear: both;"></div>
-
 <script>
     const v = document.getElementById('heroVideo');
 
+    // Sənin təyin etdiyin vaxt aralıqları
     const parts = [
-        { start: 18, end: 22 }, 
-        { start: 31, end: 40 }, 
-        { start: 49, end: 60 }, 
-        { start: 62, end: 66 }
+        { start: 18, end: 22 }, // Hissə 1
+        { start: 31, end: 40 }, // Hissə 2
+        { start: 49, end: 60 }, // Hissə 3
+        { start: 62, end: 66 }  // Hissə 4
     ];
 
+    // İlk açılışda 18-ci saniyəyə get
     v.currentTime = parts[0].start;
 
     v.addEventListener('timeupdate', function() {
         const cur = v.currentTime;
+
+        // 1-ci hissədən 2-ciyə keçid
         if (cur >= parts[0].end && cur < parts[1].start) {
             v.currentTime = parts[1].start;
         } 
+        // 2-ci hissədən 3-cüyə keçid
         else if (cur >= parts[1].end && cur < parts[2].start) {
             v.currentTime = parts[2].start;
         } 
+        // 3-cü hissədən 4-cüyə keçid
         else if (cur >= parts[2].end && cur < parts[3].start) {
             v.currentTime = parts[3].start;
         } 
+        // 4-cü hissə bitəndə başa (Hissə 1-ə) qayıt - LOOP
         else if (cur >= parts[3].end) {
             v.currentTime = parts[0].start;
         }
 
+        // Təhlükəsizlik: Video kənara çıxarsa (məs. əvvələ qayıdarsa)
         if (cur < parts[0].start && !v.seeking) {
             v.currentTime = parts[0].start;
         }
     });
 
+    // Brauzer loop edərkən 0-a düşməməsi üçün əlavə nəzarət
     v.addEventListener('play', function() {
         if (v.currentTime < parts[0].start) {
             v.currentTime = parts[0].start;
         }
     });
 </script>
-  
+
+<!-- Məsafə üçün boşluq əlavə edirəm -->
+<div style="height: 40px;"></div>
+
+<div class="cta-block row no-gutters p-40 py-lg-64 py-xl-70 position-relative px-lg-100">
+    <div class="d-flex flex-column cta-box__body col-12 col-lg-8">
+        <h3 class="cta-box__title">
+            End of ISO 20022 coexistence
+        </h3>
+        <div class="cta-box__body">
+            <div class="text-long">
+                <p>The ISO 20022 coexistence period for cross-border payments ended on 22 November 2025. Consult the ISO 20022 support page for updates and for troubleshooting information.</p>
+            </div>
+        </div>
+    </div>
     <div class="col-12 col-lg-4 mt-30 mt-lg-0 d-flex align-items-center justify-content-lg-end">
         <a href="https://www2.swift.com/go/book/book200769" 
            class="btn btn-primary-light btn-lg btn-icon btn-icon--left" 
