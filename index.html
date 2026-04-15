@@ -8269,11 +8269,11 @@ Discover our open positions now.</p></div>
             
 
 
-<div class="break-free">
-    <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
+<div class="break-free" style="position: relative; width: 100%; height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
+    <div class="position-relative w-100 h-100">
         
-        <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" 
-               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
+        <video id="heroVideo" muted autoplay loop playsinline class="w-100" 
+               style="height: 115%; object-fit: cover; object-position: top; position: absolute; top: 0; left: 0; z-index: 1;">
             <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -8286,58 +8286,62 @@ Discover our open positions now.</p></div>
                     <h1 class="text-white display-4 font-weight-bold" style="text-shadow: 4px 4px 15px rgba(0,0,0,0.8);">
                         Shaping the future of finance, together.
                     </h1>
-                    <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
-                       class="btn btn-primary btn-lg mt-4 px-5 py-3" 
-                       target="_blank">
-                        Watch now
-                    </a>
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
+                           class="btn btn-primary btn-lg px-5 py-3" 
+                           target="_blank">
+                            Watch now
+                        </a>
+                        
+                        <a href="https://www2.swift.com/go/book/book200769" 
+                           class="btn btn-outline-light btn-lg d-flex align-items-center" 
+                           target="_blank" rel="noopener noreferrer">
+                            <svg class="icon mr-2" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 116 0v2H7V7z"></path>
+                            </svg>
+                            <span>Read more</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div style="clear: both;"></div>
+
 <script>
     const v = document.getElementById('heroVideo');
 
-    // Custom time segments for the background video
     const parts = [
-        { start: 18, end: 22 }, // Segment 1
-        { start: 31, end: 40 }, // Segment 2
-        { start: 49, end: 60 }, // Segment 3
-        { start: 62, end: 66 }  // Segment 4
+        { start: 18, end: 22 }, 
+        { start: 31, end: 40 }, 
+        { start: 49, end: 60 }, 
+        { start: 62, end: 66 }
     ];
 
-    // Initial jump to the start of the first segment
     v.currentTime = parts[0].start;
 
     v.addEventListener('timeupdate', function() {
         const cur = v.currentTime;
-
-        // Transition from Segment 1 to Segment 2
         if (cur >= parts[0].end && cur < parts[1].start) {
             v.currentTime = parts[1].start;
         } 
-        // Transition from Segment 2 to Segment 3
         else if (cur >= parts[1].end && cur < parts[2].start) {
             v.currentTime = parts[2].start;
         } 
-        // Transition from Segment 3 to Segment 4
         else if (cur >= parts[2].end && cur < parts[3].start) {
             v.currentTime = parts[3].start;
         } 
-        // Loop: Return to the beginning of Segment 1 after Segment 4 ends
         else if (cur >= parts[3].end) {
             v.currentTime = parts[0].start;
         }
 
-        // Safety Check: Ensure video doesn't drift before the first segment
         if (cur < parts[0].start && !v.seeking) {
             v.currentTime = parts[0].start;
         }
     });
 
-    // Handle browser-led loop or replay to ensure it restarts at the correct timestamp
     v.addEventListener('play', function() {
         if (v.currentTime < parts[0].start) {
             v.currentTime = parts[0].start;
