@@ -8273,17 +8273,17 @@ Discover our open positions now.</p></div>
     <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
         <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" 
-               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; opacity: 0; transition: opacity 0.5s;">
+               style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; opacity: 1;">
             <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
             Brauzeriniz video dəstəkləmir.
         </video>
 
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 2;"></div>
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.1); z-index: 2;"></div>
 
         <div class="container h-100 position-relative" style="z-index: 3;">
             <div class="row h-100 align-items-center">
                 <div class="col-12 col-lg-8 text-white">
-                    <h1 class="text-white display-4 font-weight-bold" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
+                    <h1 class="text-white display-4 font-weight-bold" style="text-shadow: 4px 4px 15px rgba(0,0,0,0.8);">
                         Shaping the future of finance, together.
                     </h1>
                     <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
@@ -8301,41 +8301,21 @@ Discover our open positions now.</p></div>
     const v = document.getElementById('heroVideo');
     const startAt = 18;
 
-    // Video məlumatları yüklənən kimi saniyəni dəyişməyə çalış
+    // Video yüklənən kimi saniyəni dəyiş
     v.currentTime = startAt;
 
-    // Əsas fənd: Video oynamağa başlayanda saniyəni yoxla
     v.addEventListener('timeupdate', function() {
         if (v.currentTime < startAt) {
             v.currentTime = startAt;
-        } else {
-            // Video artıq 23-cü saniyəyə çatdısa, onu göstər
-            v.style.opacity = '1';
         }
     });
 
-    // Loop (döngü) baş verəndə dərhal geri at
     v.addEventListener('play', function() {
         if (v.currentTime < startAt) {
             v.currentTime = startAt;
         }
     });
 </script>
-
-<!-- Məsafə üçün boşluq əlavə edirəm -->
-<div style="height: 40px;"></div>
-
-<div class="cta-block row no-gutters p-40 py-lg-64 py-xl-70 position-relative px-lg-100">
-    <div class="d-flex flex-column cta-box__body col-12 col-lg-8">
-        <h3 class="cta-box__title">
-            End of ISO 20022 coexistence
-        </h3>
-        <div class="cta-box__body">
-            <div class="text-long">
-                <p>The ISO 20022 coexistence period for cross-border payments ended on 22 November 2025. Consult the ISO 20022 support page for updates and for troubleshooting information.</p>
-            </div>
-        </div>
-    </div>
     <div class="col-12 col-lg-4 mt-30 mt-lg-0 d-flex align-items-center justify-content-lg-end">
         <a href="https://www2.swift.com/go/book/book200769" 
            class="btn btn-primary-light btn-lg btn-icon btn-icon--left" 
