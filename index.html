@@ -8269,12 +8269,11 @@ Discover our open positions now.</p></div>
             
 
 
-
 <div class="break-free">
     <div class="position-relative w-100" style="height: 100vh; min-height: 500px; overflow: hidden; background-color: #000;">
         
         <video id="heroVideo" muted autoplay loop playsinline class="w-100 h-100" style="object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
-            <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4#t=30" type="video/mp4">
+            <source src="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" type="video/mp4">
             Brauzeriniz video dəstəkləmir.
         </video>
 
@@ -8286,10 +8285,6 @@ Discover our open positions now.</p></div>
                     <h1 class="text-white display-4 font-weight-bold" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
                         Shaping the future of finance, together.
                     </h1>
-                    
-                    <div class="text-big mt-3" style="font-size: 1.25rem;">
-                        </div>
-
                     <a href="https://www.swift.com/sites/default/files/videos/swift-brand-film-2025-subs-sdc-1.mp4" 
                        class="btn btn-primary btn-lg mt-4 px-5 py-3" 
                        target="_blank">
@@ -8302,23 +8297,23 @@ Discover our open positions now.</p></div>
 </div>
 
 <script>
-    /** * Bəzi brauzerlərin #t=23 teqini görməzdən gəlməməsi və 
-     * video hər dəfə başa qayıdanda (loop) 23-cü saniyədən başlaması üçün:
-     */
     const v = document.getElementById('heroVideo');
-    
-    // İlk açılış üçün
-    v.addEventListener('loadedmetadata', function() {
-        this.currentTime = 23;
+    const startSecond = 23; // Buranı istədiyin saniyəyə (məs. 30) dəyişə bilərsən
+
+    // Video oynamağa başlayanda saniyəni təyin et
+    v.addEventListener('canplay', function() {
+        if (v.currentTime < startSecond) {
+            v.currentTime = startSecond;
+        }
     });
 
-    // Döngü (loop) hər dəfə başa çatanda 23-cü saniyəyə qaytarır
-    v.addEventListener('ended', function() {
-        this.currentTime = 23;
-        this.play();
+    // Loop zamanı 0-a qayıtmasın deyə nəzarət (Daha etibarlı yol)
+    v.addEventListener('timeupdate', function() {
+        if (v.loop && v.currentTime < 1) { // Əgər video başa qayıdıbsa (0 saniyəyə yaxındırsa)
+            v.currentTime = startSecond;
+        }
     });
 </script>
-
 <!-- Məsafə üçün boşluq əlavə edirəm -->
 <div style="height: 40px;"></div>
 
