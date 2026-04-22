@@ -22,7 +22,7 @@
         }
 
         .message-container {
-            max-width: 1200px;
+            max-width: 1300px;
             width: 100%;
             background: white;
             border-radius: 24px;
@@ -195,56 +195,56 @@
 
         .header-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
         }
 
         .bank-info {
             background: #f8fafc;
-            padding: 20px;
+            padding: 18px;
             border-radius: 16px;
             border: 1px solid #e2e8f0;
         }
 
         .bank-info-title {
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
             color: #64748b;
             letter-spacing: 0.5px;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
             font-weight: 700;
         }
 
         .bank-info-content {
-            font-size: 15px;
+            font-size: 13px;
         }
 
         .bank-info-content p {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: baseline;
             flex-wrap: wrap;
         }
 
         .bank-label {
-            width: 120px;
+            width: 100px;
             color: #475569;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .bank-value {
             color: #0a2540;
             font-weight: 500;
-            font-size: 15px;
+            font-size: 13px;
             flex: 1;
         }
 
         .swift-code {
             font-family: monospace;
             background: #e9eef2;
-            padding: 3px 10px;
+            padding: 3px 8px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 12px;
             display: inline-block;
         }
 
@@ -276,7 +276,7 @@
 
         .code-value {
             font-family: monospace;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #0c4a6e;
             background: white;
@@ -293,15 +293,9 @@
         }
 
         .amount-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #0a2540;
-        }
-
-        .amount-currency {
-            color: #64748b;
-            font-size: 16px;
-            margin-left: 5px;
         }
 
         .message-text-container {
@@ -314,7 +308,6 @@
             border-radius: 12px;
             padding: 24px;
             margin: 0 0 25px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         
         .narrative-title {
@@ -323,7 +316,6 @@
             color: #004d99;
             margin-bottom: 16px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -339,7 +331,7 @@
         
         .narrative-content {
             font-family: 'Courier New', monospace;
-            font-size: 15px;
+            font-size: 14px;
             color: #1e293b;
             line-height: 1.8;
         }
@@ -411,12 +403,11 @@
             font-weight: 600;
             color: #475569;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
         .pin-value {
             font-family: 'Courier New', monospace;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: #075985;
             background: #e6f0f9;
@@ -514,12 +505,6 @@
             flex-wrap: wrap;
         }
 
-        .secure-badge span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
         .verification-bar {
             background: rgba(255,255,255,0.1);
             border-radius: 50px;
@@ -541,11 +526,6 @@
             gap: 8px;
         }
 
-        .verify-shield {
-            color: #0066cc;
-            font-size: 18px;
-        }
-
         .verify-code {
             background: rgba(255,255,255,0.2);
             padding: 8px 20px;
@@ -554,7 +534,6 @@
             font-family: monospace;
             font-size: 16px;
             font-weight: 600;
-            letter-spacing: 2px;
         }
 
         .verify-status {
@@ -569,81 +548,24 @@
         .security-note {
             text-align: center;
             color: #94a3b8;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 18px;
-            line-height: 1.6;
         }
 
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            .pdf-toolbar {
-                display: none;
-            }
-            .message-container {
-                box-shadow: none;
-                border: 1px solid #ddd;
-                max-width: 100%;
-            }
-            .status-dot {
-                animation: none;
+        @media (max-width: 1100px) {
+            .header-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
-
-        @media (max-width: 900px) {
+        @media (max-width: 700px) {
             .header-grid {
                 grid-template-columns: 1fr;
             }
-            .transaction-info {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .officers-row, .pins-row {
-                flex-direction: column;
-                gap: 20px;
-            }
         }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-            .message-status {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .message-date {
-                margin-left: 0;
-            }
-            .swift-banner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .swift-badge {
-                margin-left: 0;
-            }
-            .bank-info-content p {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            .bank-label {
-                width: 100%;
-            }
-            .verification-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .pdf-toolbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .pdf-buttons {
-                width: 100%;
-                justify-content: space-between;
-            }
+        @media print {
+            body { background: white; padding: 0; }
+            .pdf-toolbar { display: none; }
+            .status-dot { animation: none; }
         }
     </style>
 </head>
@@ -655,27 +577,15 @@
                 <span class="pdf-badge">OFFICIAL SWIFT DOCUMENT</span>
             </div>
             <div class="pdf-buttons">
-                <button class="pdf-btn" onclick="window.print()">
-                    <span>🖨️</span>
-                    <span>Print / PDF</span>
-                </button>
-                <button class="pdf-btn print" onclick="downloadPDF()">
-                    <span>📥</span>
-                    <span>Download PDF</span>
-                </button>
+                <button class="pdf-btn" onclick="window.print()">🖨️ Print / PDF</button>
+                <button class="pdf-btn print" onclick="downloadPDF()">📥 Download PDF</button>
             </div>
         </div>
 
         <div class="message-status">
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">NETWORK ACK/RECEIVED</span>
-            </div>
+            <div class="status-indicator"><span class="status-dot"></span><span class="status-text">NETWORK ACK/RECEIVED</span></div>
             <div class="message-ref">BARCGB22/2026/MT799</div>
-            <div class="message-date">
-                <span>📅</span>
-                <span>13th April, 2026 - 10:30 AM</span>
-            </div>
+            <div class="message-date">📅 13th April, 2026 - 10:30 AM</div>
         </div>
 
         <div class="swift-banner">
@@ -686,57 +596,70 @@
 
         <div class="message-header">
             <div class="header-grid">
-                <!-- SENDER BANK (Barclays) -->
+                <!-- 1. SENDER BANK (Barclays) -->
                 <div class="bank-info">
                     <div class="bank-info-title">🏦 SENDER BANK (ISSUING BANK)</div>
                     <div class="bank-info-content">
-                        <p>
-                            <span class="bank-label">Bank Name:</span>
-                            <span class="bank-value">Barclays Bank PLC (Head Office)</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">SWIFT Code:</span>
-                            <span class="bank-value swift-code">BARCGB22</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Address:</span>
-                            <span class="bank-value">1 Churchill Place, London E14 5HP, United Kingdom</span>
-                        </p>
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Barclays Bank PLC</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">BARCGB22</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">1 Churchill Place, London E14 5HP, UK</span></p>
                     </div>
                 </div>
 
-                <!-- APPLICANT: MMG Capital Limited (ayrı şirkət) -->
+                <!-- 2. APPLICANT: MMG Capital Limited (ayrı şirkət) -->
                 <div class="bank-info">
                     <div class="bank-info-title">📌 APPLICANT COMPANY</div>
                     <div class="bank-info-content">
-                        <p>
-                            <span class="bank-label">Company Name:</span>
-                            <span class="bank-value"><strong>MMG Capital Limited</strong></span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Address:</span>
-                            <span class="bank-value">43-45 Dorset Street, London, United Kingdom, W1U 7NA</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Country:</span>
-                            <span class="bank-value">United Kingdom</span>
-                        </p>
+                        <p><span class="bank-label">Company:</span><span class="bank-value"><strong>MMG Capital Limited</strong></span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">43-45 Dorset Street, London, W1U 7NA, UK</span></p>
                     </div>
                 </div>
 
-                <!-- RECEIVER BANK + BENEFICIARY -->
+                <!-- 3. RECEIVER BANK (UBS) - Bankın ünvanı ayrı -->
                 <div class="bank-info">
-                    <div class="bank-info-title">🏦 RECEIVER BANK & BENEFICIARY</div>
+                    <div class="bank-info-title">🏦 RECEIVER BANK</div>
                     <div class="bank-info-content">
-                        <p>
-                            <span class="bank-label">Bank Name:</span>
-                            <span class="bank-value">UBS Switzerland AG</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">SWIFT Code:</span>
-                            <span class="bank-value swift-code">UBSWCHZH80A</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Beneficiary:</span>
-                            <span class="bank-value">Elektrolka Sarl</span>
-                      
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">UBS Switzerland AG</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">UBSWCHZH80A</span></p>
+                        <p><span class="bank-label">Bank Address:</span><span class="bank-value">Bahnhofstrasse 45, Zurich, Switzerland</span></p>
+                    </div>
+                </div>
+
+                <!-- 4. BENEFICIARY (Elektrolka Sarl) - Şirkətin ünvanı + Account No ayrı -->
+                <div class="bank-info">
+                    <div class="bank-info-title">👤 BENEFICIARY</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Company:</span><span class="bank-value"><strong>Elektrolka Sarl</strong></span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">Rue Jean-Violette, 25 Geneva, Switzerland</span></p>
+                        <p><span class="bank-label">Account No:</span><span class="bank-value swift-code">CH94 0027 9279 3706 4860 R</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-info">
+            <div class="transaction-code"><span class="code-label">20: Transaction Ref:</span><span class="code-value">004444 1 of 1 MSI61HKK4 9893</span></div>
+            <div class="transaction-code"><span class="code-label">21: Related Ref:</span><span class="code-value">REL-TX-20260422-00</span></div>
+            <div class="amount-display"><span class="amount-value">USD 30,000,000.00</span></div>
+        </div>
+
+        <div class="message-text-container">
+            <div class="narrative-section">
+                <div class="narrative-title">📄 79: NARRATIVE <span>FREE FORMAT</span></div>
+                <div class="narrative-content">
+                    <p>WE, BARCLAYS BANK PLC, LOCATED AT 1 CHURCHILL PLACE, LONDON E14 5HP, UNITED KINGDOM, REPRESENTED BY THE UNDERSIGNED BANK OFFICERS, HEREBY CONFIRM WITH FULL BANK RESPONSIBILITY AND LIABILITY ON BEHALF OF <strong>MMG CAPITAL LIMITED</strong> (43-45 Dorset Street, London, W1U 7NA, United Kingdom).</p>
+                    
+                    <p>THAT WE ARE READY, WILLING AND ABLE TO ISSUE A STANDBY LETTER OF CREDIT (ICC 600 FORMAT) VIA SWIFT MT760 IN THE FACE VALUE AMOUNT OF <span class="highlight">USD 30,000,000.00 (THIRTY MILLION UNITED STATES DOLLARS)</span> IN FAVOR OF <strong>ELEKTROLKA SARL</strong> (Rue Jean-Violette, 25 Geneva, Switzerland).</p>
+                    
+                    <p>BENEFICIARY ACCOUNT NUMBER: <span class="highlight">CH94 0027 9279 3706 4860 R</span> WITH UBS SWITZERLAND AG (Bahnhofstrasse 45, Zurich).</p>
+                    
+                    <p>WITH A VALIDITY OF ONE YEAR AND ONE DAY FROM THE DATE OF ISSUANCE. THIS STANDBY LETTER OF CREDIT MT760 IS CASH-BACKED, IRREVOCABLE, UNCONDITIONALLY TRANSFERABLE, ASSIGNABLE AND THERE WILL BE NO LIENS AND ENCUMBRANCES ON THIS INSTRUMENT.</p>
+                    
+                    <p><em>This pre-advice constitutes an operative banking instrument subject to bank-to-bank verification via authenticated SWIFT channels.</em></p>
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <div class="date-field"><span class="date-label">DATE OF ISSUE:</span><span class="date-value">13TH DAY OF APRIL, 2026</span></div>
+                <div class="officers-row">
+                    <div 
