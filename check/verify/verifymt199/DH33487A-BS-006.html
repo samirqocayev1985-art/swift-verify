@@ -195,7 +195,7 @@
 
         .header-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
         }
 
@@ -212,6 +212,7 @@
             color: #64748b;
             letter-spacing: 0.5px;
             margin-bottom: 15px;
+            font-weight: 700;
         }
 
         .bank-info-content {
@@ -685,8 +686,9 @@
 
         <div class="message-header">
             <div class="header-grid">
+                <!-- SENDER BANK (Barclays) -->
                 <div class="bank-info">
-                    <div class="bank-info-title">SENDER BANK</div>
+                    <div class="bank-info-title">🏦 SENDER BANK (ISSUING BANK)</div>
                     <div class="bank-info-content">
                         <p>
                             <span class="bank-label">Bank Name:</span>
@@ -700,15 +702,31 @@
                             <span class="bank-label">Address:</span>
                             <span class="bank-value">1 Churchill Place, London E14 5HP, United Kingdom</span>
                         </p>
+                    </div>
+                </div>
+
+                <!-- APPLICANT: MMG Capital Limited (ayrı şirkət) -->
+                <div class="bank-info">
+                    <div class="bank-info-title">📌 APPLICANT COMPANY</div>
+                    <div class="bank-info-content">
                         <p>
-                            <span class="bank-label">Applicant Name:</span>
-                            <span class="bank-value">MMG Capital Limited</span>
+                            <span class="bank-label">Company Name:</span>
+                            <span class="bank-value"><strong>MMG Capital Limited</strong></span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Address:</span>
+                            <span class="bank-value">43-45 Dorset Street, London, United Kingdom, W1U 7NA</span>
+                        </p>
+                        <p>
+                            <span class="bank-label">Country:</span>
+                            <span class="bank-value">United Kingdom</span>
                         </p>
                     </div>
                 </div>
 
+                <!-- RECEIVER BANK + BENEFICIARY -->
                 <div class="bank-info">
-                    <div class="bank-info-title">RECEIVER BANK</div>
+                    <div class="bank-info-title">🏦 RECEIVER BANK & BENEFICIARY</div>
                     <div class="bank-info-content">
                         <p>
                             <span class="bank-label">Bank Name:</span>
@@ -719,126 +737,6 @@
                             <span class="bank-value swift-code">UBSWCHZH80A</span>
                         </p>
                         <p>
-                            <span class="bank-label">Address:</span>
-                            <span class="bank-value">Bahnhofstrasse 45, Zurich, Switzerland</span>
-                        </p>
-                        <p>
                             <span class="bank-label">Beneficiary:</span>
                             <span class="bank-value">Elektrolka Sarl</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Account No:</span>
-                            <span class="bank-value swift-code">CH94 0027 9279 3706 4860 R</span>
-                        </p>
-                        <p>
-                            <span class="bank-label">Beneficiary Address:</span>
-                            <span class="bank-value">Rue Jean-Violette, 25 Geneva, Switzerland</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="transaction-info">
-            <div class="transaction-code">
-                <span class="code-label">20: Transaction Reference No:</span>
-                <span class="code-value">004444 1 of 1 MSI61HKK4 9893</span>
-            </div>
-            <div class="transaction-code">
-                <span class="code-label">21: Related Reference:</span>
-                <span class="code-value">REL-TX-20260422-00</span>
-            </div>
-            <div class="amount-display">
-                <span class="amount-value">Currency: US (Dollar) 30,000,000.00</span>
-            </div>
-        </div>
-
-        <div class="message-text-container">
-            <div class="narrative-section">
-                <div class="narrative-title">
-                    📄 79: NARRATIVE DESCRIPTION OF THE ORIGINAL MESSAGE / COMMENTS
-                    <span>FREE FORMAT</span>
-                </div>
-                <div class="narrative-content">
-                    <p>WE, BARCLAYS BANK PLC, LOCATED AT 1 CHURCHILL PLACE, LONDON E14 5HP, UNITED KINGDOM, REPRESENTED BY THE UNDERSIGNED BANK OFFICERS, HEREBY CONFIRM WITH FULL BANK RESPONSIBILITY AND LIABILITY ON BEHALF OF <strong>MMG CAPITAL LIMITED COMPANY</strong>.</p>
-                    
-                    <p>THAT WE ARE READY, WILLING AND ABLE TO ISSUE A STANDBY LETTER OF CREDIT (ICC 600 FORMAT) VIA SWIFT MT760 IN THE FACE VALUE AMOUNT OF <span class="highlight">USD 30,000,000.00 (THIRTY MILLION UNITED STATES DOLLARS)</span> IN FAVOR OF <strong>ELEKTROLKA SARL COMPANY</strong>.</p>
-                    
-                    <p>WITH A VALIDITY OF ONE YEAR AND ONE DAY FROM THE DATE OF ISSUANCE. THIS STANDBY LETTER OF CREDIT MT760 IS CASH-BACKED, IRREVOCABLE, UNCONDITIONALLY TRANSFERABLE, ASSIGNABLE AND THERE WILL BE NO LIENS AND ENCUMBRANCES ON THIS INSTRUMENT WHICH SHALL BE DELIVERED AND AVAILED VIA SWIFT MT760.</p>
-                    
-                    <p style="margin-top: 20px;"><em>This pre-advice constitutes an operative banking instrument subject to bank-to-bank verification via authenticated SWIFT channels.</em></p>
-                </div>
-            </div>
-
-            <div class="signature-box">
-                <div class="date-field">
-                    <span class="date-label">DATE OF ISSUE:</span>
-                    <span class="date-value">13TH DAY OF APRIL, 2026</span>
-                </div>
-                
-                <div class="officers-row">
-                    <div class="officer-card">
-                        <div class="officer-name">Mr. Cathal Deasy</div>
-                        <div class="officer-title">Global Co-Head of Investment Banking</div>
-                    </div>
-                    <div class="officer-card">
-                        <div class="officer-name">Mr. Nigel Higgins</div>
-                        <div class="officer-title">Chairman</div>
-                    </div>
-                </div>
-                
-                <div class="pins-row">
-                    <div class="pin-card">
-                        <span class="pin-label">PIN CODE:</span>
-                        <span class="pin-value">BARC11-RF-029</span>
-                    </div>
-                    <div class="pin-card">
-                        <span class="pin-label">PIN CODE:</span>
-                        <span class="pin-value">BARC11-GW-820</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="security-footer">
-            <div class="payment-cards">
-                <div class="card-icon visa">VISA</div>
-                <div class="card-icon mastercard">
-                    <div class="mastercard-circle circle-left"></div>
-                    <div class="mastercard-circle circle-right"></div>
-                </div>
-                <div class="card-icon amex">AMEX</div>
-                <div style="color: white; font-size: 28px; font-weight: 600;">🔒</div>
-            </div>
-
-            <div class="secure-badge">
-                <span>✅ Verified by Visa</span>
-                <span>🛡️ MasterCard SecureCode</span>
-                <span>🔐 Amex SafeKey</span>
-            </div>
-
-            <div class="verification-bar">
-                <div class="verify-label">
-                    <span class="verify-shield">🛡️</span>
-                    <span>3D SECURE VERIFICATION</span>
-                </div>
-                <div class="verify-code">MT799-30M-USD</div>
-                <div class="verify-status">
-                    <span>✓</span>
-                    <span>VERIFIED</span>
-                </div>
-            </div>
-
-            <div class="security-note">
-                This MT799 message is secured with 256-bit SSL encryption • Verified by Visa Secure • MasterCard Identity Check • PCI DSS Compliant • SWIFT Certified
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function downloadPDF() {
-            window.print();
-        }
-    </script>
-</body>
-</html>
+                      
