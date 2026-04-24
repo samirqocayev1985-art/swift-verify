@@ -24,7 +24,7 @@ exports.handler = async (event) => {
             port: 465,
             secure: true,
             auth: {
-                user: process.env.SMTP_USER,  // örn: check@verify-swift.com
+                user: process.env.SMTP_USER,  // örn: check@verification-swift.com
                 pass: process.env.SMTP_PASS
             },
             tls: {
