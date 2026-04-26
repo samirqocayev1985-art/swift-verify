@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 
 exports.handler = async (event) => {
-    // CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -17,14 +16,13 @@ exports.handler = async (event) => {
 
         console.log("Sending email to:", to);
 
-        // IMPORTANT:
-        // MegaHost gerçek SMTP hostu = sh003.megahost.kz
+        // ✅ DÜZGÜN SMTP konfiqurasiyası (Gmail)
         const transporter = nodemailer.createTransport({
-            host: "sh003.megahost.kz",
-            port: 465,
-            secure: true,
+            host: "smtp.gmail.com",     // ← DƏYİŞDİRİLDİ!
+            port: 587,                   // ← DƏYİŞDİRİLDİ!
+            secure: false,               // ← 587 üçün false
             auth: {
-                user: process.env.SMTP_USER,  // örn: check@verification-swift.com
+                user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS
             },
             tls: {
