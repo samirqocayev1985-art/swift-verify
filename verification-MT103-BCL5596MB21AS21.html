@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SWIFT MT103/MT900/MT910 | Completed Settlement</title>
+    <style>
+        :root {
+            --bg-dark: #0b0e14;
+            --card-bg: #151921;
+            --accent: #0062ff;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --success: #00cc88;
+            --warning: #ffb347;
+            --border: #2d3748;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            background: #000000cc;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            gap: 8px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            color: var(--text-dim);
+            font-size: 22px;
+            padding: 8px 12px;
+            border-radius: 40px;
+            transition: 0.2s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(0, 98, 255, 0.15);
+        }
+
+        .main-workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at top left, #1a202c, #0b0e14);
+            width: 100%;
+        }
+
+        .top-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(21, 25, 33, 0.9);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #2d3748;
+            padding-bottom: 10px;
+        }
+
+        .tag {
+            font-family: 'Courier New', monospace;
+            color: var(--success);
+            font-weight: bold;
+            background: rgba(0, 204, 136, 0.15);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .amount-hero {
+            background: linear-gradient(145deg, #1e2530, #151921);
+            padding: 20px 16px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid #3e4b5e;
+            margin-bottom: 20px;
+        }
+
+        .amount-val {
+            font-size: clamp(28px, 8vw, 44px);
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0,98,255,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .network-map-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 18px 0 8px 0;
+            padding-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .network-map {
+            min-width: 650px;
+            padding: 20px 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .node-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .node-icon {
+            width: 48px;
+            height: 48px;
+            background: #0f131c;
+            border: 1.5px solid var(--success);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: var(--success);
+        }
+
+        .node-name {
+            font-family: 'Consolas', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .node-city {
+            font-size: 8px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .connection-line {
+            flex-grow: 1;
+            height: 2px;
+            background: #2d3748;
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            min-width: 35px;
+        }
+
+        .line-progress {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--success), transparent);
+            left: -100%;
+            animation: pulseLine 2s infinite linear;
+        }
+
+        @keyframes pulseLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .console {
+            background: #080b10;
+            font-family: 'Consolas', monospace;
+            padding: 14px;
+            border-radius: 14px;
+            height: 180px;
+            overflow-y: auto;
+            font-size: 11px;
+            border: 1px solid var(--border);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            border-left: 2px solid var(--accent);
+            padding-left: 8px;
+            word-break: break-word;
+        }
+
+        .action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+            filter: brightness(1.1);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px 20px;
+            position: relative;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 18px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-dim);
+            background: rgba(255,255,255,0.05);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background: #00000030;
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .message-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .mt-badge {
+            display: inline-block;
+            background: rgba(0, 98, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .field-row {
+            border-left: 2px solid var(--accent);
+            padding-left: 12px;
+            margin-bottom: 12px;
+        }
+
+        .field-title {
+            font-size: 11px;
+            color: var(--accent);
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+
+        .field-content {
+            font-size: 13px;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .status-completed {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 14px;
+            }
+            .amount-hero {
+                padding: 16px;
+            }
+            .node-item {
+                width: 80px;
+            }
+            .node-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="nav-item active">🏦</div>
+    <div class="nav-item">📊</div>
+    <div class="nav-item">🔒</div>
+    <div class="nav-item">⚙️</div>
+</nav>
+
+<div class="main-workspace">
+    <header class="top-bar">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-weight:800; color:var(--accent); letter-spacing:1px; font-size: 14px;">SWIFT ALLIANCE ACCESS</span>
+            <span style="color:var(--success); font-size:9px; font-weight:bold; background:#00000055; padding:2px 8px; border-radius:20px;">● COMPLETED / SETTLED</span>
+        </div>
+        <div style="text-align:right">
+            <div style="font-size:9px; color:var(--text-dim)">UETR: 40fb91ed-19aa-4263-be97-dc75011ad83f</div>
+            <div style="font-size:12px; font-weight:bold;">28-APR-2026 14:32:18</div>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        <div class="left-panel">
+            <div class="card">
+                <div class="header-section">
+                    <h2 style="font-size:15px;">FIN 103 / 900 / 910 - Single Customer Credit Transfer</h2>
+                    <span class="tag">✓ FULLY COMPLETED & SETTLED</span>
+                </div>
+
+                <div class="amount-hero">
+                    <div class="label">:32A: Value Date / Currency / Settled Amount</div>
+                    <div class="amount-val">EUR 30,000,000.00</div>
+                    <div style="color:var(--text-dim); font-size:11px; margin-top:6px;">Value Date: <strong>30-APR-2026</strong> | Currency: EUR (EURO) | Sent Date: <strong>28-APR-2026</strong></div>
+                </div>
+
+                <!-- MT103 MESSAGE FIELDS with Intermediary -->
+                <div class="message-text-block">
+                    <div class="field-row">
+                        <div class="field-title"><span class="mt-badge">MT103</span> :20: Sender's Reference</div>
+                        <div class="field-content">DEU17112212C332-280426</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:23B: Bank Operation Code</div>
+                        <div class="field-content">CRED</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:32A: Value Date / Currency / Amount</div>
+                        <div class="field-content"><strong>30-APR-2026</strong>, EUR (EURO), EUR 30,000,000.00</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:50K: Ordering Customer - Name & Address</div>
+                        <div class="field-content">/CH4504835000123452002<br>MMG Capital Limited<br>Bahnhofstrasse 45, 8001 Zurich, Switzerland</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:52A: Ordering Institution - FI BIC</div>
+                        <div class="field-content">CRAMCHGGXXX<br>BANQUE CRAMER & CIE SA<br>GENEVA, SWITZERLAND</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:56A: Intermediary Institution</div>
+                        <div class="field-content">DEUTDEFFXXX<br>DEUTSCHE BANK AG<br>FRANKFURT, GERMANY</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:57A: Account With Institution - FI BIC</div>
+                        <div class="field-content">UBSWCHZH80A<br>UBS SWITZERLAND AG<br>ZURICH, SWITZERLAND</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:59: Beneficiary Customer - Name & Address</div>
+                        <div class="field-content">/CH9404835000123454860<br>ELEKTROLKA SARL<br>Rue de la Confédération 15, 1204 Geneva, Switzerland</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:70: Remittance Information</div>
+                        <div class="field-content">Payment for Agreement No. AG/SJU-005824</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:71A: Details of Charges</div>
+                        <div class="field-content">OUR (Sender pays all charges)</div>
+                    </div>
+                </div>
+
+                <!-- Network Map - 3 nodes: CRAMCHGGXXX → DEUTDEFFXXX → UBSWCHZH80A -->
+                <div class="network-map-container">
+                    <div class="network-map">
+                        <div class="node-item">
+                            <div class="node-icon">🏦</div>
+                            <div class="node-name">CRAMCHGGXXX</div>
+                            <div class="node-city">Banque Cramer, Geneva</div>
+                            <div class="status-completed" style="font-size:9px; margin-top:4px;">✓ COMPLETED</div>
+                        </div>
+                        <div class="connection-line"><div class="line-progress"></div></div>
+                        <div class="node-item">
+                            <div class="node-icon">⚙️</div>
+                            <div class="node-name">DEUTDEFFXXX</div>
+                            <div class="node-city">Deutsche Bank, Frankfurt</div>
+                            <div class="status-completed" style="font-size:9px; margin-top:4px;">✓ COMPLETED</div>
+                        </div>
+                        <div class="connection-line"><div class="line-progress" style="animation-delay: 0.6s;"></div></div>
+                        <div class="node-item">
+                            <div class="node-icon" style="border-color:var(--success);">🏛️</div>
+                            <div class="node-name">UBSWCHZH80A</div>
+                            <div class="node-city">UBS Switzerland, Zurich</div>
+                            <div class="status-completed" style="font-size:9px; margin-top:4px;">✓ COMPLETED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="header-section"><h3 style="font-size:14px;">NETWORK DELIVERY STATUS - FULLY COMPLETED</h3></div>
+                <div class="console" id="console">
+                    <div class="log-entry"><span style="color:var(--text-dim)">[28-APR-2026 14:30:12]</span> MT103 sent from CRAMCHGGXXX to DEUTDEFFXXX (ACK received) ✓</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">[28-APR-2026 14:30:45]</span> MT103 forwarded from DEUTDEFFXXX to UBSWCHZH80A (ACK received) ✓</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">[28-APR-2026 14:31:05]</span> MT900 Confirmation of Debit - Fully settled (Value Date: 30-APR-2026) ✓</div>
+                    <div class="log-entry"><span style="color:var(--success)">[28-APR-2026 14:32:18]</span> NETWORK DELIVERY STATUS: COMPLETED | Priority: Normal</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">Message Input Reference:</span> 1430 280426CRAMCHGGAXXX8291722562</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">UETR:</span> 40fb91ed-19aa-4263-be97-dc75011ad83f</div>
+                    <div class="log-entry"><span style="color:var(--success)">MT910: Confirmation of Credit - Beneficiary account credited (Value Date: 30-APR-2026) ✓</span></div>
+                    <div class="log-entry"><span style="color:var(--accent)">Details of Charges: OUR (Sender pays all charges) | Status: COMPLETED</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="card">
+                <div class="header-section"><h3 style="font-size:14px;">SWIFT FIN RAW - MT103 / MT900 / MT910 (COMPLETED)</h3></div>
+                <pre id="swiftRaw" style="font-family:'Courier New', monospace; font-size:11px; color:var(--text-dim);">{1:F21CRAMCHGGAXXX8291722562}
+{2:I103DEUTDEFFXXXN}
+{4:
+:20:DEU17112212C332-260428
+:23B:CRED
+:32A:260430EUR30000000,00
+:50K:/CH4504835000123452002
+MMG Capital Limited
+Bahnhofstrasse 45, 8001 Zurich
+:52A:CRAMCHGGXXX
+BANQUE CRAMER & CIE SA
+GENEVA
+:56A:DEUTDEFFXXX
+DEUTSCHE BANK AG
+FRANKFURT
+:57A:UBSWCHZH80A
+UBS SWITZERLAND AG
+ZURICH
+:59:/CH9404835000123454860
+ELEKTROLKA SARL
+Rue de la Confédération 15, 1204 Geneva
+:70:Payment for Agreement No. AG/SJU-005824
+:71A:OUR
+-}
+{5:{CHK:8A3F2E1B7C9D4F6E}}
+{PKI Signature: MAC-Equivalent}
+
+================== MT900 (Confirmation of Debit - Completed) ==================
+{1:F01CRAMCHGGAXXX8291722562}{2:O9002804261431UBSWCHZH80AXXX}
+:20:DEU17112212C332-280426
+:21:40fb91ed-19aa-4263
+:25:CH4504835000123452002
+:32A:260428EUR30000000,00
+:72:/SETTLED/ Transaction fully completed on 28-APR-2026 (Value Date: 30-APR-2026)
+
+================== MT910 (Confirmation of Credit - Completed) ==================
+{1:F01UBSWCHZH80AXXX1234567890}{2:O9102804261432CRAMCHGGAXXX}
+:20:DEU17112212C332-280426
+:21:40fb91ed-19aa-4263
+:25:CH9404835000123454860
+:32A:260430EUR30000000,00
+:72:/REC/ Value credited to beneficiary account on Value Date 30-APR-2026 - Final settlement executed on 28-APR-2026</pre>
+
+                <div class="button-group">
+                    <button class="action-btn" onclick="downloadAdvice()">📥 DOWNLOAD FULL MT103/MT900/MT910</button>
+                    <button class="action-btn action-outline" onclick="toggleModal('senderModal')">🏦 ORDERING INSTITUTION (52A)</button>
+                    <button class="action-btn action-outline" onclick="toggleModal('gpiModal')">📍 GPI TRACE / UETR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GPI Modal -->
+<div id="gpiModal" class="modal-overlay" onclick="closeOnOutside(event)">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleModal('gpiModal')">&times;</span>
+        <h3 style="color:var(--accent); margin-bottom:20px; font-size:18px;">📍 GPI Real-Time Tracker - COMPLETED</h3>
+        <div style="border-left: 2px solid var(--border); margin-left: 8px; padding-left: 20px; font-size: 13px; line-height: 2;">
+            <p><strong>🏦 CRAMCHGGXXX (Banque Cramer, Geneva):</strong> Funds debited · 28-APR-2026 14:30 ✓</p>
+            <p><strong>⚙️ DEUTDEFFXXX (Deutsche Bank, Frankfurt):</strong> Intermediary processing · 28-APR-2026 14:30:45 ✓</p>
+            <p><strong>📄 MT103 sent from CRAMCHGGXXX → DEUTDEFFXXX → UBSWCHZH80A:</strong> ACK received ✓</p>
+            <p><strong>📄 MT900 Confirmation of Debit:</strong> Fully settled · 28-APR-2026 14:31:05 ✓</p>
+            <p style="color:var(--success)"><strong>🏛️ UBSWCHZH80A (UBS Switzerland, Zurich):</strong> Credited to beneficiary account · 28-APR-2026 14:32:18 ✓</p>
+            <p><strong>📄 MT910 Confirmation of Credit:</strong> Final settlement executed · 28-APR-2026 14:32:18 ✓</p>
+            <p style="margin-top:12px; font-size:11px; color:var(--accent)"><strong>UETR:</strong> 40fb91ed-19aa-4263-be97-dc75011ad83f</p>
+            <p style="font-size:11px; color:var(--text-dim)"><strong>Sent Date:</strong> 28-APR-2026 | <strong>Value Date:</strong> 30-APR-2026</p>
+            <p style="font-size:10px; color:var(--text-dim);">Network Delivery Status: COMPLETED | Charges: OUR</p>
+        </div>
+    </div>
+</div>
+
+<!-- Ordering Institution Modal (52A) -->
+<div id="senderModal" class="modal-overlay" onclick="closeOnOutside(event)">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleModal('senderModal')">&times;</span>
+        <h3 style="color:var(--accent); margin-bottom:16px;">:52A: Ordering Institution - FI BIC</h3>
+        <div style="background:#04070c; padding:18px; border-radius:20px; font-family:monospace; font-size:12px; border:1px solid var(--border); line-height: 1.7;">
+            <strong>Account:</strong> /CH4504835000123452002<br>
+            <strong>BIC:</strong> CRAMCHGGXXX<br>
+            <strong>Bank:</strong> BANQUE CRAMER & CIE SA<br>
+            <strong>City/Country:</strong> GENEVA, SWITZERLAND<br>
+            <hr style="border-color:#2d3748; margin:10px 0;">
+            <strong>Sender's Reference (:20:):</strong> DEU17112212C332-280426<br>
+            <strong>Bank Operation Code (:23B:):</strong> CRED<br>
+            <strong>Charges (:71A:):</strong> OUR (Sender pays all charges)<br>
+            <hr style="border-color:#2d3748; margin:10px 0;">
+            <strong>Intermediary (:56A:):</strong> DEUTDEFFXXX (Deutsche Bank, Frankfurt)<br>
+            <strong>Beneficiary Bank (:57A:):</strong> UBSWCHZH80A (UBS Switzerland, Zurich)<br>
+            <strong>Value Date:</strong> 30-APR-2026<br>
+            <strong>Sent Date:</strong> 28-APR-2026<br>
+            <strong>Status:</strong> COMPLETED ✓
+        </div>
+    </div>
+</div>
+
+<script>
+    function logToConsole(msg, isSuccess = false) {
+        const consoleEl = document.getElementById('console');
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerHTML = `<span style="color:var(--text-dim)">[${time}]</span> <span style="color:${isSuccess ? 'var(--success)' : '#e2e8f0'}">${msg}</span>`;
+        consoleEl.appendChild(div);
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+        while(consoleEl.children.length > 40) consoleEl.removeChild(consoleEl.firstChild);
+    }
+
+    function toggleModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        const isOpen = modal.style.display === 'flex';
+        modal.style.display = isOpen ? 'none' : 'flex';
+        if (!isOpen) {
+            const modalName = modalId === 'gpiModal' ? 'GPI TRACE' : 'ORDERING INSTITUTION (52A)';
+            logToConsole(`🔐 Opening ${modalName}...`, false);
+        }
+    }
+
+    function downloadAdvice() {
+        let rawContent = document.getElementById('swiftRaw').innerText;
+        const header = "=== SWIFT MT103/MT900/MT910 - FULLY COMPLETED SETTLEMENT ===\n";
+        const meta = `Sender: CRAMCHGGXXX (Banque Cramer & Cie SA, Geneva)\nIntermediary: DEUTDEFFXXX (Deutsche Bank, Frankfurt)\nReceiver: UBSWCHZH80A (UBS Switzerland AG, Zurich)\nUETR: 40fb91ed-19aa-4263-be97-dc75011ad83f\nValue Date: 30-APR-2026\nSent Date: 28-APR-2026\nAmount: EUR 30,000,000.00\nBeneficiary: ELEKTROLKA SARL\nReference: DEU17112212C332-280426\nCharges: OUR (Sender pays all charges)\nStatus: COMPLETED / FULLY SETTLED\n\n`;
+        const blob = new Blob([header + meta + rawContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `SWIFT_MT103_MT900_MT910_COMPLETED_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.txt`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        logToConsole("📄 Full SWIFT message (MT103/MT900/MT910) downloaded successfully.", true);
+    }
+
+    function closeOnOutside(e) {
+        if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+            e.target.style.display = 'none';
+        }
+    }
+
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            const iconText = this.innerText || this.textContent;
+            logToConsole(`Navigation: ${iconText} module selected`, false);
+        });
+    });
+
+    window.addEventListener('load', () => {
+        logToConsole("SWIFT Alliance Access ready | Network Status: COMPLETED", true);
+        logToConsole("MT103 sent from CRAMCHGGXXX to DEUTDEFFXXX (ACK received)", true);
+        logToConsole("MT103 forwarded from DEUTDEFFXXX to UBSWCHZH80A (ACK received)", true);
+        logToConsole("UETR: 40fb91ed-19aa-4263-be97-dc75011ad83f", false);
+        logToConsole("MT900: Confirmation of Debit - Fully settled (Value Date: 30-APR-2026)", true);
+        logToConsole("MT910: Confirmation of Credit - Beneficiary credited (Value Date: 30-APR-2026)", true);
+        logToConsole("Charges: OUR | Status: COMPLETED | Sent: 28-APR-2026", false);
+    });
+
+    if (window.navigator && window.navigator.vibrate) {
+        const btns = document.querySelectorAll('.action-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                window.navigator.vibrate?.(10);
+            }, { passive: true });
+        });
+    }
+</script>
+</body>
+</html>
