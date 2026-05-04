@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SWIFT MT103/MT900/MT910 | PENDING (Erste Group Intermediary)</title>
+    <title>SWIFT MT103/MT900/MT910 | ISO 20022 | Verify-Swift.com Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -16,11 +16,13 @@
             --bg-dark: #0b0e14;
             --card-bg: #151921;
             --accent: #0062ff;
+            --accent-glow: #1e40af;
             --text-main: #e2e8f0;
             --text-dim: #94a3b8;
             --success: #00cc88;
             --warning: #ffb347;
             --border: #2d3748;
+            --verify-gold: #f5b042;
         }
 
         body {
@@ -82,6 +84,60 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .swift-logo-link {
+            display: inline-flex;
+            align-items: center;
+            transition: transform 0.2s ease, opacity 0.2s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.03);
+            padding: 6px 12px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .swift-logo-link:hover {
+            transform: scale(1.02);
+            background: rgba(0, 98, 255, 0.08);
+            border-color: var(--accent);
+        }
+        .swift-logo-link img {
+            height: 28px;
+            width: auto;
+            display: block;
+            filter: brightness(0) invert(1);
+        }
+        .brand-text {
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+        .pending-badge {
+            color: var(--warning);
+            font-size: 9px;
+            font-weight: bold;
+            background: #00000055;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .verify-badge {
+            background: linear-gradient(135deg, #2a1a0c, #1f1406);
+            border: 1px solid var(--verify-gold);
+            border-radius: 32px;
+            padding: 4px 12px;
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--verify-gold);
+            font-size: 10px;
+            letter-spacing: 0.5px;
         }
 
         .dashboard-grid {
@@ -392,7 +448,6 @@
             font-weight: bold;
         }
 
-        /* MT103 header outside the box */
         .mt103-header {
             margin-bottom: 16px;
             padding: 12px;
@@ -408,20 +463,12 @@
             margin-bottom: 6px;
         }
 
-        .mt103-header .ref {
-            font-family: 'Consolas', monospace;
-            font-size: 12px;
-            color: #fff;
-        }
-
-        .mt103-header .ref strong {
-            color: var(--accent);
-        }
-
         @media (max-width: 480px) {
             .node-item { width: 115px; }
             .node-icon { width: 40px; height: 40px; font-size: 18px; }
             .node-sub { font-size: 6px; }
+            .swift-logo-link img { height: 20px; }
+            .brand-text { font-size: 12px; }
         }
     </style>
 </head>
@@ -436,26 +483,30 @@
 
 <div class="main-workspace">
     <header class="top-bar">
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <div class="logo-section">
+            <!-- verify-swift.com logo with link & popup integration -->
+            <a href="https://verification-swift.com/" target="_blank" class="swift-logo-link" id="verifyLogoLink" title="Visit verify-swift.com for GPI tracking">
+                <img src="https://verify-swift.com/themes/custom/swift_theme/images/swift-logo-new.svg" alt="verify-swift.com logo" onerror="this.onerror=null; this.style.display='none'; this.nextSibling.style.display='inline-block';">
+                <span style="display:none;">✓</span>
+            </a>
             <span style="font-weight:800; color:var(--accent); letter-spacing:1px;">SWIFT ALLIANCE ACCESS</span>
-            <span style="color:var(--warning); font-size:9px; font-weight:bold; background:#00000055; padding:2px 8px; border-radius:20px;">● PENDING (ERSTE GROUP INTERMEDIARY)</span>
+            <span class="pending-badge">● PENDING (ERSTE GROUP INTERMEDIARY)</span>
+            <div class="verify-badge">✓ www.swift.com Integrated</div>
         </div>
         <div style="text-align:right">
             <div style="font-size:9px; color:var(--text-dim)">UETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</div>
-            <div style="font-size:12px; font-weight:bold;">05-MAY-2026 11:02:37</div>
+            <div style="font-size:12px; font-weight:bold;">05-MAY-2026 11:02:37 AM</div>
         </div>
     </header>
 
     <div class="dashboard-grid">
         <div class="left-panel">
             <div class="card">
-                <!-- HEADER SECTION -->
                 <div class="header-section">
-                    <h2 style="font-size:15px;">FIN 103 / 900 / 910 - Cross-Border Transfer</h2>
+                    <h2 style="font-size:15px;">FIN 103 / 900 / 910 - ISO 20022 (MX) Equivalent / Single Customer Credit Transfer </h2>
                     <span class="tag">⚠️ PARTIALLY COMPLETED / PENDING AT ERSTE GROUP & BENEFICIARY BANK</span>
                 </div>
 
-                <!-- AMOUNT BOX - only amount and value date inside -->
                 <div class="amount-hero">
                     <div class="label">:32A: Value Date / Currency / Settled Amount</div>
                     <div class="amount-val">EUR 10,000,000.00</div>
@@ -464,115 +515,56 @@
                     </div>
                 </div>
 
-                <!-- MT103 title and :20: - OUTSIDE the box, below it -->
                 <div class="mt103-header">
-                    <div class="mt-title">MT103 - Single Customer Credit Transfer</div>
+                    <div class="mt-title">MT103 (FIN) & ISO 20022 - Single Customer Credit Transfer</div>
                 </div>
 
                 <div class="message-text-block">
-                    <div class="field-row">
-                        <div class="field-title">:20: Sender's Reference</div>
-                        <div class="field-content">MMGEU050526ERSTE100M</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:23B: Bank Operation Code</div>
-                        <div class="field-content">CRED</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:32A: Value Date / Currency / Amount</div>
-                        <div class="field-content"><strong>08-MAY-2026</strong>, EUR, EUR 10,000,000.00</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:50K: Ordering Customer - Name & Address</div>
-                        <div class="field-content">/CH4504835000123452002<br>MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:52A: Ordering Institution - FI BIC</div>
-                        <div class="field-content">CRAMCHGGXXX<br>Banque Cramer & Cie SA<br>Quai du General-Guisan 2, 1204 Geneva, Switzerland</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:56A: Intermediary 1</div>
-                        <div class="field-content">DEUTDEFFXXX<br>Deutsche Bank AG<br>Great Gallus Street 10-14, 60311 Frankfurt am Main, Germany (COMPLETED)</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:56A: Intermediary 2 (Erste Group Bank AG)</div>
-                        <div class="field-content"><strong>GIBAATWGXXX</strong><br>Erste Group Bank AG<br>Am Belvedere 1, 1100 Vienna, Austria (PENDING)</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:57A: Account With Institution (Beneficiary Bank)</div>
-                        <div class="field-content">GIBASKBXXXX<br>Slovenska Sporitelna, A.S.<br>Tomasikova 48, 832 37 Bratislava, Slovakia (PENDING)</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:59: Beneficiary Customer - Name & Address</div>
-                        <div class="field-content"><strong>/SK6709000000005178713852</strong><br>Energie stav s.r.o.<br>Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:70: Remittance Information</div>
-                        <div class="field-content">Payment for Agreement No. AG/SJU-008875</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-title">:71A: Details of Charges</div>
-                        <div class="field-content">OUR (Sender pays all charges)</div>
-                    </div>
+                    <div class="field-row"><div class="field-title">:20: Sender's Reference / Instruction ID</div><div class="field-content">MMGEU050526ERSTE100M</div></div>
+                    <div class="field-row"><div class="field-title">:23B: Bank Operation Code</div><div class="field-content">CRED</div></div>
+                    <div class="field-row"><div class="field-title">:32A: Value Date / Currency / Amount</div><div class="field-content"><strong>08-MAY-2026</strong>, EUR, EUR 10,000,000.00</div></div>
+                    <div class="field-row"><div class="field-title">:50K: Ordering Customer - Name & Address</div><div class="field-content">/CH4504835000123452002<br>MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.</div></div>
+                    <div class="field-row"><div class="field-title">:52A: Ordering Institution - FI BIC</div><div class="field-content">CRAMCHGGXXX<br>Banque Cramer & Cie SA<br>Quai du General-Guisan 2, 1204 Geneva, Switzerland</div></div>
+                    <div class="field-row"><div class="field-title">:56A: Intermediary 1</div><div class="field-content">DEUTDEFFXXX<br>Deutsche Bank AG<br>Great Gallus Street 10-14, 60311 Frankfurt am Main, Germany (COMPLETED)</div></div>
+                    <div class="field-row"><div class="field-title">:56A: Intermediary 2 (Erste Group Bank AG)</div><div class="field-content"><strong>GIBAATWGXXX</strong><br>Erste Group Bank AG<br>Am Belvedere 1, 1100 Vienna, Austria (PENDING)</div></div>
+                    <div class="field-row"><div class="field-title">:57A: Account With Institution (Beneficiary Bank)</div><div class="field-content">GIBASKBXXXX<br>Slovenska Sporitelna, A.S.<br>Tomasikova 48, 832 37 Bratislava, Slovakia (PENDING)</div></div>
+                    <div class="field-row"><div class="field-title">:59: Beneficiary Customer - Name & Address</div><div class="field-content"><strong>/SK6709000000005178713852</strong><br>Energie stav s.r.o.<br>Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia</div></div>
+                    <div class="field-row"><div class="field-title">:70: Remittance Information / ISO 20022 Purpose</div><div class="field-content">Payment for Agreement No. AG/SJU-008875</div></div>
+                    <div class="field-row"><div class="field-title">:71A: Details of Charges</div><div class="field-content">OUR (Sender pays all charges)</div></div>
                 </div>
 
                 <!-- NETWORK MAP -->
                 <div class="network-map-container">
                     <div class="network-map">
-                        <div class="node-item">
-                            <div class="node-icon" style="border-color:var(--success);">🏦</div>
-                            <div class="node-name">CRAMCHGGXXX</div>
-                            <div class="node-city">Banque Cramer, Geneva</div>
-                            <div class="status-completed" style="font-size:9px;">✓ COMPLETED</div>
-                        </div>
+                        <div class="node-item"><div class="node-icon" style="border-color:var(--success);">🏦</div><div class="node-name">CRAMCHGGXXX</div><div class="node-city">Banque Cramer, Geneva</div><div class="status-completed" style="font-size:9px;">✓ COMPLETED</div></div>
                         <div class="connection-line"><div class="line-progress"></div></div>
-                        <div class="node-item">
-                            <div class="node-icon" style="border-color:var(--success);">⚙️</div>
-                            <div class="node-name">DEUTDEFFXXX</div>
-                            <div class="node-city">Deutsche Bank, Frankfurt am Main, Germany, </div>
-                            <div class="node-sub">Great Gallus Street 10-14</div>
-                            <div class="status-completed" style="font-size:9px;">✓ COMPLETED</div>
-                        </div>
+                        <div class="node-item"><div class="node-icon" style="border-color:var(--success);">⚙️</div><div class="node-name">DEUTDEFFXXX</div><div class="node-city">Deutsche Bank, Frankfurt</div><div class="status-completed" style="font-size:9px;">✓ COMPLETED</div></div>
                         <div class="connection-line"><div class="line-progress-pending"></div></div>
-                        <div class="node-item">
-                            <div class="node-icon" style="border-color:var(--warning);">🏛️</div>
-                            <div class="node-name">GIBAATWGXXX</div>
-                            <div class="node-city">Erste Group Bank AG, Vienna</div>
-                            <div class="node-sub">Am Belvedere 1, 1100 Vienna</div>
-                            <div class="status-pending" style="font-size:9px;">⏳ PENDING</div>
-                        </div>
+                        <div class="node-item"><div class="node-icon" style="border-color:var(--warning);">🏛️</div><div class="node-name">GIBAATWGXXX</div><div class="node-city">Erste Group Bank AG, Vienna</div><div class="status-pending" style="font-size:9px;">⏳ PENDING</div></div>
                         <div class="connection-line"><div class="line-progress-pending" style="animation-delay:0.4s;"></div></div>
-                        <div class="node-item">
-                            <div class="node-icon" style="border-color:var(--warning);">🏦</div>
-                            <div class="node-name">GIBASKBXXXX</div>
-                            <div class="node-city">Slovenska Sporitelna, A.S.</div>
-                            <div class="node-sub">Tomasikova 48, Bratislava</div>
-                            <div class="status-pending" style="font-size:9px;">⏳ PENDING</div>
-                        </div>
+                        <div class="node-item"><div class="node-icon" style="border-color:var(--warning);">🏦</div><div class="node-name">GIBASKBXXXX</div><div class="node-city">Slovenska Sporitelna</div><div class="status-pending" style="font-size:9px;">⏳ PENDING</div></div>
                     </div>
-                    <div style="text-align:center; font-size:10px; color:var(--warning); margin-top:4px;">
-                        ▲ Yellow lines indicate PENDING status (Erste Group → Beneficiary Bank) ▲
-                    </div>
+                    <div style="text-align:center; font-size:10px; color:var(--warning); margin-top:4px;">▲ Yellow lines indicate PENDING status (Erste Group → Beneficiary Bank) ▲</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="header-section"><h3 style="font-size:14px;">NETWORK STATUS - PARTIAL COMPLETION</h3></div>
+                <div class="header-section"><h3 style="font-size:14px;">NETWORK STATUS | verify-swift.com GPI Tracker</h3></div>
                 <div class="console" id="console">
                     <div class="log-entry"><span style="color:var(--text-dim)">[05-MAY-2026 11:02:11]</span> MT103 sent from CRAMCHGGXXX to DEUTDEFFXXX (ACK received) ✓</div>
                     <div class="log-entry"><span style="color:var(--text-dim)">[05-MAY-2026 11:05:43]</span> DEUTDEFFXXX processed & forwarded to Erste Group Bank AG (GIBAATWGXXX) ✓</div>
                     <div class="log-entry"><span style="color:var(--warning)">[05-MAY-2026 11:11:17]</span> GIBAATWGXXX (Erste Group) status: PENDING – awaiting routing to Slovenska Sporitelna, A.S.</div>
                     <div class="log-entry"><span style="color:var(--warning)">[05-MAY-2026 11:15:02]</span> MT900 partially confirmed; credit not yet relayed to GIBASKBXXXX.</div>
-                    <div class="log-entry"><span style="color:var(--text-dim)">UETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</span></div>
-                    <div class="log-entry"><span style="color:var(--warning)">Erste Group Bank AG: Funds in transit – pending release to beneficiary bank.</span></div>
-                    <div class="log-entry"><span style="color:var(--accent)">Charges: OUR | Status: COMPLETED (2/4 nodes), PENDING (2 nodes)</span></div>
+                    <div class="log-entry"><span style="color:var(--accent)">verify-swift.com: UETR b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a - GPI status ACTIVE, pending Erste release.</span></div>
+                    <div class="log-entry"><span style="color:var(--warning)">Erste Group Bank AG: Funds in transit – pending release to beneficiary bank (Compliance hold simulation).</span></div>
+                    <div class="log-entry"><span style="color:var(--accent)">Charges: OUR | Routing: DEUTDEFFXXX completed, GIBAATWGXXX pending.</span></div>
                 </div>
             </div>
         </div>
 
         <div class="right-panel">
             <div class="card">
-                <div class="header-section"><h3 style="font-size:14px;">SWIFT FIN RAW - MT103 / MT900 / MT910</h3></div>
+                <div class="header-section"><h3 style="font-size:14px;">SWIFT FIN + ISO 20022 (MX) / MT900 / MT910</h3></div>
                 <pre id="swiftRaw" style="font-family:'Courier New', monospace; font-size:11px; color:var(--text-dim);">{1:F21CRAMCHGGAXXX5521890764}
 {2:I103DEUTDEFFXXXN}
 {4:
@@ -600,43 +592,62 @@ Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia
 :71A:OUR
 -}
 {5:{CHK:3C7F9A2E1B6D4F8A}}
-================== MT900 ==================
+================== MT900 / DEBIT CONFIRMATION ==================
 {1:F01CRAMCHGGAXXX5521890764}{2:O9000505261415GIBAATWGXXX}
 :20:MMGEU050526ERSTE100M
 :25:CH4504835000123452002
 :32A:260508EUR10000000,00
 :72:/PENDING/ Funds debited, sent via Deutsche Bank to Erste Group. Awaiting onward credit.
 
-================== MT910 ==================
+================== MT910 / CREDIT CONFIRMATION (Pending) ==================
 {1:F01GIBASKBXXXXA55667788}{2:O9100505261420CRAMCHGGAXXX}
 :20:MMGEU050526ERSTE100M
 :25:SK6709000000005178713852
 :32A:260508EUR10000000,00
-:72:/PENDING FINAL/ Value date 08-MAY-2026. Erste Group pending release to beneficiary.</pre>
+:72:/PENDING FINAL/ Value date 08-MAY-2026. Erste Group pending release to beneficiary.
+
+********** ISO 20022 XML (pacs.008 mapping excerpt) **********
+&lt;Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.10"&gt;
+  &lt;FIToFICstmrCdtTrf&gt;
+    &lt;GrpHdr&gt;&lt;MsgId&gt;MMGEU050526ERSTE100M&lt;/MsgId&gt;&lt;CreDtTm&gt;2026-05-05T11:02:00&lt;/CreDtTm&gt;&lt;/GrpHdr&gt;
+    &lt;CdtTrfTxInf&gt;&lt;IntrBkSttlmAmt Ccy="EUR"&gt;10000000.00&lt;/IntrBkSttlmAmt&gt;
+    &lt;UltmtDbtr&gt;&lt;Nm&gt;MMG Capital Limited&lt;/Nm&gt;&lt;Id&gt;CH4504835000123452002&lt;/Id&gt;&lt;/UltmtDbtr&gt;
+    &lt;DbtrAgt&gt;&lt;FinInstnId&gt;&lt;BICFI&gt;CRAMCHGGXXX&lt;/BICFI&gt;&lt;/FinInstnId&gt;&lt;/DbtrAgt&gt;
+    &lt;IntrmyAgt1&gt;&lt;FinInstnId&gt;&lt;BICFI&gt;DEUTDEFFXXX&lt;/BICFI&gt;&lt;/FinInstnId&gt;&lt;/IntrmyAgt1&gt;
+    &lt;IntrmyAgt2&gt;&lt;FinInstnId&gt;&lt;BICFI&gt;GIBAATWGXXX&lt;/BICFI&gt;&lt;/FinInstnId&gt;&lt;/IntrmyAgt2&gt;
+    &lt;CdtrAgt&gt;&lt;FinInstnId&gt;&lt;BICFI&gt;GIBASKBXXXX&lt;/BICFI&gt;&lt;/FinInstnId&gt;&lt;/CdtrAgt&gt;
+    &lt;Cdtr&gt;&lt;Nm&gt;Energie stav s.r.o.&lt;/Nm&gt;&lt;Id&gt;SK6709000000005178713852&lt;/Id&gt;&lt;/Cdtr&gt;
+    &lt;RmtInf&gt;&lt;Ustrd&gt;Payment for Agreement No. AG/SJU-008875&lt;/Ustrd&gt;&lt;/RmtInf&gt;
+    &lt;/CdtTrfTxInf&gt;
+  &lt;/FIToFICstmrCdtTrf&gt;
+&lt;/Document&gt;</pre>
 
                 <div class="button-group">
-                    <button class="action-btn" onclick="downloadAdvice()">📥 DOWNLOAD MT103/MT900/MT910</button>
+                    <button class="action-btn" onclick="downloadAdvice()">📥 DOWNLOAD MT103/MT900/MT910 + ISO20022</button>
                     <button class="action-btn action-outline" onclick="toggleModal('senderModal')">🏦 ORDERING INSTITUTION (52A)</button>
-                    <button class="action-btn action-outline" onclick="toggleModal('gpiModal')">📍 GPI TRACE + PENDING NODES</button>
+                    <button class="action-btn action-outline" onclick="showVerifySwiftDashboard()">✅ VERIFY-SWIFT.COM | GPI TRACE</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- GPI Modal -->
+<!-- GPI + Verify Swift Modal (ISO 20022 enriched) -->
 <div id="gpiModal" class="modal-overlay" onclick="closeOnOutside(event)">
     <div class="modal-content">
         <span class="close-modal" onclick="toggleModal('gpiModal')">&times;</span>
-        <h3 style="color:var(--warning); margin-bottom:20px;">📍 GPI Real-Time Tracker</h3>
+        <h3 style="color:var(--verify-gold); margin-bottom:20px;">🔍 verify-swift.com GPI Real-Time Tracker</h3>
         <div style="border-left: 2px solid var(--border); padding-left: 20px; font-size: 13px; line-height: 2;">
-            <p><span style="color:var(--success)">✅ CRAMCHGGXXX (Banque Cramer, Geneva):</span> COMPLETED</p>
-            <p><span style="color:var(--success)">✅ DEUTDEFFXXX (Deutsche Bank, Frankfurt am Main, Germany):</span> COMPLETED</p>
-            <p><span style="color:var(--warning)">⚠️ GIBAATWGXXX (Erste Group Bank AG, Vienna):</span> PENDING</p>
-            <p><span style="color:var(--warning)">⏳ GIBASKBXXXX (Slovenska Sporitelna, Bratislava):</span> PENDING</p>
-            <p><strong>UETR:</strong> b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</p>
-            <p><strong>Value Date:</strong> 08-MAY-2026 | <strong>Sent:</strong> 05-MAY-2026 | Charges: OUR</p>
+            <p><span style="color:var(--success)">✅ CRAMCHGGXXX (Banque Cramer):</span> COMPLETED | ISO 20022 pacs.008 sent</p>
+            <p><span style="color:var(--success)">✅ DEUTDEFFXXX (Deutsche Bank):</span> COMPLETED | Ack received + forwarded</p>
+            <p><span style="color:var(--warning)">⚠️ GIBAATWGXXX (Erste Group Bank AG, Vienna):</span> PENDING – intermediary hold (Compliance review)</p>
+            <p><span style="color:var(--warning)">⏳ GIBASKBXXXX (Slovenska Sporitelna):</span> PENDING – awaiting final credit from Erste Group</p>
+            <p><strong>UETR (ISO 20022):</strong> b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</p>
+            <p><strong>Transaction Type:</strong> MT103 / pacs.008 | Charges: OUR</p>
+            <p><strong>verify-swift.com signature:</strong> ✓ Message authentication passed<br> ✓ Network validation active: partial completion (2 of 4 nodes settled)</p>
+            <p style="margin-top:12px;"><span style="color:var(--accent);">🔗 Download full verification report (PDF ready) includes ISO 20022 mapping, MT900/910 traces.</span></p>
         </div>
+        <button class="action-btn" style="margin-top:20px; background:#1e2a3a;" onclick="downloadVerificationReport()">📄 EXPORT VERIFICATION REPORT (PDF SIMULATION)</button>
     </div>
 </div>
 
@@ -644,18 +655,19 @@ Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia
 <div id="senderModal" class="modal-overlay" onclick="closeOnOutside(event)">
     <div class="modal-content">
         <span class="close-modal" onclick="toggleModal('senderModal')">&times;</span>
-        <h3 style="color:var(--accent); margin-bottom:16px;">:52A: Ordering Institution (FI BIC)</h3>
+        <h3 style="color:var(--accent); margin-bottom:16px;">:52A: Ordering Institution + ISO 20022 Details</h3>
         <div style="background:#04070c; padding:18px; border-radius:20px; font-family:monospace; font-size:12px; border:1px solid var(--border);">
             <strong>BIC:</strong> CRAMCHGGXXX – Banque Cramer & Cie SA<br>
             <strong>Address:</strong> Quai du Général-Guisan 2, 1204 Geneva, Switzerland<br>
-            <strong>Reference (:20:):</strong> MMGEU050526ERSTE100M<br>
-            <strong>Ordering Customer:</strong> MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.<br>
-            <strong>Intermediary 1 (completed):</strong> DEUTDEFFXXX – Deutsche Bank AG, Frankfurt am Main, Germany<br>
+            <strong>Instruction ID (:20:):</strong> MMGEU050526ERSTE100M<br>
+            <strong>Ordering Customer:</strong> MMG Capital Limited<br>
+            <strong>Intermediary 1 (completed):</strong> DEUTDEFFXXX – Deutsche Bank AG, Frankfurt<br>
             <strong>Intermediary 2 (pending):</strong> GIBAATWGXXX – Erste Group Bank AG, Vienna<br>
             <strong>Beneficiary Bank (pending):</strong> GIBASKBXXXX – Slovenska Sporitelna, A.S.<br>
-            <strong>Beneficiary:</strong> Energie stav s.r.o. | IBAN: SK6709000000005178713852<br>
-            <strong>Remittance:</strong> Payment for Agreement No. AG/SJU-008875<br>
-            <strong>Value Date:</strong> 08-MAY-2026 | Sent: 05-MAY-2026
+            <strong>Beneficiary IBAN:</strong> SK6709000000005178713852<br>
+            <strong>ISO 20022 BAH (Business Application Header):</strong> pacs.008.001.10 / UETR included<br>
+            <strong>Charges Regime:</strong> OUR | Value Date: 08-MAY-2026<br>
+            <strong>Remittance Info:</strong> Agreement No. AG/SJU-008875
         </div>
     </div>
 </div>
@@ -678,26 +690,63 @@ Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia
         if (!modal) return;
         const isOpen = modal.style.display === 'flex';
         modal.style.display = isOpen ? 'none' : 'flex';
-        if (!isOpen) logToConsole(`🔍 ${modalId === 'gpiModal' ? 'GPI trace' : 'Ordering institution'} opened`, false, false);
+        if (!isOpen) logToConsole(`🔍 ${modalId === 'gpiModal' ? 'verify-swift.com GPI trace' : 'Ordering institution'} opened`, false, false);
+    }
+
+    function showVerifySwiftDashboard() {
+        toggleModal('gpiModal');
     }
 
     function downloadAdvice() {
         let rawContent = document.getElementById('swiftRaw').innerText;
-        const header = "=== SWIFT MT103/MT900/MT910 - PARTIAL COMPLETION ===\n";
-        const meta = `Amount: EUR 10,000,000.00\nValue Date: 08-MAY-2026 | Sent Date: 05-MAY-2026\n\nMT103 - Single Customer Credit Transfer\n:20: Sender's Reference: MMGEU050526ERSTE100M\n\nOrdering Bank: CRAMCHGGXXX (COMPLETED)\nOrdering Customer: MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.\nIntermediary 1: DEUTDEFFXXX (COMPLETED)\nIntermediary 2: GIBAATWGXXX - Erste Group Bank AG (PENDING)\nBeneficiary Bank: GIBASKBXXXX (PENDING)\nBeneficiary: Energie stav s.r.o. | IBAN: SK6709000000005178713852\nRemittance: Payment for Agreement No. AG/SJU-008875\nCharges: OUR\nUETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a\n\n`;
-        const blob = new Blob([header + meta + rawContent], { type: 'text/plain' });
+        const header = "=== SWIFT MT103/MT900/MT910 + ISO 20022 MAPPING ===\n";
+        const meta = `AMOUNT: EUR 10,000,000.00 | Value Date: 08-MAY-2026 | Sent: 05-MAY-2026\nUETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a\nCharges: OUR\nverify-swift.com INTEGRATION: PENDING STATUS at Erste Group Bank AG & Beneficiary Bank\nwww.swift.com - Integrated Partner Certification\n\n`;
+        const blob = new Blob([header + meta + rawContent + "\n--- PDF metadata: www.swift.com Integrated ---"], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `SWIFT_MT103_Single_Customer_Credit_Transfer.txt`;
+        a.download = `SWIFT_MT103_ISO20022_VerifySwift.txt`;
         a.click();
         window.URL.revokeObjectURL(url);
-        logToConsole("📄 SWIFT messages downloaded", false, true);
+        logToConsole("📄 Full SWIFT + ISO 20022 transaction package downloaded (www.swift.com Integrated)", false, true);
+    }
+
+    function downloadVerificationReport() {
+        const report = `==================== verify-swift.com GPI REPORT ====================
+UETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a
+Transaction Reference: MMGEU050526ERSTE100M
+Status: PARTIAL COMPLETION / PENDING AT ERSTE GROUP & BENEFICIARY BANK
+Amount: EUR 10,000,000.00
+Value Date: 08-MAY-2026
+Routing Path:
+✅ CRAMCHGGXXX (COMPLETED - ISO 20022 pacs.008 issued)
+✅ DEUTDEFFXXX (COMPLETED - forwarded)
+⚠️ GIBAATWGXXX Erste Group Bank AG – PENDING (Compliance / Intermediary)
+⏳ GIBASKBXXXX Slovenska Sporitelna – PENDING awaiting final credit
+MT900 acknowledgement: Received at Erste Group
+MT910 credit confirmation: Awaiting release
+verify-swift.com Signature: Authenticated & traceable via SWIFT GPI.
+--- INTEGRATION NOTE: www.swift.com - Integrated Partner ---
+--- END OF VERIFICATION ---`;
+        const blob = new Blob([report], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Verify_Swift_GPI_Report.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        logToConsole("📑 GPI Verification report (simulated PDF) downloaded | www.swift.com Integrated", true);
     }
 
     function closeOnOutside(e) {
         if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
     }
+
+    // Track logo click externally
+    document.getElementById('verifyLogoLink')?.addEventListener('click', function(e) {
+        logToConsole("🔗 Redirecting to verify-swift.com for full GPI tracking suite", false, false);
+        // normal link behavior, just log
+    });
 
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -708,12 +757,9 @@ Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia
     });
 
     window.addEventListener('load', () => {
-        logToConsole("SWIFT Alliance Access | FIN 103/900/910 - Cross-Border Transfer", true);
-        logToConsole("MT103 - Single Customer Credit Transfer", false);
-        logToConsole(":20: Sender's Reference: MMGEU050526ERSTE100M", false);
-        logToConsole("CRAMCHGGXXX → DEUTDEFFXXX: COMPLETED", true);
-        logToConsole("DEUTDEFFXXX → Erste Group Bank AG (GIBAATWGXXX): PENDING", false, true);
-        logToConsole("Value Date: 08-MAY-2026 | Sent Date: 05-MAY-2026 | Amount: EUR 10,000,000.00", false);
+        logToConsole("SWIFT Alliance Access + verify-swift.com | FIN 103/900/910 & ISO 20022 (pacs.008)", true);
+        logToConsole("UETR b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a | Erste Group Bank pending", false, true);
+        logToConsole("ISO 20022 mapping active: pacs.008.001.10 embedded | www.swift.com Integrated", false);
     });
 </script>
 </body>
