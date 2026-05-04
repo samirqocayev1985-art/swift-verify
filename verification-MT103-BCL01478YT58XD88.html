@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SWIFT MT103/MT900/MT910 | PENDING (Erste Group Intermediary)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-dark: #0b0e14;
+            --card-bg: #151921;
+            --accent: #0062ff;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --success: #00cc88;
+            --warning: #ffb347;
+            --border: #2d3748;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            background: #000000cc;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            gap: 8px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            color: var(--text-dim);
+            font-size: 22px;
+            padding: 8px 12px;
+            border-radius: 40px;
+            transition: 0.2s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(0, 98, 255, 0.15);
+        }
+
+        .main-workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: radial-gradient(circle at top left, #1a202c, #0b0e14);
+            width: 100%;
+        }
+
+        .top-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(21, 25, 33, 0.9);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 18px;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #2d3748;
+            padding-bottom: 10px;
+        }
+
+        .tag {
+            font-family: 'Courier New', monospace;
+            color: var(--warning);
+            font-weight: bold;
+            background: rgba(255, 180, 71, 0.15);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .amount-hero {
+            background: linear-gradient(145deg, #1e2530, #151921);
+            padding: 20px 16px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid #3e4b5e;
+            margin-bottom: 20px;
+        }
+
+        .amount-val {
+            font-size: clamp(28px, 8vw, 44px);
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0,98,255,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .network-map-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 18px 0 8px 0;
+            padding-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .network-map {
+            min-width: 850px;
+            padding: 20px 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .node-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 145px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .node-icon {
+            width: 48px;
+            height: 48px;
+            background: #0f131c;
+            border: 1.5px solid #4a5568;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 8px;
+            transition: border 0.2s;
+        }
+
+        .node-name {
+            font-family: 'Consolas', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .node-city {
+            font-size: 8px;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .node-sub {
+            font-size: 7px;
+            color: var(--text-dim);
+            margin-top: 4px;
+            max-width: 135px;
+            word-break: break-word;
+        }
+
+        .connection-line {
+            flex-grow: 1;
+            height: 2px;
+            background: #2d3748;
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            min-width: 35px;
+        }
+
+        .line-progress {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--success), transparent);
+            left: -100%;
+            animation: pulseLine 2s infinite linear;
+        }
+
+        .line-progress-pending {
+            background: linear-gradient(90deg, transparent, var(--warning), transparent);
+            left: -100%;
+            animation: pulseLine 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulseLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .console {
+            background: #080b10;
+            font-family: 'Consolas', monospace;
+            padding: 14px;
+            border-radius: 14px;
+            height: 180px;
+            overflow-y: auto;
+            font-size: 11px;
+            border: 1px solid var(--border);
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            border-left: 2px solid var(--accent);
+            padding-left: 8px;
+            word-break: break-word;
+        }
+
+        .action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px 20px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 18px;
+            font-size: 28px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.05);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            background: #00000030;
+            padding: 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .message-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .mt-badge {
+            background: rgba(0, 98, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .field-row {
+            border-left: 2px solid var(--accent);
+            padding-left: 12px;
+            margin-bottom: 12px;
+        }
+
+        .field-title {
+            font-size: 11px;
+            color: var(--accent);
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+
+        .field-content {
+            font-size: 13px;
+            word-break: break-word;
+        }
+
+        .status-completed {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        /* MT103 header outside the box */
+        .mt103-header {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(0, 98, 255, 0.08);
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .mt103-header .mt-title {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .mt103-header .ref {
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .mt103-header .ref strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 480px) {
+            .node-item { width: 115px; }
+            .node-icon { width: 40px; height: 40px; font-size: 18px; }
+            .node-sub { font-size: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <div class="nav-item active">🏦</div>
+    <div class="nav-item">📊</div>
+    <div class="nav-item">🔒</div>
+    <div class="nav-item">⚙️</div>
+</nav>
+
+<div class="main-workspace">
+    <header class="top-bar">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-weight:800; color:var(--accent); letter-spacing:1px;">SWIFT ALLIANCE ACCESS</span>
+            <span style="color:var(--warning); font-size:9px; font-weight:bold; background:#00000055; padding:2px 8px; border-radius:20px;">● PENDING (ERSTE GROUP INTERMEDIARY)</span>
+        </div>
+        <div style="text-align:right">
+            <div style="font-size:9px; color:var(--text-dim)">UETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</div>
+            <div style="font-size:12px; font-weight:bold;">05-MAY-2026 12:02:37</div>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        <div class="left-panel">
+            <div class="card">
+                <!-- HEADER SECTION -->
+                <div class="header-section">
+                    <h2 style="font-size:15px;">FIN 103 / 900 / 910 - Cross-Border Transfer</h2>
+                    <span class="tag">⚠️ PARTIALLY COMPLETED / PENDING AT ERSTE GROUP & BENEFICIARY BANK</span>
+                </div>
+
+                <!-- AMOUNT BOX - only amount and value date inside -->
+                <div class="amount-hero">
+                    <div class="label">:32A: Value Date / Currency / Settled Amount</div>
+                    <div class="amount-val">EUR 10,000,000.00</div>
+                    <div style="color:var(--text-dim); font-size:11px; margin-top:6px;">
+                        Value Date: <strong>08-MAY-2026</strong> | Currency: EUR | Sent Date: <strong>05-MAY-2026</strong>
+                    </div>
+                </div>
+
+                <!-- MT103 title and :20: - OUTSIDE the box, below it -->
+                <div class="mt103-header">
+                    <div class="mt-title">MT103 - Single Customer Credit Transfer</div>
+                </div>
+
+                <div class="message-text-block">
+                    <div class="field-row">
+                        <div class="field-title">:20: Sender's Reference</div>
+                        <div class="field-content">MMGEU050526ERSTE100M</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:23B: Bank Operation Code</div>
+                        <div class="field-content">CRED</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:32A: Value Date / Currency / Amount</div>
+                        <div class="field-content"><strong>08-MAY-2026</strong>, EUR, EUR 10,000,000.00</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:50K: Ordering Customer - Name & Address</div>
+                        <div class="field-content">/CH4504835000123452002<br>MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:52A: Ordering Institution - FI BIC</div>
+                        <div class="field-content">CRAMCHGGXXX<br>Banque Cramer & Cie SA<br>Quai du General-Guisan 2, 1204 Geneva, Switzerland</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:56A: Intermediary 1</div>
+                        <div class="field-content">DEUTDEFFXXX<br>Deutsche Bank AG<br>Great Gallus Street 10-14, 60311 Frankfurt am Main, Germany (COMPLETED)</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:56A: Intermediary 2 (Erste Group Bank AG)</div>
+                        <div class="field-content"><strong>GIBAATWGXXX</strong><br>Erste Group Bank AG<br>Am Belvedere 1, 1100 Vienna, Austria (PENDING)</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:57A: Account With Institution (Beneficiary Bank)</div>
+                        <div class="field-content">GIBASKBXXXX<br>Slovenska Sporitelna, A.S.<br>Tomasikova 48, 832 37 Bratislava, Slovakia (PENDING)</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:59: Beneficiary Customer - Name & Address</div>
+                        <div class="field-content"><strong>/SK6709000000005178713852</strong><br>Energie stav s.r.o.<br>Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:70: Remittance Information</div>
+                        <div class="field-content">Payment for Agreement No. AG/SJU-008875</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-title">:71A: Details of Charges</div>
+                        <div class="field-content">OUR (Sender pays all charges)</div>
+                    </div>
+                </div>
+
+                <!-- NETWORK MAP -->
+                <div class="network-map-container">
+                    <div class="network-map">
+                        <div class="node-item">
+                            <div class="node-icon" style="border-color:var(--success);">🏦</div>
+                            <div class="node-name">CRAMCHGGXXX</div>
+                            <div class="node-city">Banque Cramer, Geneva</div>
+                            <div class="status-completed" style="font-size:9px;">✓ COMPLETED</div>
+                        </div>
+                        <div class="connection-line"><div class="line-progress"></div></div>
+                        <div class="node-item">
+                            <div class="node-icon" style="border-color:var(--success);">⚙️</div>
+                            <div class="node-name">DEUTDEFFXXX</div>
+                            <div class="node-city">Deutsche Bank, Frankfurt am Main, Germany, </div>
+                            <div class="node-sub">Great Gallus Street 10-14</div>
+                            <div class="status-completed" style="font-size:9px;">✓ COMPLETED</div>
+                        </div>
+                        <div class="connection-line"><div class="line-progress-pending"></div></div>
+                        <div class="node-item">
+                            <div class="node-icon" style="border-color:var(--warning);">🏛️</div>
+                            <div class="node-name">GIBAATWGXXX</div>
+                            <div class="node-city">Erste Group Bank AG, Vienna</div>
+                            <div class="node-sub">Am Belvedere 1, 1100 Vienna</div>
+                            <div class="status-pending" style="font-size:9px;">⏳ PENDING</div>
+                        </div>
+                        <div class="connection-line"><div class="line-progress-pending" style="animation-delay:0.4s;"></div></div>
+                        <div class="node-item">
+                            <div class="node-icon" style="border-color:var(--warning);">🏦</div>
+                            <div class="node-name">GIBASKBXXXX</div>
+                            <div class="node-city">Slovenska Sporitelna, A.S.</div>
+                            <div class="node-sub">Tomasikova 48, Bratislava</div>
+                            <div class="status-pending" style="font-size:9px;">⏳ PENDING</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; font-size:10px; color:var(--warning); margin-top:4px;">
+                        ▲ Yellow lines indicate PENDING status (Erste Group → Beneficiary Bank) ▲
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="header-section"><h3 style="font-size:14px;">NETWORK STATUS - PARTIAL COMPLETION</h3></div>
+                <div class="console" id="console">
+                    <div class="log-entry"><span style="color:var(--text-dim)">[05-MAY-2026 12:02:11]</span> MT103 sent from CRAMCHGGXXX to DEUTDEFFXXX (ACK received) ✓</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">[05-MAY-2026 12:05:43]</span> DEUTDEFFXXX processed & forwarded to Erste Group Bank AG (GIBAATWGXXX) ✓</div>
+                    <div class="log-entry"><span style="color:var(--warning)">[05-MAY-2026 12:11:17]</span> GIBAATWGXXX (Erste Group) status: PENDING – awaiting routing to Slovenska Sporitelna, A.S.</div>
+                    <div class="log-entry"><span style="color:var(--warning)">[05-MAY-2026 12:15:02]</span> MT900 partially confirmed; credit not yet relayed to GIBASKBXXXX.</div>
+                    <div class="log-entry"><span style="color:var(--text-dim)">UETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</span></div>
+                    <div class="log-entry"><span style="color:var(--warning)">Erste Group Bank AG: Funds in transit – pending release to beneficiary bank.</span></div>
+                    <div class="log-entry"><span style="color:var(--accent)">Charges: OUR | Status: COMPLETED (2/4 nodes), PENDING (2 nodes)</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="card">
+                <div class="header-section"><h3 style="font-size:14px;">SWIFT FIN RAW - MT103 / MT900 / MT910</h3></div>
+                <pre id="swiftRaw" style="font-family:'Courier New', monospace; font-size:11px; color:var(--text-dim);">{1:F21CRAMCHGGAXXX5521890764}
+{2:I103DEUTDEFFXXXN}
+{4:
+:20:MMGEU050526ERSTE100M
+:23B:CRED
+:32A:260508EUR10000000,00
+:50K:/CH4504835000123452002
+MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.
+:52A:CRAMCHGGXXX
+BANQUE CRAMER & CIE SA
+Quai du General-Guisan 2, 1204 Geneva, Switzerland
+:56A:DEUTDEFFXXX
+DEUTSCHE BANK AG
+Great Gallus Street 10-14, 60311 Frankfurt am Main, Germany
+:56D:/GIBAATWGXXX
+ERSTE GROUP BANK AG
+Am Belvedere 1, 1100 Vienna, Austria
+:57A:GIBASKBXXXX
+SLOVENSKA SPORITELNA, A.S.
+Tomasikova 48, 832 37 Bratislava, Slovakia
+:59:/SK6709000000005178713852
+Energie stav s.r.o.
+Buzalkova 10037/10, Bratislava, Vajnory 831 07, Slovakia
+:70:Payment for Agreement No. AG/SJU-008875
+:71A:OUR
+-}
+{5:{CHK:3C7F9A2E1B6D4F8A}}
+================== MT900 ==================
+{1:F01CRAMCHGGAXXX5521890764}{2:O9000505261415GIBAATWGXXX}
+:20:MMGEU050526ERSTE100M
+:25:CH4504835000123452002
+:32A:260508EUR10000000,00
+:72:/PENDING/ Funds debited, sent via Deutsche Bank to Erste Group. Awaiting onward credit.
+
+================== MT910 ==================
+{1:F01GIBASKBXXXXA55667788}{2:O9100505261420CRAMCHGGAXXX}
+:20:MMGEU050526ERSTE100M
+:25:SK6709000000005178713852
+:32A:260508EUR10000000,00
+:72:/PENDING FINAL/ Value date 08-MAY-2026. Erste Group pending release to beneficiary.</pre>
+
+                <div class="button-group">
+                    <button class="action-btn" onclick="downloadAdvice()">📥 DOWNLOAD MT103/MT900/MT910</button>
+                    <button class="action-btn action-outline" onclick="toggleModal('senderModal')">🏦 ORDERING INSTITUTION (52A)</button>
+                    <button class="action-btn action-outline" onclick="toggleModal('gpiModal')">📍 GPI TRACE + PENDING NODES</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GPI Modal -->
+<div id="gpiModal" class="modal-overlay" onclick="closeOnOutside(event)">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleModal('gpiModal')">&times;</span>
+        <h3 style="color:var(--warning); margin-bottom:20px;">📍 GPI Real-Time Tracker</h3>
+        <div style="border-left: 2px solid var(--border); padding-left: 20px; font-size: 13px; line-height: 2;">
+            <p><span style="color:var(--success)">✅ CRAMCHGGXXX (Banque Cramer, Geneva):</span> COMPLETED</p>
+            <p><span style="color:var(--success)">✅ DEUTDEFFXXX (Deutsche Bank, Frankfurt am Main, Germany):</span> COMPLETED</p>
+            <p><span style="color:var(--warning)">⚠️ GIBAATWGXXX (Erste Group Bank AG, Vienna):</span> PENDING</p>
+            <p><span style="color:var(--warning)">⏳ GIBASKBXXXX (Slovenska Sporitelna, Bratislava):</span> PENDING</p>
+            <p><strong>UETR:</strong> b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a</p>
+            <p><strong>Value Date:</strong> 08-MAY-2026 | <strong>Sent:</strong> 05-MAY-2026 | Charges: OUR</p>
+        </div>
+    </div>
+</div>
+
+<!-- Ordering Institution Modal -->
+<div id="senderModal" class="modal-overlay" onclick="closeOnOutside(event)">
+    <div class="modal-content">
+        <span class="close-modal" onclick="toggleModal('senderModal')">&times;</span>
+        <h3 style="color:var(--accent); margin-bottom:16px;">:52A: Ordering Institution (FI BIC)</h3>
+        <div style="background:#04070c; padding:18px; border-radius:20px; font-family:monospace; font-size:12px; border:1px solid var(--border);">
+            <strong>BIC:</strong> CRAMCHGGXXX – Banque Cramer & Cie SA<br>
+            <strong>Address:</strong> Quai du Général-Guisan 2, 1204 Geneva, Switzerland<br>
+            <strong>Reference (:20:):</strong> MMGEU050526ERSTE100M<br>
+            <strong>Ordering Customer:</strong> MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.<br>
+            <strong>Intermediary 1 (completed):</strong> DEUTDEFFXXX – Deutsche Bank AG, Frankfurt am Main, Germany<br>
+            <strong>Intermediary 2 (pending):</strong> GIBAATWGXXX – Erste Group Bank AG, Vienna<br>
+            <strong>Beneficiary Bank (pending):</strong> GIBASKBXXXX – Slovenska Sporitelna, A.S.<br>
+            <strong>Beneficiary:</strong> Energie stav s.r.o. | IBAN: SK6709000000005178713852<br>
+            <strong>Remittance:</strong> Payment for Agreement No. AG/SJU-008875<br>
+            <strong>Value Date:</strong> 08-MAY-2026 | Sent: 05-MAY-2026
+        </div>
+    </div>
+</div>
+
+<script>
+    function logToConsole(msg, isSuccess = false, isPending = false) {
+        const consoleEl = document.getElementById('console');
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        let color = isSuccess ? 'var(--success)' : (isPending ? 'var(--warning)' : '#e2e8f0');
+        div.innerHTML = `<span style="color:var(--text-dim)">[${time}]</span> <span style="color:${color}">${msg}</span>`;
+        consoleEl.appendChild(div);
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+        if(consoleEl.children.length > 40) consoleEl.removeChild(consoleEl.firstChild);
+    }
+
+    function toggleModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        const isOpen = modal.style.display === 'flex';
+        modal.style.display = isOpen ? 'none' : 'flex';
+        if (!isOpen) logToConsole(`🔍 ${modalId === 'gpiModal' ? 'GPI trace' : 'Ordering institution'} opened`, false, false);
+    }
+
+    function downloadAdvice() {
+        let rawContent = document.getElementById('swiftRaw').innerText;
+        const header = "=== SWIFT MT103/MT900/MT910 - PARTIAL COMPLETION ===\n";
+        const meta = `Amount: EUR 10,000,000.00\nValue Date: 08-MAY-2026 | Sent Date: 05-MAY-2026\n\nMT103 - Single Customer Credit Transfer\n:20: Sender's Reference: MMGEU050526ERSTE100M\n\nOrdering Bank: CRAMCHGGXXX (COMPLETED)\nOrdering Customer: MMG Capital Limited, 43-45 Dorset Street, London, UK, W1U 7NA.\nIntermediary 1: DEUTDEFFXXX (COMPLETED)\nIntermediary 2: GIBAATWGXXX - Erste Group Bank AG (PENDING)\nBeneficiary Bank: GIBASKBXXXX (PENDING)\nBeneficiary: Energie stav s.r.o. | IBAN: SK6709000000005178713852\nRemittance: Payment for Agreement No. AG/SJU-008875\nCharges: OUR\nUETR: b7d4f2a1-39c8-4e6f-92a5-1c8d3e7b9f2a\n\n`;
+        const blob = new Blob([header + meta + rawContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `SWIFT_MT103_Single_Customer_Credit_Transfer.txt`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        logToConsole("📄 SWIFT messages downloaded", false, true);
+    }
+
+    function closeOnOutside(e) {
+        if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none';
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            logToConsole(`Navigation: ${this.innerText} selected`, false, false);
+        });
+    });
+
+    window.addEventListener('load', () => {
+        logToConsole("SWIFT Alliance Access | FIN 103/900/910 - Cross-Border Transfer", true);
+        logToConsole("MT103 - Single Customer Credit Transfer", false);
+        logToConsole(":20: Sender's Reference: MMGEU050526ERSTE100M", false);
+        logToConsole("CRAMCHGGXXX → DEUTDEFFXXX: COMPLETED", true);
+        logToConsole("DEUTDEFFXXX → Erste Group Bank AG (GIBAATWGXXX): PENDING", false, true);
+        logToConsole("Value Date: 08-MAY-2026 | Sent Date: 05-MAY-2026 | Amount: EUR 10,000,000.00", false);
+    });
+</script>
+</body>
+</html>
