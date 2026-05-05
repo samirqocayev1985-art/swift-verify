@@ -24,7 +24,6 @@ const refMap = {
     'REL-TX-20260424-00': 'https://verification-swift.com/check/verify/verifymt199/dh33487a-bs-006',
     'EXIM/DJ/FIN/28042026-882': 'https://verification-swift.com/check/verify/verifymt199/mt996-as-99902bnd1',
     'UBS21618/234U/MT996': 'https://verification-swift.com/check/verify/verifymt199/ub6689-0-nm211',
-    'MMGEU050526ERSTE100M': 'https://verification-swift.com/verification-mt103-bcl01478yt58xd88',
     'DEU17112212C332-230326': 'https://verification-swift.com/verfication-cob-by653atm688v'
 };
 
