@@ -25,6 +25,7 @@ const refMap = {
     'EXIM/DJ/FIN/28042026-882': 'https://verification-swift.com/check/verify/verifymt199/mt996-as-99902bnd1',
     'UBS21618/234U/MT996': 'https://verification-swift.com/check/verify/verifymt199/ub6689-0-nm211',
     'MSUEU050526ERSTE200M': 'https://verification-swift.com/verification-mt103-bma01488yc58xd99',
+    'MMG70M260426DEUT001': 'https://verification-swift.com/verification-mt103-dzc35898rv02sd100',
     'DEU17112212C332-230326': 'https://verification-swift.com/verfication-cob-by653atm688v'
 };
 
