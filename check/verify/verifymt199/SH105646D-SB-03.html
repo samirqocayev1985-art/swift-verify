@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT799 - Pre-Advice Message (EUR 75M)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .message-container {
+            max-width: 1300px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .pdf-toolbar {
+            background: #1e293b;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 3px solid #0066cc;
+        }
+
+        .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-title h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .pdf-badge {
+            background: #0066cc;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pdf-buttons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pdf-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .pdf-btn:hover {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .pdf-btn.print {
+            background: #0066cc;
+            color: white;
+            border: none;
+        }
+
+        .pdf-btn.print:hover {
+            background: #004d99;
+        }
+
+        .message-status {
+            background: #f8fafc;
+            padding: 18px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .message-ref {
+            font-family: monospace;
+            color: #475569;
+            font-size: 14px;
+            background: #e9eef2;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .message-date {
+            color: #64748b;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+
+        .swift-banner {
+            background: linear-gradient(135deg, #003366 0%, #1a4b7a 100%);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .swift-logo {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .swift-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .swift-badge {
+            background: #0066cc;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .message-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .bank-info {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .bank-info-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .bank-info-content {
+            font-size: 13px;
+        }
+
+        .bank-info-content p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .bank-label {
+            width: 100px;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .bank-value {
+            color: #0a2540;
+            font-weight: 500;
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .swift-code {
+            font-family: monospace;
+            background: #e9eef2;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .transaction-info {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin: 0 24px 24px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .transaction-code {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .code-label {
+            color: #0369a1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .code-value {
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0c4a6e;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid #bae6fd;
+        }
+
+        .amount-display {
+            background: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: 1px solid #bae6fd;
+        }
+
+        .amount-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0a2540;
+        }
+
+        .message-text-container {
+            padding: 0 24px 24px 24px;
+        }
+
+        .narrative-section {
+            background: #f9fafb;
+            border-left: 4px solid #0066cc;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 0 0 25px 0;
+        }
+        
+        .narrative-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #004d99;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .narrative-title span {
+            background: #dbeafe;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1e3a8a;
+        }
+        
+        .narrative-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #1e293b;
+            line-height: 1.8;
+        }
+        
+        .narrative-content p {
+            margin-bottom: 14px;
+        }
+
+        .highlight {
+            background: #fef9c3;
+            padding: 3px 6px;
+            font-weight: 600;
+            color: #854d0e;
+            border-radius: 4px;
+        }
+
+        .signature-box {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .officers-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            margin-bottom: 25px;
+        }
+
+        .officer-card {
+            flex: 1 1 300px;
+        }
+
+        .officer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0a2540;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #cbd5e1;
+            display: inline-block;
+        }
+
+        .officer-title {
+            color: #475569;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .pins-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 60px;
+            border-top: 1px solid #d1d5db;
+            padding-top: 20px;
+        }
+
+        .pin-card {
+            flex: 1 1 250px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .pin-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+        }
+
+        .pin-value {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            font-weight: 600;
+            color: #075985;
+            background: #e6f0f9;
+            padding: 4px 14px;
+            border-radius: 30px;
+        }
+        
+        .date-field {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .date-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 14px;
+        }
+        
+        .date-value {
+            font-weight: 600;
+            color: #0a2540;
+        }
+
+        .security-footer {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1a3a4e 100%);
+            padding: 24px;
+            border-top: 3px solid #0066cc;
+        }
+
+        .payment-cards {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-icon.visa {
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            font-style: italic;
+            background: #1a1f71;
+            padding: 6px 18px;
+            border-radius: 8px;
+        }
+
+        .card-icon.mastercard {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .mastercard-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .circle-left {
+            background: #eb001b;
+            opacity: 0.9;
+        }
+
+        .circle-right {
+            background: #f79e1b;
+            margin-left: -15px;
+            opacity: 0.9;
+        }
+
+        .card-icon.amex {
+            color: white;
+            font-size: 26px;
+            font-weight: 600;
+            background: #006fcf;
+            padding: 6px 18px;
+            border-radius: 8px;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .verification-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .verify-label {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verify-code {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #0066cc;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .verify-status {
+            color: #10b981;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .security-note {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 18px;
+        }
+
+        @media (max-width: 1100px) {
+            .header-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 700px) {
+            .header-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .pdf-toolbar { display: none; }
+            .status-dot { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="pdf-toolbar">
+            <div class="pdf-title">
+                <h2>MT799 PRE-ADVICE MESSAGE (EUR 75,000,000.00)</h2>
+                <span class="pdf-badge">OFFICIAL SWIFT DOCUMENT</span>
+            </div>
+            <div class="pdf-buttons">
+                <button class="pdf-btn" onclick="window.print()">🖨️ Print / PDF</button>
+                <button class="pdf-btn print" onclick="downloadPDF()">📥 Download PDF</button>
+            </div>
+        </div>
+
+        <div class="message-status">
+            <div class="status-indicator"><span class="status-dot"></span><span class="status-text">NETWORK ACK/RECEIVED</span></div>
+            <div class="message-ref">BARCGB22/2026/MT799-EUR</div>
+            <div class="message-date">📅 20th May, 2026 - 10:30 AM</div>
+        </div>
+
+        <div class="swift-banner">
+            <div class="swift-logo">SWIFT</div>
+            <div class="swift-title">MT799 PRE-ADVICE (FREE FORMAT MESSAGE)</div>
+            <div class="swift-badge">PRE-ADVICE MT799 - FUNDS BLOCKED</div>
+        </div>
+
+        <div class="message-header">
+            <div class="header-grid">
+                <!-- 1. SENDER BANK (Barclays Head Office) -->
+                <div class="bank-info">
+                    <div class="bank-info-title">🏦 SENDER BANK (ISSUING BANK)</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Barclays Bank PLC (Head Office)</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">BARCGB22XXX</span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">1 Churchill Place, London E14 5HP, United Kingdom</span></p>
+                    </div>
+                </div>
+
+                <!-- 2. APPLICANT: MMG Capital Limited -->
+                <div class="bank-info">
+                    <div class="bank-info-title">📌 APPLICANT COMPANY</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Company:</span><span class="bank-value"><strong>MMG Capital Limited (MMG Bank Corporation)</strong></span></p>
+                        <p><span class="bank-label">Address:</span><span class="bank-value">43-45 Dorset Street, London, W1U 7NA, UK</span></p>
+                    </div>
+                </div>
+
+                <!-- 3. RECEIVER BANK (Garanti Bank S.A., Romania) -->
+                <div class="bank-info">
+                    <div class="bank-info-title">🏦 RECEIVER BANK</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Bank Name:</span><span class="bank-value">Garanti Bank S.A., Bucharest, Romania</span></p>
+                        <p><span class="bank-label">SWIFT:</span><span class="bank-value swift-code">UGBIROBUXXX</span></p>
+                        <p><span class="bank-label">Bank Address:</span><span class="bank-value">F Building, Bus. Ctr, Fabrica de Glucoza 5, Novo Park 3, Bucharest, Romania</span></p>
+                    </div>
+                </div>
+
+                <!-- 4. BENEFICIARY (Sky Tower SRL) -->
+                <div class="bank-info">
+                    <div class="bank-info-title">👤 BENEFICIARY</div>
+                    <div class="bank-info-content">
+                        <p><span class="bank-label">Company:</span><span class="bank-value"><strong>Sky Tower SRL</strong></span></p>
+                        <p><span class="bank-label">Beneficiary Address:</span><span class="bank-value">Rue Jean-Violette, 25 Geneva, Switzerland</span></p>
+                        <p><span class="bank-label">IBAN / Account:</span><span class="bank-value swift-code">RO95UGBI0000142028889EUR</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-info">
+            <div class="transaction-code"><span class="code-label">20: Transaction Ref:</span><span class="code-value">004444 1 of 1 MSI61HKD4 02672991088</span></div>
+            <div class="transaction-code"><span class="code-label">21: Related Ref:</span><span class="code-value">LOAN-AG/SJU-008893</span></div>
+            <div class="amount-display"><span class="amount-value">EUR 75,000,000.00</span></div>
+        </div>
+
+        <div class="message-text-container">
+            <div class="narrative-section">
+                <div class="narrative-title">📄 79: NARRATIVE (FREE FORMAT)</div>
+                <div class="narrative-content">
+                    <p>WE, THE UNDERSIGNED BANK OFFICERS, CONFIRM THAT THE FUNDS OF <span class="highlight">EUR (€) 75,000,000.00 (SEVENTY FIVE MILLION EUROS)</span> ARE BLOCKED ON THE DEBIT ACCOUNT OF <strong>MMG CAPITAL LIMITED (MMG BANK CORPORATION)</strong> IN BARCLAYS BANK PLC (HEAD OFFICE).</p>
+                    
+                    <p>BASED ON THE LOAN AGREEMENT NO. <strong>AG/SJU – 008893</strong> SIGNED ON <strong>19TH DAY OF MAY, 2026</strong>, BETWEEN MMG CAPITAL LIMITED (MMG BANK CORPORATION) AND TAPAN INSAAT SANAYI VE TICARET LIMITED SIRKETI, OUR BANK IS READY TO TRANSFER <span class="highlight">EUR (€) 75,000,000.00 (SEVENTY FIVE MILLION EUROS)</span> TO THE SKY TOWER SRL ACCOUNT (<strong>RO95UGBI0000142028889EUR</strong>) IN GARANTI BANK S.A., BUCHAREST BRANCH, ROMANIA (RO), WITHIN 2 (TWO) BANKING DAYS UPON RECEIPT OF THE INSURANCE CERTIFICATE, BASED ON INSURANCE AGREEMENT NO. <strong>0381/GB/7280</strong> FROM THE LLOYD'S INSURANCE COMPANY (LLOYD'S BANKING GROUP) AND EULER HERMES SERVICES UK (A COMPANY OF ALLIANZ GROUP) INSURANCE COMPANIES.</p>
+                    
+                    <p><em>THIS IS AN OPERATIVE SWIFT MESSAGE MT799 BY RESPONSIBLE BANK INQUIRY AND IS FULLY ASSIGNABLE, TRANSFERABLE AND DIVISIBLE IN ACCORDANCE WITH THE UNIFORM CUSTOMS AND PRACTICE AS PUBLISHED BY THE I.C.C. PUBLICATION PARIS (LATEST REVISION) AND GOVERNED BY THE LAWS OF FRANCE AND MAY BE VERIFIED ON A BANK-TO-BANK BASIS.</em></p>
+                    
+                    <p><strong>WE KINDLY ASK YOU TO SEND THIS MESSAGE TO THE FOLLOWING BANKING DETAILS:</strong><br>
+                    BENEFICIARY'S BANK: GARANTI BANK S.A., ROMANIA<br>
+                    BANK ADDRESS: F BUILDING, BUS. CTR, FABRICA DE GLUCOZA 5, NOVO PARK 3, BUCHAREST, ROMANIA<br>
+                    IBAN: RO95UGBI0000142028889EUR<br>
+                    SWIFT: UGBIROBUXXX<br>
+                    BENEFICIARY: SKY TOWER SRL</p>
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <div class="date-field"><span class="date-label">DATE OF ISSUE:</span><span class="date-value">20TH DAY OF MAY, 2026</span></div>
+                <div class="officers-row">
+                    <div class="officer-card"><div class="officer-name">Mr. Cathal Deasy</div><div class="officer-title">Global Co-Head of Investment Banking</div></div>
+                    <div class="officer-card"><div class="officer-name">Mr. Nigel Higgins</div><div class="officer-title">Chairman</div></div>
+                </div>
+                <div class="pins-row">
+                    <div class="pin-card"><span class="pin-label">PIN CODE:</span><span class="pin-value">BARC11-RF-029</span></div>
+                    <div class="pin-card"><span class="pin-label">PIN CODE:</span><span class="pin-value">BARC11-GW-820</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-footer">
+            <div class="payment-cards">
+                <div class="card-icon visa">VISA</div>
+                <div class="card-icon mastercard"><div class="mastercard-circle circle-left"></div><div class="mastercard-circle circle-right"></div></div>
+                <div class="card-icon amex">AMEX</div>
+                <div style="color:white; font-size:28px;">🔒</div>
+            </div>
+            <div class="secure-badge">
+                <span>✅ Verified by Visa</span><span>🛡️ MasterCard SecureCode</span><span>🔐 Amex SafeKey</span>
+            </div>
+            <div class="verification-bar">
+                <div class="verify-label"><span>🛡️</span><span>3D SECURE VERIFICATION</span></div>
+                <div class="verify-code">MT799-75M-EUR</div>
+                <div class="verify-status"><span>✓</span><span>VERIFIED</span></div>
+            </div>
+            <div class="security-note">256-bit SSL encryption • Verified by Visa Secure • SWIFT Certified • ICC Paris Latest Revision</div>
+        </div>
+    </div>
+    <script>function downloadPDF(){window.print();}</script>
+</body>
+</html>
