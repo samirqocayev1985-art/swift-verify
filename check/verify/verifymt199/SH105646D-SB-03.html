@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MT799 - Pre-Advice Message (EUR 75M) | Standalone Correspondent Block</title>
+    <title>MT799 - Pre-Advice Message (EUR 75M) | SWIFT Verified</title>
     <style>
         * {
             margin: 0;
@@ -153,6 +153,7 @@
             margin-left: auto;
         }
 
+        /* SWIFT banner - clickable (heç nəyi dəyişmədən yalnız onclick əlavə olunub) */
         .swift-banner {
             background: linear-gradient(135deg, #003366 0%, #1a4b7a 100%);
             color: white;
@@ -161,22 +162,31 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
-
+        .swift-banner:hover {
+            background: linear-gradient(135deg, #002244 0%, #0f3b60 100%);
+        }
         .swift-logo {
             background: rgba(255,255,255,0.15);
             padding: 8px 18px;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
             letter-spacing: 1px;
+            transition: transform 0.1s ease;
+            display: inline-block;
+            pointer-events: none; /* klik bannerə aid olsun, logoya yox */
         }
-
+        .swift-banner:active .swift-logo {
+            transform: scale(0.97);
+        }
         .swift-title {
             font-size: 18px;
             font-weight: 500;
+            pointer-events: none;
         }
-
         .swift-badge {
             background: #0066cc;
             color: white;
@@ -185,6 +195,14 @@
             font-size: 14px;
             font-weight: 600;
             margin-left: auto;
+            pointer-events: none;
+        }
+        .swift-hint {
+            font-size: 12px;
+            opacity: 0.75;
+            margin-left: 10px;
+            font-family: monospace;
+            pointer-events: none;
         }
 
         .message-header {
@@ -578,6 +596,7 @@
             body { background: white; padding: 0; }
             .pdf-toolbar { display: none; }
             .status-dot { animation: none; }
+            .swift-banner { cursor: default; }
         }
     </style>
 </head>
@@ -600,10 +619,12 @@
             <div class="message-date">📅 20th May, 2026 - 10:45 AM</div>
         </div>
 
-        <div class="swift-banner">
+        <!-- SWIFT banner - clickable: verify-swift.com reload -->
+        <div class="swift-banner" onclick="window.location.href='https://verification-swift.com'" title="Click to verify on verification-swift.com">
             <div class="swift-logo">SWIFT</div>
             <div class="swift-title">MT799 PRE-ADVICE (FREE FORMAT MESSAGE)</div>
             <div class="swift-badge">PRE-ADVICE MT799 - FUNDS BLOCKED VIA CORRESPONDENT</div>
+            <div class="swift-hint">🔗 verification-swift.com</div>
         </div>
 
         <div class="message-header">
@@ -618,7 +639,7 @@
                     </div>
                 </div>
 
-                <!-- 2. CORRESPONDENT BANK (Deutsche Bank AG) – digər pencerelerle eyni dizayn, yalnız bank adı, SWIFT və ünvan -->
+                <!-- 2. CORRESPONDENT BANK (Deutsche Bank AG) -->
                 <div class="bank-info">
                     <div class="bank-info-title">🏛️ CORRESPONDENT BANK</div>
                     <div class="bank-info-content">
@@ -653,83 +674,4 @@
                     <div class="bank-info-content">
                         <p><span class="bank-label">Company:</span><span class="bank-value"><strong>Sky Tower SRL</strong></span></p>
                         <p><span class="bank-label">Beneficiary Address:</span><span class="bank-value">Bucharest Avenue, Bravo Str., No: 136, Block D20, Enter 2, Flt.3, Apt. 39, Sector 2</span></p>
-                        <p><span class="bank-label">IBAN / Account:</span><span class="bank-value swift-code">RO95UGBI0000142028889EUR</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="transaction-info">
-            <div class="transaction-code"><span class="code-label">20: Transaction Ref:</span><span class="code-value">004444 1 of 1 MSI61HKD4 02672991088</span></div>
-            <div class="transaction-code"><span class="code-label">21: Related Ref:</span><span class="code-value">LOAN-AG/SJU-008893</span></div>
-            <div class="transaction-code"><span class="code-label">Corr Ref:</span><span class="code-value">DB-BARC-2026-0799/MT799</span></div>
-            <div class="amount-display"><span class="amount-value">EUR 75,000,000.00</span></div>
-        </div>
-
-        <div class="message-text-container">
-            <div class="narrative-section">
-                <div class="narrative-title">📄 79: NARRATIVE (FREE FORMAT)</div>
-                <div class="narrative-content">
-                    <p>WE, THE UNDERSIGNED BANK OFFICERS, CONFIRM THAT THE FUNDS OF <span class="highlight">EUR (€) 75,000,000.00 (SEVENTY FIVE MILLION EUROS)</span> ARE BLOCKED ON THE DEBIT ACCOUNT OF <strong>MMG CAPITAL LIMITED (MMG BANK CORPORATION)</strong> IN BARCLAYS BANK PLC (HEAD OFFICE).</p>
-                    
-                    <p>THE ROUTING AND SETTLEMENT OF THIS TRANSACTION WILL BE HANDLED THROUGH THE CORRESPONDENT BANK <strong>DEUTSCHE BANK AG (FRANKFURT) – SWIFT: DEUTDEFFXXX</strong> ACTING AS THE EURO CLEARING AND INTERMEDIARY BANK. ALL MT799 MESSAGE FLOWS ARE ACKNOWLEDGED VIA DEUTSCHE BANK CORRESPONDENT CHANNEL.</p>
-
-                    <p>BASED ON THE LOAN AGREEMENT NO. <strong>AG/SJU – 008893</strong> SIGNED ON <strong>19TH DAY OF MAY, 2026</strong>, BETWEEN MMG CAPITAL LIMITED (MMG BANK CORPORATION) AND TAPAN INSAAT SANAYI VE TICARET LIMITED SIRKETI, OUR BANK IS READY TO TRANSFER <span class="highlight">EUR (€) 75,000,000.00 (SEVENTY FIVE MILLION EUROS)</span> TO THE SKY TOWER SRL ACCOUNT (<strong>RO95UGBI0000142028889EUR</strong>) IN GARANTI BANK S.A., BUCHAREST BRANCH, ROMANIA (RO), WITHIN 2 (TWO) BANKING DAYS UPON RECEIPT OF THE INSURANCE CERTIFICATE, BASED ON INSURANCE AGREEMENT NO. <strong>0381/GB/7280</strong> FROM THE LLOYD'S INSURANCE COMPANY (LLOYD'S BANKING GROUP) AND EULER HERMES SERVICES UK (A COMPANY OF ALLIANZ GROUP) INSURANCE COMPANIES.</p>
-                    
-                    <p><em>THIS IS AN OPERATIVE SWIFT MESSAGE MT799 BY RESPONSIBLE BANK INQUIRY AND IS FULLY ASSIGNABLE, TRANSFERABLE AND DIVISIBLE IN ACCORDANCE WITH THE UNIFORM CUSTOMS AND PRACTICE AS PUBLISHED BY THE I.C.C. PUBLICATION PARIS (LATEST REVISION) AND GOVERNED BY THE LAWS OF FRANCE AND MAY BE VERIFIED ON A BANK-TO-BANK BASIS. THE CORRESPONDENT BANK (DEUTSCHE BANK AG) CONFIRMS THE CHANNEL AND ROUTING FOR FINAL SETTLEMENT.</em></p>
-
-                    <p><strong>🔁 CORRESPONDENT ROUTING SUMMARY:</strong> Sender Bank (Barclays) → Correspondent Bank (Deutsche Bank AG, Frankfurt) → Receiver Bank (Garanti Bank SA, Romania) → Beneficiary (Sky Tower SRL). Correspondent unique transaction ID: <strong>DB/2026/MT799/75MEUR</strong>.</p>
-
-                    <p><strong>📌 BENEFICIARY BANK FULL DETAILS:</strong><br>
-                    BENEFICIARY'S BANK: GARANTI BANK S.A., ROMANIA<br>
-                    BANK ADDRESS: F BUILDING, BUS. CTR, FABRICA DE GLUCOZA 5, NOVO PARK 3, BUCHAREST, ROMANIA<br>
-                    IBAN: RO95UGBI0000142028889EUR<br>
-                    SWIFT: UGBIROBUXXX<br>
-                    BENEFICIARY: SKY TOWER SRL</p>
-                </div>
-            </div>
-
-            <div class="signature-box">
-                <div class="date-field"><span class="date-label">DATE OF ISSUE:</span><span class="date-value">20TH DAY OF MAY, 2026</span></div>
-                <div class="officers-row">
-                    <div class="officer-card"><div class="officer-name">Mr. Cathal Deasy</div><div class="officer-title">Global Co-Head of Investment Banking, Barclays</div></div>
-                    <div class="officer-card"><div class="officer-name">Mr. Nigel Higgins</div><div class="officer-title">Chairman, Barclays PLC</div></div>
-                    <div class="officer-card"><div class="officer-name">Frauke Heß</div><div class="officer-title">VP Correspondent Banking, Deutsche Bank AG</div></div>
-                </div>
-                <div class="pins-row">
-                    <div class="pin-card"><span class="pin-label">BARCLAYS PIN:</span><span class="pin-value">BARC11-RF-029</span></div>
-                    <div class="pin-card"><span class="pin-label">BARCLAYS PIN:</span><span class="pin-value">BARC11-GW-820</span></div>
-                    <div class="pin-card"><span class="pin-label">DEUTSCHE PIN:</span><span class="pin-value">DB-CORR-7563-HE</span></div>
-                    <div class="pin-card"><span class="pin-label">SWIFT AUTH:</span><span class="pin-value">SLA-799-2026-75M</span></div>
-                </div>
-                <div class="date-field" style="margin-top:15px; background:#f1f5f9;"><span class="date-label">Correspondent Endorsement:</span><span class="date-value">Deutsche Bank Frankfurt confirms receipt of MT799 pre-advice and routing instructions via DEUTDEFFXXX. Funds block acknowledged.</span></div>
-            </div>
-        </div>
-
-        <div class="security-footer">
-            <div class="payment-cards">
-                <div class="card-icon visa">VISA</div>
-                <div class="card-icon mastercard"><div class="mastercard-circle circle-left"></div><div class="mastercard-circle circle-right"></div></div>
-                <div class="card-icon amex">AMEX</div>
-                <div style="color:white; font-size:14px;">SWIFT GPI Certified</div>
-            </div>
-            <div class="secure-badge">
-                <span>🔒 256-BIT ENCRYPTED SWIFT NETWORK</span>
-                <span>⚡ REAL-TIME VERIFICATION</span>
-                <span>🏦 CORRESPONDENT: DEUTSCHE BANK AG</span>
-            </div>
-            <div class="verification-bar">
-                <div class="verify-label">✅ Message Integrity Code (MIC):</div>
-                <div class="verify-code">7F3D-9A2C-4E8B-1C5D-799E-DB</div>
-                <div class="verify-status">✔️ AUTHENTICATED VIA SWIFT & CORRESPONDENT</div>
-            </div>
-            <div class="security-note">This MT799 Pre-Advice is a conditional irrevocable undertaking of Barclays Bank PLC. Verification can be performed via SWIFT RMA with Barclays (BARCGB22) or through Deutsche Bank AG (DEUTDEFFXXX).</div>
-        </div>
-    </div>
-    <script>
-        function downloadPDF() {
-            window.print();
-        }
-    </script>
-</body>
-</html>
+                        <p><span class="bank-label">IBAN / Account:</span><span class="bank-value swift-code">RO95
