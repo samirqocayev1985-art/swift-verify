@@ -27,7 +27,7 @@ const refMap = {
     'MSUEU050526ERSTE200M': 'https://verification-swift.com/verification-mt103-bma01488yc58xd99',
     'MMG70M260426DEUT001': 'https://verification-swift.com/verification-mt103-dzc35898rv02sd100',
     'MSI61HKD402672991088': 'https://verification-swift.com/check/verify/verifymt199/sh105646d-sb-03',
-    'MMG70M230626DEUT001': 'https://verification-swift.com/verification-mt103-nva55478rv04ds200',
+    'MMG70M240626DEUT001': 'https://verification-swift.com/verification-mt103-nva55478rv04ds200',
     'DEU17112212C332-230326': 'https://verification-swift.com/verfication-cob-by653atm688v'
 };
 
